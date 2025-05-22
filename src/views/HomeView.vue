@@ -1,8 +1,12 @@
 <script setup>
 import Search from '@/assets/icon/Search.vue'
+
+import FooterSection from '@/components/FooterSection.vue'
+import { ref, computed } from 'vue'
+
 import Favhiddengem from '@/components/favhiddengem.vue'
 import Navbar from '@/components/Navbar.vue'
-import { computed, ref } from 'vue'
+
 const allDestinations = [
   'Ubud',
   'Kuta Selatan',
@@ -28,6 +32,7 @@ const visibleDestinations = computed(() =>
 </script>
 
 <template>
+
   <div>
     <Navbar />
     <!-- Hero Section -->
@@ -92,6 +97,7 @@ const visibleDestinations = computed(() =>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 justify-center px-8 ">
           <div v-for="i in 5" :key="i" class="h-[170px] w-[300px] bg-gray-300 rounded-2xl"></div>
         </div>
+
       </div>
     </section>
 
@@ -113,5 +119,6 @@ const visibleDestinations = computed(() =>
         </div>
       </div>
     </section>
+      <FooterSection />
   </div>
 </template>
