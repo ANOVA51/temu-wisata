@@ -12,7 +12,7 @@ const route = useRoute()
 const hideNavbar = computed(() => ['login', 'signup'].includes(route.name as string))
 
 const isWhiteBackgroundPage = computed(() =>
-  ['destination', 'about', 'login', 'signup'].includes(route.name as string)
+  ['destination'].includes(route.name as string)
 )
 </script>
 
@@ -51,7 +51,7 @@ const isWhiteBackgroundPage = computed(() =>
               :to="{ name: 'home' }"
               :class="[
                 isWhiteBackgroundPage ? 'text-black hover:text-green-600' : 'text-white hover:text-green-500',
-                'font-semibold group-hover:underline'
+                
               ]"
             >
               HOME
@@ -62,7 +62,7 @@ const isWhiteBackgroundPage = computed(() =>
               :to="{ name: 'destination' }"
               :class="[
                 isWhiteBackgroundPage ? 'text-black hover:text-green-600' : 'text-white hover:text-green-500',
-                'group-hover:underline'
+                
               ]"
             >
               DESTINATION
@@ -73,7 +73,7 @@ const isWhiteBackgroundPage = computed(() =>
               :to="{ name: 'about' }"
               :class="[
                 isWhiteBackgroundPage ? 'text-black hover:text-green-600' : 'text-white hover:text-green-500',
-                'group-hover:underline'
+                
               ]"
             >
               ABOUT
@@ -99,8 +99,8 @@ const isWhiteBackgroundPage = computed(() =>
             class="px-4 py-2 rounded-lg font-semibold"
             :class="
               isWhiteBackgroundPage
-                ? 'bg-black text-white hover:bg-gray-800'
-                : 'bg-white text-black hover:bg-gray-200'
+                ? 'text-black border border-black hover:bg-black hover:text-white'
+                : 'text-white border border-white hover:bg-white hover:text-black'
             "
           >
             Signup

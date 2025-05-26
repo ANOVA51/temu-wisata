@@ -9,13 +9,13 @@
   transform-origin: center;
   width: 80%;
   height: 2px;
-  background-color: #fafafa; /* Tailwind green-500 */
+  background-color: #00d853; /* Tailwind green-500 */
   transition: transform 0.3s ease;
 }
-
 .nav-item:hover::after {
   transform: translateX(-50%) scaleX(1);
 }
+
 
 @keyframes fade-in {
   from {
