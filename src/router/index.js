@@ -42,6 +42,11 @@ const router = createRouter({
       component: () => import('@/views/SignupView.vue'),
     },
     {
+      path: '/form-input',
+      name: 'form-input',
+      component: () => import('@/views/FormInputWisata.vue'),
+    },
+    {
       // path: '/admin',
       // name: 'admin',
       // // route level code-splitting
