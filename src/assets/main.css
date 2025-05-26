@@ -1,1 +1,32 @@
 @import "tailwindcss";
+
+.nav-item::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%) scaleX(0);
+  transform-origin: center;
+  width: 80%;
+  height: 2px;
+  background-color: #fafafa; /* Tailwind green-500 */
+  transition: transform 0.3s ease;
+}
+
+.nav-item:hover::after {
+  transform: translateX(-50%) scaleX(1);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out;
+}

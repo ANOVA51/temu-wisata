@@ -6,6 +6,7 @@ import { ref, computed } from 'vue'
 
 import Favhiddengem from '@/components/favhiddengem.vue'
 import Navbar from '@/components/Navbar.vue'
+import Testimoni from '@/components/testimoni.vue'
 
 const allDestinations = [
   'Ubud',
@@ -29,6 +30,33 @@ const showAll = ref(false)
 const visibleDestinations = computed(() =>
   showAll.value ? allDestinations : allDestinations.slice(0, 9),
 )
+
+import nature from '@/assets/icon/landscape.png'
+import FnB from '@/assets/icon/FnB.png'
+
+const toDo = [
+  {
+    image : nature,
+  },
+  {
+    image : FnB,
+  },
+  {
+    image : FnB,
+  },
+  {
+    image : FnB,
+  },
+  {
+    image : FnB,
+  },
+  {
+    image : FnB,
+  },
+  {
+    image : FnB,
+  },
+]
 </script>
 
 <template>
@@ -70,32 +98,26 @@ const visibleDestinations = computed(() =>
 
    <favhiddengem />
 
-    <section>
-      <!--Testimoni-->
-      <div class="bg-[#67AE6E] pt-12 pb-12 mb-10">
-        <h2 class="text-3xl md:text-4xl font-bold text-white mb-10 text-center">
-          Testimoni Hidden Gem
-        </h2>
-
-        <!-- Card Grid Testimoni -->
-        <div class="overflow-x-auto">
-          <div class="grid grid-cols-[repeat(4,auto)] gap-4 px-30" style="min-width: max-content">
-            <div
-              v-for="i in 4"
-              :key="i"
-              class="bg-gray-300 rounded-xl w-40 sm:w-64 h-40 sm:h-72 flex-shrink-0"
-            ></div>
-          </div>
-        </div>
-      </div>
-    </section>
+   <Testimoni />
 
     <section>
       <!--Something TO-do-->
       <div>
-        <h2 class="text-5xl md:text-3xl font-bold text-[#328E6E] px-10 pb-10">Something To-Do</h2>
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 justify-center px-8 ">
-          <div v-for="i in 5" :key="i" class="h-[170px] w-[300px] bg-gray-300 rounded-2xl"></div>
+        <h2 class="text-3xl md:text-5xl font-bold text-[#328E6E] px-10 pb-10">Something To-Do</h2>
+        <div class="flex justify-center flex-wrap gap-6 md:gap-30 px-8 ">
+          <div v-for="(icon , index) in toDo" 
+          :key="index" 
+          class="h-[100px] w-[200px] bg-white rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300"
+          >
+          <div class=" pt-5 flex justify-center">
+            <img
+            :src="icon.image"
+            class="size-16  object-cover"
+            />
+
+          </div>
+
+        </div>
         </div>
 
       </div>

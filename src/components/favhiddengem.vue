@@ -96,7 +96,6 @@ const displayedItems = computed(() => {
         </div>
       </div>
     </div>
-
     <!-- Tombol View More -->
     <div v-if="hiddengem.length > 4" class="mt-10 flex justify-center mb-10">
       <button 
