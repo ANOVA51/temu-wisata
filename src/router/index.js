@@ -47,6 +47,16 @@ const router = createRouter({
       component: () => import('@/views/FormInputWisata.vue'),
     },
     {
+      path: '/tesa',
+      name: 'tesa',
+      component: () => import('@/views/ChatTesa.vue'),
+    },
+    {
+      path: '/coba2',
+      name: 'coba2',
+      component: () => import('@/views/Coba2.vue'),
+    },
+    {
       // path: '/admin',
       // name: 'admin',
       // // route level code-splitting
