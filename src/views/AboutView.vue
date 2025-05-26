@@ -21,6 +21,7 @@ import dimas from '@/assets/images/profile/dimas.jpg'
 import emo from '@/assets/images/profile/emo.jpg'
 import nova from '@/assets/images/profile/nova.jpg'
 import pius from '@/assets/images/profile/pius.jpg'
+import Navbar from '@/components/Navbar.vue'
 
 const teamMembers = [
   {
@@ -68,7 +69,8 @@ const teamMembers = [
 
 <template>
   <div>
-    <Navbar />
+    <Navbar/>
+  
 
     <!-- Hero Section -->
     <section class="relative h-screen w-full">
