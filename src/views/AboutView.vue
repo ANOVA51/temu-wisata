@@ -2,6 +2,7 @@
 import IconLocation from '@/components/icons/IconLocation.vue'
 import IconMail from '@/components/icons/IconMail.vue'
 import IconWA from '@/components/icons/IconWA.vue'
+import FooterSection from '@/components/FooterSection.vue'
 
 import kecak from '@/assets/images/kecak.jpg'
 import penari from '@/assets/images/penari.jpg'
@@ -242,6 +243,6 @@ const teamMembers = [
         </div>
       </div>
     </section>
-    <div></div>
+    <FooterSection/>
   </div>
 </template>
