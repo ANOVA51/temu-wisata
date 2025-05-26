@@ -1,3 +1,8 @@
+<script setup>
+import '@/assets/main.css'
+import { RouterLink } from 'vue-router'
+</script>
+
 <template>
   <footer class="bg-gray-200 text-black text-xs sm:text-sm">
     <div
@@ -33,10 +38,26 @@
         class="flex flex-col items-center sm:items-end gap-4 col-span-1 sm:col-span-2 md:col-span-1"
       >
         <nav class="flex flex-col space-y-1 text-center sm:text-right">
-          <a href="#" class="hover:underline text-[10px] sm:text-sm">Home</a>
-          <a href="#" class="hover:underline text-[10px] sm:text-sm">Destination</a>
-          <a href="#" class="hover:underline text-[10px] sm:text-sm">About</a>
-          <a href="#" class="hover:underline text-[10px] sm:text-sm">Register / Login</a>
+          <RouterLink
+            :to="{ name: 'home' }"
+            class="hover:underline text-[10px] sm:text-sm"
+            >Home</RouterLink
+          >
+          <RouterLink
+            :to="{ name: 'destination' }"
+            class="hover:underline text-[10px] sm:text-sm"
+            >Destination</RouterLink
+          >
+          <RouterLink
+            :to="{ name: 'about' }"
+            class="hover:underline text-[10px] sm:text-sm"
+            >About</RouterLink
+          >
+          <RouterLink
+            :to="{ name: 'login' }"
+            class="hover:underline text-[10px] sm:text-sm"
+            >Register / Login</RouterLink
+          >
         </nav>
         <div class="text-center sm:text-right">
           <p class="font-bold text-[10px] sm:text-sm">Follow Us On !</p>
@@ -54,12 +75,6 @@
     </div>
   </footer>
 </template>
-
-<script>
-export default {
-  name: 'FooterSection',
-}
-</script>
 
 <style scoped>
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');

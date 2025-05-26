@@ -1,12 +1,10 @@
 <script setup>
 import Search from '@/assets/icon/Search.vue'
-
-import FooterSection from '@/components/FooterSection.vue'
 import { ref, computed } from 'vue'
-
-import Favhiddengem from '@/components/favhiddengem.vue'
 import Navbar from '@/components/Navbar.vue'
+import Favhiddengem from '@/components/favhiddengem.vue'
 import Testimoni from '@/components/testimoni.vue'
+import FooterSection from '@/components/FooterSection.vue'
 
 const allDestinations = [
   'Ubud',
@@ -103,13 +101,13 @@ const toDo = [
     <section>
       <!--Something TO-do-->
       <div>
-        <h2 class="text-3xl md:text-5xl font-bold text-[#328E6E] px-10 pb-10">Something To-Do</h2>
+        <h2 class="text-3xl md:text-5xl font-bold text-[#328E6E] mt-10 px-10 pb-10 text-center">Something To-Do</h2>
         <div class="flex justify-center flex-wrap gap-6 md:gap-30 px-8 ">
-          <div v-for="(icon , index) in toDo" 
-          :key="index" 
+          <div v-for="(icon , index) in toDo"
+          :key="index"
           class="h-[100px] w-[200px] bg-white rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300"
           >
-          <div class=" pt-5 flex justify-center">
+          <div class=" pt-5 pb-5 flex justify-center">
             <img
             :src="icon.image"
             class="size-16  object-cover"

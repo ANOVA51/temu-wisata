@@ -16,12 +16,38 @@ const hideNavbar = computed(() => ['login', 'signup'].includes(route.name as str
 
 // Tentukan apakah halaman berlatar putih (misal: destination)
 const isWhiteBackgroundPage = computed(() => {
-  return route.name === 'destination' || route.name === 'about'
+  return route.name === 'destination' || route.name === 'about' || route.name === 'login' || route.name === 'signup'
 })
 </script>
 
 <template>
+<<<<<<< HEAD
+  <!-- Navbar -->
+  <nav
+    :class="[
+      'py-4 absolute w-full z-50 transition-all duration-300',
+      isWhiteBackgroundPage ? 'bg-white' : 'bg-transparent'
+    ]"
+  >
+    <div class="container mx-auto flex items-center justify-between px-4 md:px-20">
+      <!-- Logo -->
+      <div class="flex items-center space-x-2">
+        <div class="w-8 h-8 rounded-full border" :class="isWhiteBackgroundPage ? 'bg-black' : 'bg-white'"></div>
+        <li class="nav-item relative group py-1 px-6">
+          <RouterLink
+            :to="{ name: 'home' }"
+            :class="[
+              isWhiteBackgroundPage ? 'text-black hover:text-green-600' : 'text-white hover:text-green-500',
+              'font-semibold group-hover:underline'
+            ]"
+          >
+            TEMU WISATA
+          </RouterLink>
+        </li>
+      </div>
+=======
   <div v-if="!hideNavbar">
+>>>>>>> f69ae3a6fb26a9821f66d3d43182db9f76ac0cf0
 
     <!-- Navbar -->
     <nav

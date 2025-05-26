@@ -25,7 +25,7 @@ import pius from '@/assets/images/profile/pius.jpg'
 const teamMembers = [
   {
     name: 'Komang Emo',
-    role: 'Frontend of TESA',
+    role: 'Backend of TESA',
     image: emo,
     instagram: '#',
     github: '#',
@@ -41,7 +41,7 @@ const teamMembers = [
   },
   {
     name: 'Novanka',
-    role: 'Backend of TESA',
+    role: 'Frontend of TESA',
     image: nova,
     instagram: '#',
     github: '#',
