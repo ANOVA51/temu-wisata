@@ -13,7 +13,7 @@ const route = useRoute()
 
 // Tentukan apakah halaman berlatar putih (misal: destination)
 const isWhiteBackgroundPage = computed(() => {
-  return route.name === 'destination' || route.name === 'about'
+  return route.name === 'destination' || route.name === 'about' || route.name === 'login' || route.name === 'signup'
 })
 </script>
 
@@ -29,7 +29,17 @@ const isWhiteBackgroundPage = computed(() => {
       <!-- Logo -->
       <div class="flex items-center space-x-2">
         <div class="w-8 h-8 rounded-full border" :class="isWhiteBackgroundPage ? 'bg-black' : 'bg-white'"></div>
-        <span :class="['font-bold', isWhiteBackgroundPage ? 'text-black' : 'text-white']">TEMU WISATA</span>
+        <li class="nav-item relative group py-1 px-6">
+          <RouterLink
+            :to="{ name: 'home' }"
+            :class="[
+              isWhiteBackgroundPage ? 'text-black hover:text-green-600' : 'text-white hover:text-green-500',
+              'font-semibold group-hover:underline'
+            ]"
+          >
+            TEMU WISATA
+          </RouterLink>
+        </li>
       </div>
 
       <!-- Desktop Nav -->
