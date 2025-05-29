@@ -86,7 +86,7 @@ const handleSignup = async () => {
         } else {
             alert("Terjadi kesalahan saat signup. Silakan coba lagi!");
         }
-    } catch (error) {
+    } catch  {
         alert("Gagal signup. Silakan cek kembali data yang dimasukkan!");
     }
 };
