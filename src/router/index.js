@@ -31,26 +31,15 @@ const router = createRouter({
       name: 'about',
       component: () => import('../views/AboutView.vue'),
     },
-<<<<<<< HEAD
     {
-      // path: '/admin',
-      // name: 'admin',
-      // // route level code-splitting
-      // // this generates a separate chunk (About.[hash].js) for this route
-      // // which is lazy-loaded when the route is visited.
-      // component: () => import('../views/AdminDashboardView.vue'),
-=======
-
-    {
-      path:'/login',
-      name:'login',
-      component: () => import('@/views/LoginView.vue')
+      path: '/login',
+      name: 'login',
+      component: () => import('@/views/LoginView.vue'),
     },
     {
-      path:'/signup',
-      name:'signup',
-      component: () => import('@/views/SignupView.vue')
->>>>>>> main
+      path: '/signup',
+      name: 'signup',
+      component: () => import('@/views/SignupView.vue'),
     },
   ],
 })

@@ -3,31 +3,26 @@ import '@/assets/main.css'
 import { computed, ref } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 
-
-
 const isSidebarOpen = ref(false)
 const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value
 }
 
-// Ambil route aktif
 const route = useRoute()
 const hideNavbar = computed(() => ['login', 'signup'].includes(route.name as string))
 
-// Tentukan apakah halaman berlatar putih (misal: destination)
-const isWhiteBackgroundPage = computed(() => {
-  return route.name === 'destination' || route.name === 'about'
-})
+const isWhiteBackgroundPage = computed(() =>
+  ['destination', 'about', 'login', 'signup'].includes(route.name as string)
+)
 </script>
 
 <template>
   <div v-if="!hideNavbar">
-
     <!-- Navbar -->
     <nav
       :class="[
         'py-4 absolute w-full z-50 transition-all duration-300',
-        isWhiteBackgroundPage ? 'bg-white' : 'bg-transparent',
+        isWhiteBackgroundPage ? 'bg-white' : 'bg-transparent'
       ]"
     >
       <div class="container mx-auto flex items-center justify-between px-4 md:px-20">
@@ -37,26 +32,26 @@ const isWhiteBackgroundPage = computed(() => {
             class="w-8 h-8 rounded-full border"
             :class="isWhiteBackgroundPage ? 'bg-black' : 'bg-white'"
           ></div>
-          <span :class="['font-bold', isWhiteBackgroundPage ? 'text-black' : 'text-white']"
-            >TEMU WISATA</span
+          <span
+            :class="['font-bold', isWhiteBackgroundPage ? 'text-black' : 'text-white']"
           >
+            TEMU WISATA
+          </span>
         </div>
 
         <!-- Desktop Nav -->
         <ul
           :class="[
             'hidden md:flex absolute left-1/2 transform -translate-x-1/2 space-x-20 font-bold',
-            isWhiteBackgroundPage ? 'text-black' : 'text-white',
+            isWhiteBackgroundPage ? 'text-black' : 'text-white'
           ]"
         >
           <li class="nav-item relative group py-1 px-6">
             <RouterLink
               :to="{ name: 'home' }"
               :class="[
-                isWhiteBackgroundPage
-                  ? 'text-black hover:text-green-600'
-                  : 'text-white hover:text-green-500',
-                'font-semibold group-hover:underline',
+                isWhiteBackgroundPage ? 'text-black hover:text-green-600' : 'text-white hover:text-green-500',
+                'font-semibold group-hover:underline'
               ]"
             >
               HOME
@@ -66,10 +61,8 @@ const isWhiteBackgroundPage = computed(() => {
             <RouterLink
               :to="{ name: 'destination' }"
               :class="[
-                isWhiteBackgroundPage
-                  ? 'text-black hover:text-green-600'
-                  : 'text-white hover:text-green-500',
-                'group-hover:underline',
+                isWhiteBackgroundPage ? 'text-black hover:text-green-600' : 'text-white hover:text-green-500',
+                'group-hover:underline'
               ]"
             >
               DESTINATION
@@ -79,10 +72,8 @@ const isWhiteBackgroundPage = computed(() => {
             <RouterLink
               :to="{ name: 'about' }"
               :class="[
-                isWhiteBackgroundPage
-                  ? 'text-black hover:text-green-600'
-                  : 'text-white hover:text-green-500',
-                'group-hover:underline',
+                isWhiteBackgroundPage ? 'text-black hover:text-green-600' : 'text-white hover:text-green-500',
+                'group-hover:underline'
               ]"
             >
               ABOUT
@@ -116,35 +107,24 @@ const isWhiteBackgroundPage = computed(() => {
           </RouterLink>
         </div>
 
-        <!-- Hamburger Button (Mobile) -->
+        <!-- Hamburger (Mobile) -->
         <button @click="toggleSidebar" class="md:hidden relative w-8 h-8 z-50">
-          <!-- Top Line -->
           <span
             :class="[
               'absolute left-0 w-8 h-0.5 transition-all duration-300 ease-in-out',
-              isSidebarOpen
-                ? 'rotate-45 top-3.5 bg-black'
-                : ['top-2', isWhiteBackgroundPage ? 'bg-black' : 'bg-white'],
+              isSidebarOpen ? 'rotate-45 top-3.5 bg-black' : ['top-2', isWhiteBackgroundPage ? 'bg-black' : 'bg-white']
             ]"
           ></span>
-
-          <!-- Middle Line -->
           <span
             :class="[
               'absolute left-0 w-8 h-0.5 transition-all duration-300 ease-in-out',
-              isSidebarOpen
-                ? 'opacity-0 -translate-x-6'
-                : ['top-4', isWhiteBackgroundPage ? 'bg-black' : 'bg-white'],
+              isSidebarOpen ? 'opacity-0 -translate-x-6' : ['top-4', isWhiteBackgroundPage ? 'bg-black' : 'bg-white']
             ]"
           ></span>
-
-          <!-- Bottom Line -->
           <span
             :class="[
               'absolute left-0 w-8 h-0.5 transition-all duration-300 ease-in-out',
-              isSidebarOpen
-                ? '-rotate-45 top-3.5 bg-black'
-                : ['top-6', isWhiteBackgroundPage ? 'bg-black' : 'bg-white'],
+              isSidebarOpen ? '-rotate-45 top-3.5 bg-black' : ['top-6', isWhiteBackgroundPage ? 'bg-black' : 'bg-white']
             ]"
           ></span>
         </button>
@@ -159,72 +139,55 @@ const isWhiteBackgroundPage = computed(() => {
     ></div>
 
     <!-- Sidebar -->
-<aside
-  class="fixed top-0 right-0 h-full w-64 bg-white text-black p-6 z-40 transform transition-transform duration-300 shadow-lg"
-  :class="{ 'translate-x-0': isSidebarOpen, 'translate-x-full': !isSidebarOpen }"
->
-  <!-- Navigasi -->
-  <ul class="space-y-4 font-semibold mt-12">
-    <li>
-      <RouterLink
-        @click="toggleSidebar"
-        :to="{ name: 'home' }"
-        class="block text-center py-2 hover:underline transition"
-      >
-        HOME
-      </RouterLink>
-    </li>
-    <li>
-      <RouterLink
-        @click="toggleSidebar"
-        :to="{ name: 'destination' }"
-        class="[
-                isWhiteBackgroundPage
-                  ? 'text-black hover:text-green-600'
-                  : 'text-white hover:text-green-500',
-                'group-hover:underline',
-              ]",
-      >
-        DESTINATION
-      </RouterLink>
-    </li>
-    <li>
-      <RouterLink
-        @click="toggleSidebar"
-        :to="{ name: 'about' }"
-        class="block text-center py-2 hover:underline transition"
-      >
-        ABOUT
-      </RouterLink>
-    </li>
-  </ul>
-
-  <!-- Tombol Login/Signup -->
-  <div class="mt-10 flex flex-col space-y-4">
-    <RouterLink
-      :to="{ name: 'login' }"
-      class="w-full text-center px-4 py-2 rounded-lg font-semibold transition"
-      :class="
-        isWhiteBackgroundPage
-          ? 'bg-black text-white hover:bg-gray-800'
-          : 'bg-black text-white hover:bg-gray-700'
-      "
+    <aside
+      class="fixed top-0 right-0 h-full w-64 bg-white text-black p-6 z-50 transform transition-transform duration-300 shadow-lg"
+      :class="{ 'translate-x-0': isSidebarOpen, 'translate-x-full': !isSidebarOpen }"
     >
-      Login
-    </RouterLink>
-    <RouterLink
-      :to="{ name: 'signup' }"
-      class="w-full text-center px-4 py-2 rounded-lg font-semibold transition"
-      :class="
-        isWhiteBackgroundPage
-          ? 'bg-gray-200 text-black hover:bg-gray-300'
-          : 'bg-gray-100 text-black hover:bg-gray-200'
-      "
-    >
-      Signup
-    </RouterLink>
-  </div>
-</aside>
+      <ul class="space-y-4 font-semibold mt-12">
+        <li>
+          <RouterLink
+            @click="toggleSidebar"
+            :to="{ name: 'home' }"
+            class="block text-center py-2 hover:underline transition"
+          >
+            HOME
+          </RouterLink>
+        </li>
+        <li>
+          <RouterLink
+            @click="toggleSidebar"
+            :to="{ name: 'destination' }"
+            class="block text-center py-2 hover:underline transition"
+          >
+            DESTINATION
+          </RouterLink>
+        </li>
+        <li>
+          <RouterLink
+            @click="toggleSidebar"
+            :to="{ name: 'about' }"
+            class="block text-center py-2 hover:underline transition"
+          >
+            ABOUT
+          </RouterLink>
+        </li>
+      </ul>
 
+      <!-- Auth Buttons (Mobile) -->
+      <div class="mt-10 flex flex-col space-y-4">
+        <RouterLink
+          :to="{ name: 'login' }"
+          class="w-full text-center px-4 py-2 rounded-lg font-semibold transition bg-black text-white hover:bg-gray-800"
+        >
+          Login
+        </RouterLink>
+        <RouterLink
+          :to="{ name: 'signup' }"
+          class="w-full text-center px-4 py-2 rounded-lg font-semibold transition bg-gray-200 text-black hover:bg-gray-300"
+        >
+          Signup
+        </RouterLink>
+      </div>
+    </aside>
   </div>
 </template>

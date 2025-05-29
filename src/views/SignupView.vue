@@ -1,64 +1,63 @@
 <template>
   <div class="w-screen h-screen flex overflow-hidden">
-    <!-- Left side: Gambar -->
-    <div class="hidden md:flex w-1/2 items-center justify-center">
-      <img src="@/assets/images/lognsign/background.png" class="object-cover w-full h-full" />
-
-      <div class="absolute z-10">
-        <h2 class="relative z-20 text-black text-6xl font-bold text-start px-6">Signup <br> 
-            <span class="text-black text-5xl font-semibold">For Free</span></h2>
+    <!-- Left side: Gambar dan Teks -->
+    <div class="hidden md:flex w-1/2 items-center justify-center relative">
+      <img :src="SignupBG" class="object-cover w-full h-full" alt="Signup Background" />
+      <div class="absolute z-10 px-10">
+        <h2 class="text-black text-6xl font-bold text-start">
+          Signup <br>
+          <span class="text-black text-5xl font-semibold">Join Us!</span>
+        </h2>
       </div>
     </div>
 
-    <!-- Jika ingin menambahkan teks atau logo, bisa ditaruh di sini -->
-
-    <!-- Right side: Form Login -->
-    <div class="flex items-center justify-center bg-white p-8">
-      <div class="h-full">
-        <h2 class="text-5xl font-bold mb-2 text-gray-800">Signup</h2>
-        <p class="text-md text-gray-500 mb-6">Welcome back! Signup your account for free</p>
-        <form @submit.prevent="handleLogin" class="space-y-4">
-          <div class="pb-10">
-            <label class="block text-lg font-medium text-gray-700 mb-1">Email</label>
+    <!-- Right side: Form Signup -->
+    <div class="flex w-full md:w-1/2 items-center justify-center bg-white p-8">
+      <div class="w-full max-w-sm">
+        <h2 class="text-3xl font-bold mb-2 text-gray-800">Signup</h2>
+        <p class="text-sm text-gray-600 mb-6">Welcome! Register your account for free.</p>
+        <form @submit.prevent="handleSignup" class="space-y-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
             <input
               v-model="email"
               type="email"
               required
-              class="w-140 h-12 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+              placeholder="you@example.com"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
-          <div class="pb-10">
-            <label class="block text-lg font-medium text-gray-700 mb-1">User Name</label>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
             <input
-              v-model="name"
-              type="name"
+              v-model="username"
+              type="text"
               required
-              class="w-140 h-12 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+              placeholder="yourusername"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
-          <div class="pb-10">
-            <label class="block text-lg font-medium text-gray-700 mb-1">Password</label>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
             <input
               v-model="password"
               type="password"
               required
-              class="w-140 h-12 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+              placeholder="••••••••"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
             />
-          </div>
-          
-          <div class="flex items-center justify-between text-sm text-gray-600">
-
           </div>
           <button
             type="submit"
-            class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-800 transition "
+            class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition-colors font-medium"
           >
-            Login
+            Register Now
           </button>
         </form>
-        <p class="text-center text-sm text-gray-600 mt-4">
-          have an account?
-          <RouterLink to="/login" class="text-green-500 hover:underline">login</RouterLink>
+
+        <p class="text-center text-sm text-gray-600 mt-6">
+          Already have an account?
+          <RouterLink to="/login" class="text-green-600 hover:underline font-medium">Login</RouterLink>
         </p>
       </div>
     </div>
@@ -67,12 +66,13 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, RouterLink } from 'vue-router'
+import SignupBG from '@/assets/images/signupBG.jpg'
 import { createUser } from '@/services/api'
 
 const router = useRouter()
-const name = ref('')
 const email = ref('')
+const username = ref('')
 const password = ref('')
 
 const handleSignup = async () => {
