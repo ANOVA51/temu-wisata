@@ -28,15 +28,26 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { createUser } from '@/services/api'
 
 const router = useRouter()
 const name = ref('')
 const email = ref('')
 const password = ref('')
 
-const handleSignup = () => {
-  // Implementasi signup, contoh redirect
-  console.log('Signup with:', name.value, email.value, password.value)
-  router.push({ name: 'home' })
-}
+const handleSignup = async () => {
+    const userData = { username: name.value, email: email.value, password_hash: password.value };
+
+    try {
+        const response = await createUser(userData);
+
+        if (response && response.data) {
+            router.push({ name: "home" });  // Pindah ke halaman Home jika berhasil
+        } else {
+            alert("Terjadi kesalahan saat signup. Silakan coba lagi!");
+        }
+    } catch (error) {
+        alert("Gagal signup. Silakan cek kembali data yang dimasukkan!");
+    }
+};
 </script>
