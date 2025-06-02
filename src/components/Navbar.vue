@@ -12,9 +12,9 @@ const toggleSidebar = () => {
 const route = useRoute()
 
 // Tentukan apakah halaman berlatar putih (misal: destination)
-const isWhiteBackgroundPage = computed(() => {
-  return route.name === 'destination' || route.name === 'about'
-})
+const isWhiteBackgroundPage = computed(() =>
+  ['destination'].includes(route.name as string)
+)
 </script>
 
 <template>
