@@ -12,7 +12,7 @@ const route = useRoute()
 const hideNavbar = computed(() => ['login', 'signup'].includes(route.name as string))
 
 const isWhiteBackgroundPage = computed(() =>
-  ['destination', 'about', 'login', 'signup'].includes(route.name as string)
+  ['destination','login', 'signup'].includes(route.name as string)
 )
 </script>
 
