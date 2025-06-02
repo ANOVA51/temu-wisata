@@ -2,6 +2,7 @@
 import Search from '@/assets/icon/Search.vue'
 import FooterSection from '@/components/FooterSection.vue'
 import Navbar from '@/components/Navbar.vue'
+import plussicon from '@/assets/icon/plussbutton.png'
 
 import { computed, onMounted, ref } from 'vue'
 
@@ -214,6 +215,17 @@ const filteredDestinasi = computed(() => {
       <div class="text-center mt-6">
         <button @click="showAll = !showAll" class="text-green-600 underline font-semibold">
           {{ showAll ? 'Show Less' : 'Show More' }}
+        </button>
+      </div>
+
+      <!--button tambah postingan-->
+      <div>
+        <button
+        @click="openAddPostModal"
+        class="fixed bottom-8 right-8 z-50 p-4"
+        aria-label="Add Post"
+        >
+        <img :src="plussicon" alt="Tambah" class="w-15 h-15 hover hover:shadow-xl rounded-lg" />
         </button>
       </div>
     </section>
