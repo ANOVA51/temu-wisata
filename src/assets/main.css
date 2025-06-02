@@ -9,7 +9,7 @@
   transform-origin: center;
   width: 80%;
   height: 2px;
-  background-color: #00d853; /* Tailwind green-500 */
+  background-color: #fffefe; /* Tailwind green-500 */
   transition: transform 0.3s ease;
 }
 .nav-item:hover::after {

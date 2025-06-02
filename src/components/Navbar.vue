@@ -50,7 +50,7 @@ const isWhiteBackgroundPage = computed(() =>
             <RouterLink
               :to="{ name: 'home' }"
               :class="[
-                isWhiteBackgroundPage ? 'text-black hover:text-green-600' : 'text-white hover:text-green-500',
+                isWhiteBackgroundPage ? 'text-black' : 'text-white',
                 
               ]"
             >
@@ -61,7 +61,7 @@ const isWhiteBackgroundPage = computed(() =>
             <RouterLink
               :to="{ name: 'destination' }"
               :class="[
-                isWhiteBackgroundPage ? 'text-black hover:text-green-600' : 'text-white hover:text-green-500',
+                isWhiteBackgroundPage ? 'text-black' : 'text-white',
                 
               ]"
             >
@@ -72,7 +72,7 @@ const isWhiteBackgroundPage = computed(() =>
             <RouterLink
               :to="{ name: 'about' }"
               :class="[
-                isWhiteBackgroundPage ? 'text-black hover:text-green-600' : 'text-white hover:text-green-500',
+                isWhiteBackgroundPage ? 'text-black' : 'text-white',
                 
               ]"
             >
