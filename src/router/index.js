@@ -42,6 +42,12 @@ const router = createRouter({
       name: 'signup',
       component: () => import('@/views/SignupView.vue'),
     },
+
+    {
+      path: '/forminput',
+      name: 'forminput',
+      component: () => import('@/views/FormInputWisata.vue'),
+    }
   ],
 })
 
