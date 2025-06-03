@@ -74,15 +74,31 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import loginBG from '@/assets/images/loginBG.jpg'
+import axios from 'axios'
 
 const router = useRouter()
 const username = ref('')
 const password = ref('')
 const rememberMe = ref(false)
 
-const handleLogin = () => {
-  console.log('Login with:', username.value, password.value, 'Remember:', rememberMe.value)
-  // Simulasi redirect ke home
-  router.push({ name: 'home' })
+const handleLogin = async () => {
+  try {
+    const response = await axios.post('http://localhost:8000/api/token/', {
+      username: username.value,
+      password: password.value,
+    })
+    const data = response.data
+    // Simpan token JWT ke localStorage atau sessionStorage
+    if (rememberMe.value) {
+      localStorage.setItem('access', data.access)
+      localStorage.setItem('refresh', data.refresh)
+    } else {
+      sessionStorage.setItem('access', data.access)
+      sessionStorage.setItem('refresh', data.refresh)
+    }
+    router.push({ name: 'home' })
+  } catch  {
+    alert('Login gagal! Username atau password salah.')
+  }
 }
 </script>

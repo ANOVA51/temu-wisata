@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import '@/assets/main.css'
 import { computed, ref } from 'vue'
-import { RouterLink, useRoute } from 'vue-router'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 
 const isSidebarOpen = ref(false)
 const toggleSidebar = () => {
@@ -14,6 +14,19 @@ const hideNavbar = computed(() => ['login', 'signup'].includes(route.name as str
 const isWhiteBackgroundPage = computed(() =>
   ['destination'].includes(route.name as string)
 )
+
+const router = useRouter()
+const isLoggedIn = computed(() =>
+  !!localStorage.getItem('access') || !!sessionStorage.getItem('access')
+)
+
+const handleLogout = () => {
+  localStorage.removeItem('access')
+  localStorage.removeItem('refresh')
+  sessionStorage.removeItem('access')
+  sessionStorage.removeItem('refresh')
+  router.push({ name: 'login' })
+}
 </script>
 
 <template>
@@ -83,28 +96,38 @@ const isWhiteBackgroundPage = computed(() =>
 
         <!-- Auth Buttons (Desktop) -->
         <div class="hidden md:flex space-x-4">
-          <RouterLink
-            :to="{ name: 'login' }"
-            class="px-4 py-2 rounded-lg font-semibold"
-            :class="
-              isWhiteBackgroundPage
-                ? 'text-black border border-black hover:bg-black hover:text-white'
-                : 'text-white border border-white hover:bg-white hover:text-black'
-            "
-          >
-            Login
-          </RouterLink>
-          <RouterLink
-            :to="{ name: 'signup' }"
-            class="px-4 py-2 rounded-lg font-semibold"
-            :class="
-              isWhiteBackgroundPage
-                ? 'text-black border border-black hover:bg-black hover:text-white'
-                : 'text-white border border-white hover:bg-white hover:text-black'
-            "
-          >
-            Signup
-          </RouterLink>
+          <template v-if="isLoggedIn">
+            <button
+              @click="handleLogout"
+              class="px-4 py-2 rounded-lg font-semibold text-white bg-red-600 hover:bg-red-700"
+            >
+              Logout
+            </button>
+          </template>
+          <template v-else>
+            <RouterLink
+              :to="{ name: 'login' }"
+              class="px-4 py-2 rounded-lg font-semibold"
+              :class="
+                isWhiteBackgroundPage
+                  ? 'text-black border border-black hover:bg-black hover:text-white'
+                  : 'text-white border border-white hover:bg-white hover:text-black'
+              "
+            >
+              Login
+            </RouterLink>
+            <RouterLink
+              :to="{ name: 'signup' }"
+              class="px-4 py-2 rounded-lg font-semibold"
+              :class="
+                isWhiteBackgroundPage
+                  ? 'bg-black text-white hover:bg-gray-800'
+                  : 'bg-white text-black hover:bg-gray-200'
+              "
+            >
+              Signup
+            </RouterLink>
+          </template>
         </div>
 
         <!-- Hamburger (Mobile) -->
@@ -175,18 +198,30 @@ const isWhiteBackgroundPage = computed(() =>
 
       <!-- Auth Buttons (Mobile) -->
       <div class="mt-10 flex flex-col space-y-4">
-        <RouterLink
-          :to="{ name: 'login' }"
-          class="w-full text-center px-4 py-2 rounded-lg font-semibold transition bg-black text-white hover:bg-gray-800"
-        >
-          Login
-        </RouterLink>
-        <RouterLink
-          :to="{ name: 'signup' }"
-          class="w-full text-center px-4 py-2 rounded-lg font-semibold transition bg-gray-200 text-black hover:bg-gray-300"
-        >
-          Signup
-        </RouterLink>
+        <template v-if="isLoggedIn">
+          <button
+            @click="() => { handleLogout(); toggleSidebar(); }"
+            class="w-full text-center px-4 py-2 rounded-lg font-semibold transition bg-red-600 text-white hover:bg-red-700"
+          >
+            Logout
+          </button>
+        </template>
+        <template v-else>
+          <RouterLink
+            :to="{ name: 'login' }"
+            class="w-full text-center px-4 py-2 rounded-lg font-semibold transition bg-black text-white hover:bg-gray-800"
+            @click="toggleSidebar"
+          >
+            Login
+          </RouterLink>
+          <RouterLink
+            :to="{ name: 'signup' }"
+            class="w-full text-center px-4 py-2 rounded-lg font-semibold transition bg-gray-200 text-black hover:bg-gray-300"
+            @click="toggleSidebar"
+          >
+            Signup
+          </RouterLink>
+        </template>
       </div>
     </aside>
   </div>

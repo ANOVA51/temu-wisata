@@ -68,17 +68,26 @@
 import { ref } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'
 import SignupBG from '@/assets/images/signupBG.jpg'
+import { createUser } from '@/services/api'
 
 const router = useRouter()
 const email = ref('')
 const username = ref('')
 const password = ref('')
 
-const handleSignup = () => {
-  // Proses registrasi di sini (contoh log saja)
-  console.log('Signup with:', email.value, username.value, password.value)
+const handleSignup = async () => {
+    const userData = { username: name.value, email: email.value, password_hash: password.value };
 
-  // Redirect ke home setelah signup
-  router.push({ name: 'home' })
-}
+    try {
+        const response = await createUser(userData);
+
+        if (response && response.data) {
+            router.push({ name: "home" });  // Pindah ke halaman Home jika berhasil
+        } else {
+            alert("Terjadi kesalahan saat signup. Silakan coba lagi!");
+        }
+    } catch  {
+        alert("Gagal signup. Silakan cek kembali data yang dimasukkan!");
+    }
+};
 </script>
