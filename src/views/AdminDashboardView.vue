@@ -226,10 +226,20 @@ const viewReportDetail = (report) => {
   showReportModal.value = true
 }
 
+const showAdminReply = ref(false)
+const adminReply = ref('')
+
 const approveReport = () => {
+  showAdminReply.value = true
+}
+
+const submitAdminReply = () => {
   if (selectedReport.value) {
     selectedReport.value.status = 'approved'
+    // Simpan pesan admin jika perlu
     showReportModal.value = false
+    showAdminReply.value = false
+    adminReply.value = ''
   }
 }
 
@@ -627,7 +637,7 @@ const rejectReport = () => {
             <p class="text-sm text-gray-600 leading-relaxed">{{ selectedReport.description }}</p>
           </div>
 
-          <div class="flex space-x-3 pt-4">
+          <div v-if="!showAdminReply" class="flex space-x-3 pt-4">
             <button
               @click="approveReport"
               class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-medium"
@@ -641,6 +651,63 @@ const rejectReport = () => {
               Reject
             </button>
           </div>
+
+          <!-- Admin Reply Modal -->
+          <div v-if="showAdminReply" class="bg-gray-900 p-4 rounded-lg mt-4">
+            <div class="text-white font-semibold mb-2">
+              ini akan muncul saat tombol confirm di klik
+            </div>
+            <div class="bg-white p-4 rounded-lg">
+              <div class="font-bold mb-2">Admin Reply</div>
+              <textarea
+                v-model="adminReply"
+                placeholder="text"
+                rows="5"
+                class="w-full p-2 border rounded-lg mb-4"
+              ></textarea>
+              <div class="flex justify-end">
+                <button
+                  @click="submitAdminReply"
+                  class="bg-green-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-green-700"
+                >
+                  submit
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- End Admin Reply Modal -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for Admin Reply -->
+    <div
+      v-if="showAdminReply"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+    >
+      <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
+        <div class="mb-4">
+          <h3 class="text-lg font-bold text-gray-800">Approve Report</h3>
+          <p class="text-sm text-gray-600">Add a message to the user (optional):</p>
+        </div>
+        <textarea
+          v-model="adminReply"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 resize-none h-24"
+          placeholder="Type your message here..."
+        ></textarea>
+        <div class="flex justify-end space-x-2 mt-4">
+          <button
+            @click="submitAdminReply"
+            class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-medium"
+          >
+            Send & Approve
+          </button>
+          <button
+            @click="showAdminReply = false"
+            class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition-colors"
+          >
+            Cancel
+          </button>
         </div>
       </div>
     </div>

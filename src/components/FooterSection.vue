@@ -11,7 +11,12 @@ import { RouterLink } from 'vue-router'
       <!-- Logo & Tagline -->
       <div class="flex flex-col items-center sm:items-start">
         <div class="flex items-center gap-2">
-          <div class="w-12 h-12 sm:w-16 sm:h-16 border-4 border-black rounded-full"></div>
+          <img
+            src="@/assets/images/logotesa.png"
+            alt="Logo Tesa"
+            class="w-12 h-12 sm:w-16 sm:h-16 rounded-full object-cover"
+          />
+          <!-- <div class="w-12 h-12 sm:w-16 sm:h-16 border-4 border-black rounded-full"></div> -->
           <h1 class="text-2xl sm:text-4xl font-bold text-green-700 tracking-widest">TESA</h1>
         </div>
         <p
@@ -38,24 +43,16 @@ import { RouterLink } from 'vue-router'
         class="flex flex-col items-center sm:items-end gap-4 col-span-1 sm:col-span-2 md:col-span-1"
       >
         <nav class="flex flex-col space-y-1 text-center sm:text-right">
-          <RouterLink
-            :to="{ name: 'home' }"
-            class="hover:underline text-[10px] sm:text-sm"
+          <RouterLink :to="{ name: 'home' }" class="hover:underline text-[10px] sm:text-sm"
             >Home</RouterLink
           >
-          <RouterLink
-            :to="{ name: 'destination' }"
-            class="hover:underline text-[10px] sm:text-sm"
+          <RouterLink :to="{ name: 'destination' }" class="hover:underline text-[10px] sm:text-sm"
             >Destination</RouterLink
           >
-          <RouterLink
-            :to="{ name: 'about' }"
-            class="hover:underline text-[10px] sm:text-sm"
+          <RouterLink :to="{ name: 'about' }" class="hover:underline text-[10px] sm:text-sm"
             >About</RouterLink
           >
-          <RouterLink
-            :to="{ name: 'login' }"
-            class="hover:underline text-[10px] sm:text-sm"
+          <RouterLink :to="{ name: 'login' }" class="hover:underline text-[10px] sm:text-sm"
             >Register / Login</RouterLink
           >
         </nav>

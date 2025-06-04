@@ -30,10 +30,15 @@ const isWhiteBackgroundPage = computed(() => ['destination'].includes(String(rou
       <div class="container mx-auto flex items-center justify-between px-4 md:px-20">
         <!-- Logo -->
         <div class="flex items-center space-x-2">
-          <div
+          <!-- <div
             class="w-8 h-8 rounded-full border"
             :class="isWhiteBackgroundPage ? 'bg-black' : 'bg-white'"
-          ></div>
+          ></div> -->
+          <img
+            src="@/assets/images/logotesa.png"
+            alt="Logo Tesa"
+            class="w-8 h-8 rounded-full border object-cover"
+          />
           <span :class="['font-bold', isWhiteBackgroundPage ? 'text-black' : 'text-white']">
             TEMU WISATA
           </span>
