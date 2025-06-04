@@ -2,6 +2,9 @@
 import '@/assets/main.css'
 import { computed, ref } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
+import { defineOptions } from 'vue'
+
+defineOptions({ name: 'NavbarSection' })
 
 const isSidebarOpen = ref(false)
 const toggleSidebar = () => {
@@ -9,17 +12,10 @@ const toggleSidebar = () => {
 }
 
 const route = useRoute()
-const hideNavbar = computed(() => ['login', 'signup'].includes(route.name as string))
+const hideNavbar = computed(() => ['login', 'signup'].includes(String(route.name)))
 
-<<<<<<< HEAD
 // Tentukan apakah halaman berlatar putih (misal: destination)
-const isWhiteBackgroundPage = computed(() =>
-  ['destination'].includes(route.name as string)
-=======
-const isWhiteBackgroundPage = computed(() =>
-  ['destination','login', 'signup'].includes(route.name as string)
->>>>>>> main
-)
+const isWhiteBackgroundPage = computed(() => ['destination'].includes(String(route.name)))
 </script>
 
 <template>
@@ -28,7 +24,7 @@ const isWhiteBackgroundPage = computed(() =>
     <nav
       :class="[
         'py-4 absolute w-full z-50 transition-all duration-300',
-        isWhiteBackgroundPage ? 'bg-white' : 'bg-transparent'
+        isWhiteBackgroundPage ? 'bg-white' : 'bg-transparent',
       ]"
     >
       <div class="container mx-auto flex items-center justify-between px-4 md:px-20">
@@ -38,9 +34,7 @@ const isWhiteBackgroundPage = computed(() =>
             class="w-8 h-8 rounded-full border"
             :class="isWhiteBackgroundPage ? 'bg-black' : 'bg-white'"
           ></div>
-          <span
-            :class="['font-bold', isWhiteBackgroundPage ? 'text-black' : 'text-white']"
-          >
+          <span :class="['font-bold', isWhiteBackgroundPage ? 'text-black' : 'text-white']">
             TEMU WISATA
           </span>
         </div>
@@ -49,15 +43,17 @@ const isWhiteBackgroundPage = computed(() =>
         <ul
           :class="[
             'hidden md:flex absolute left-1/2 transform -translate-x-1/2 space-x-20 font-bold',
-            isWhiteBackgroundPage ? 'text-black' : 'text-white'
+            isWhiteBackgroundPage ? 'text-black' : 'text-white',
           ]"
         >
           <li class="nav-item relative group py-1 px-6">
             <RouterLink
               :to="{ name: 'home' }"
               :class="[
-                isWhiteBackgroundPage ? 'text-black hover:text-green-600' : 'text-white hover:text-green-500',
-                'font-semibold group-hover:underline'
+                isWhiteBackgroundPage
+                  ? 'text-black hover:text-green-600'
+                  : 'text-white hover:text-green-500',
+                'font-semibold group-hover:underline',
               ]"
             >
               HOME
@@ -67,8 +63,10 @@ const isWhiteBackgroundPage = computed(() =>
             <RouterLink
               :to="{ name: 'destination' }"
               :class="[
-                isWhiteBackgroundPage ? 'text-black hover:text-green-600' : 'text-white hover:text-green-500',
-                'group-hover:underline'
+                isWhiteBackgroundPage
+                  ? 'text-black hover:text-green-600'
+                  : 'text-white hover:text-green-500',
+                'group-hover:underline',
               ]"
             >
               DESTINATION
@@ -78,8 +76,10 @@ const isWhiteBackgroundPage = computed(() =>
             <RouterLink
               :to="{ name: 'about' }"
               :class="[
-                isWhiteBackgroundPage ? 'text-black hover:text-green-600' : 'text-white hover:text-green-500',
-                'group-hover:underline'
+                isWhiteBackgroundPage
+                  ? 'text-black hover:text-green-600'
+                  : 'text-white hover:text-green-500',
+                'group-hover:underline',
               ]"
             >
               ABOUT
@@ -118,19 +118,25 @@ const isWhiteBackgroundPage = computed(() =>
           <span
             :class="[
               'absolute left-0 w-8 h-0.5 transition-all duration-300 ease-in-out',
-              isSidebarOpen ? 'rotate-45 top-3.5 bg-black' : ['top-2', isWhiteBackgroundPage ? 'bg-black' : 'bg-white']
+              isSidebarOpen
+                ? 'rotate-45 top-3.5 bg-black'
+                : ['top-2', isWhiteBackgroundPage ? 'bg-black' : 'bg-white'],
             ]"
           ></span>
           <span
             :class="[
               'absolute left-0 w-8 h-0.5 transition-all duration-300 ease-in-out',
-              isSidebarOpen ? 'opacity-0 -translate-x-6' : ['top-4', isWhiteBackgroundPage ? 'bg-black' : 'bg-white']
+              isSidebarOpen
+                ? 'opacity-0 -translate-x-6'
+                : ['top-4', isWhiteBackgroundPage ? 'bg-black' : 'bg-white'],
             ]"
           ></span>
           <span
             :class="[
               'absolute left-0 w-8 h-0.5 transition-all duration-300 ease-in-out',
-              isSidebarOpen ? '-rotate-45 top-3.5 bg-black' : ['top-6', isWhiteBackgroundPage ? 'bg-black' : 'bg-white']
+              isSidebarOpen
+                ? '-rotate-45 top-3.5 bg-black'
+                : ['top-6', isWhiteBackgroundPage ? 'bg-black' : 'bg-white'],
             ]"
           ></span>
         </button>
