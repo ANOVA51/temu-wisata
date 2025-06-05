@@ -9,6 +9,8 @@ import statue from '@/assets/images/statue1.jpg'
 import waterfall from '@/assets/images/waterfall1.jpg'
 
 import { computed, onMounted, ref, watch } from 'vue'
+import AOS from 'aos'
+import 'aos/dist/aos.css'
 
 const allDestinations = [
   'Ubud',
@@ -32,25 +34,6 @@ const allDestinations = [
 import savana from '@/assets/images/destinasi/savana.png'
 
 const destinasi = [
-  {
-    images: [savana, kecak, penari, statue, waterfall],
-    name: 'savana tianyar',
-    deskripsi:
-      'Savana Tianyar adalah salah satu hidden gem di Bali yang memiliki suasana eksotik ala Afrika.',
-    mapUrl:
-      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.785349860783!2d115.50615607456099!3d-8.224328682550388!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd1fa262ae6d15f%3A0x21d7bc44437e774c!2sSavana%20Tianyar!5e0!3m2!1sid!2sid!4v1748139614578!5m2!1sid!2sid',
-    tabel: {
-      Category: 'Nature',
-      Facilities: 'Restroom, Parking Area',
-      'Entrance Ticket': 'Rp 10.000 - Rp 250.000',
-      Contact: '+62 812 3456 7890',
-      Email: 'example@temuwisata.my.id',
-      Street: 'Jalan Gautama Ubud',
-      'Sub-district': 'Ubud',
-      Regency: 'Gianyar',
-      'Maps Link': 'https://maps.app.goo.gl/CjYk3kxVF1ziqkDAA',
-    },
-  },
   {
     images: [savana, kecak, penari, statue, waterfall],
     name: 'savana tianyar',
@@ -214,6 +197,7 @@ const currentIndex = ref(0)
 
 onMounted(() => {
   setTimeout(() => (loading.value = false), 1000)
+  AOS.init()
 })
 
 const toggleFavorite = (index) => {
@@ -346,6 +330,7 @@ watch(activeModal, (val) => {
       v-if="activeModal"
       class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
       @click.self="activeModal = null"
+      data-aos="zoom-in"
     >
       <div
         class="bg-white rounded-xl p-8 w-full max-w-5xl shadow-lg flex flex-col md:flex-row gap-10 items-center relative"
