@@ -1,5 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue'
+import Swal from 'sweetalert2'
 
 const active = ref('dashboard')
 const direction = ref('right')
@@ -205,20 +206,62 @@ const closeWisataModal = () => {
 }
 
 const approveWisata = (wisata) => {
-  pendingWisata.value = pendingWisata.value.filter((w) => w.id !== wisata.id)
-  wisataList.value.push({
-    ...wisata,
-    price: 'Rp 30,000',
-    rating: 4.0,
-    address: wisata.location,
-    description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-    mapsLink: 'https://maps.google.com/placeholder',
-    uploader: 'user_name',
+  Swal.fire({
+    icon: 'success',
+    html: `
+      <div style="font-size:2rem;font-weight:600;margin:1rem 0;">Approved!</div>
+      <div style="font-size:1.2rem;color:#666;">Wisata berhasil di-approve</div>
+    `,
+    showConfirmButton: true,
+    confirmButtonText: 'OK',
+    customClass: {
+      popup: 'swal2-popup-custom',
+      confirmButton: 'swal2-confirm-custom',
+    },
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    didOpen: (popup) => {
+      if (Swal.isVisible() && typeof popup.draggable !== 'undefined') {
+        popup.draggable = true
+      }
+    },
+  }).then(() => {
+    pendingWisata.value = pendingWisata.value.filter((w) => w.id !== wisata.id)
+    wisataList.value.push({
+      ...wisata,
+      price: 'Rp 30,000',
+      rating: 4.0,
+      address: wisata.location,
+      description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
+      mapsLink: 'https://maps.google.com/placeholder',
+      uploader: 'user_name',
+    })
   })
 }
 
 const rejectWisata = (wisata) => {
-  pendingWisata.value = pendingWisata.value.filter((w) => w.id !== wisata.id)
+  Swal.fire({
+    icon: 'error',
+    html: `
+      <div style="font-size:2rem;font-weight:600;margin:1rem 0;">Rejected!</div>
+      <div style="font-size:1.2rem;color:#666;">Wisata telah ditolak</div>
+    `,
+    showConfirmButton: true,
+    confirmButtonText: 'OK',
+    customClass: {
+      popup: 'swal2-popup-custom',
+      confirmButton: 'swal2-confirm-custom',
+    },
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    didOpen: (popup) => {
+      if (Swal.isVisible() && typeof popup.draggable !== 'undefined') {
+        popup.draggable = true
+      }
+    },
+  }).then(() => {
+    pendingWisata.value = pendingWisata.value.filter((w) => w.id !== wisata.id)
+  })
 }
 
 const viewReportDetail = (report) => {
@@ -249,18 +292,90 @@ const rejectReport = () => {
     showReportModal.value = false
   }
 }
+
+// User Manage Actions
+const approveUser = (user) => {
+  Swal.fire({
+    icon: 'success',
+    html: `
+      <div style="font-size:2rem;font-weight:600;margin:1rem 0;">User Approved!</div>
+      <div style="font-size:1.2rem;color:#666;">User berhasil diaktifkan</div>
+    `,
+    showConfirmButton: true,
+    confirmButtonText: 'OK',
+    customClass: {
+      popup: 'swal2-popup-custom',
+      confirmButton: 'swal2-confirm-custom',
+    },
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    didOpen: (popup) => {
+      if (Swal.isVisible() && typeof popup.draggable !== 'undefined') {
+        popup.draggable = true
+      }
+    },
+  })
+  user.status = 'active'
+}
+
+const setUserPending = (user) => {
+  Swal.fire({
+    icon: 'warning',
+    html: `
+      <div style="font-size:2rem;font-weight:600;margin:1rem 0;">User Pending!</div>
+      <div style="font-size:1.2rem;color:#666;">Status user diubah menjadi pending</div>
+    `,
+    showConfirmButton: true,
+    confirmButtonText: 'OK',
+    customClass: {
+      popup: 'swal2-popup-custom',
+      confirmButton: 'swal2-confirm-custom',
+    },
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    didOpen: (popup) => {
+      if (Swal.isVisible() && typeof popup.draggable !== 'undefined') {
+        popup.draggable = true
+      }
+    },
+  })
+  user.status = 'pending'
+}
+
+const rejectUser = (user) => {
+  Swal.fire({
+    icon: 'error',
+    html: `
+      <div style="font-size:2rem;font-weight:600;margin:1rem 0;">User Rejected!</div>
+      <div style="font-size:1.2rem;color:#666;">User berhasil dinonaktifkan</div>
+    `,
+    showConfirmButton: true,
+    confirmButtonText: 'OK',
+    customClass: {
+      popup: 'swal2-popup-custom',
+      confirmButton: 'swal2-confirm-custom',
+    },
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    didOpen: (popup) => {
+      if (Swal.isVisible() && typeof popup.draggable !== 'undefined') {
+        popup.draggable = true
+      }
+    },
+  })
+  user.status = 'inactive'
+}
 </script>
 
 <template>
   <div class="flex h-screen bg-gray-100">
     <!-- Sidebar -->
-    <aside class="w-64 bg-green-600 text-white flex flex-col">
-      <div class="p-6 text-center border-b border-white/20">
-        <h1 class="text-3xl font-bold tracking-widest">TESA</h1>
-        <p class="text-xs mt-1">Temu Wisata Admin Dashboard</p>
+    <aside class="w-72 bg-green-600 text-white flex flex-col">
+      <div class="p-8 text-center border-b border-white/20">
+        <h1 class="text-5xl font-extrabold tracking-widest">TESA</h1>
+        <p class="text-sm mt-2 font-light">"Temu Wisata Admin Dashboard"</p>
       </div>
-      <nav class="flex-1 px-4 py-4 space-y-2">
-        <!-- Dashboard -->
+      <nav class="flex-1 px-6 py-6 space-y-4">
         <div
           @click="active = 'dashboard'"
           :class="[
@@ -270,11 +385,9 @@ const rejectReport = () => {
               : 'hover:bg-green-700 text-white',
           ]"
         >
-          <i class="mdi mdi-view-dashboard mr-3 text-lg"></i>
-          <span class="font-medium">Dashboard</span>
+          <i class="mdi mdi-view-dashboard mr-3 text-2xl"></i>
+          <span class="font-semibold text-lg">Dashboard</span>
         </div>
-
-        <!-- Wisata Manage -->
         <div
           @click="active = 'wisata-manage'"
           :class="[
@@ -284,11 +397,13 @@ const rejectReport = () => {
               : 'hover:bg-green-700 text-white',
           ]"
         >
-          <i class="mdi mdi-map-marker-multiple mr-3 text-lg"></i>
-          <span class="font-medium">Wisata Manage</span>
+          <i class="mdi mdi-map-marker-multiple mr-3 text-2xl"></i>
+          <span class="font-semibold text-lg">Wisata Manage</span>
+          <span
+            class="ml-auto bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded-full"
+            >{{ wisataList.length }}</span
+          >
         </div>
-
-        <!-- Confirm Wisata -->
         <div
           @click="active = 'confirm-wisata'"
           :class="[
@@ -298,11 +413,13 @@ const rejectReport = () => {
               : 'hover:bg-green-700 text-white',
           ]"
         >
-          <i class="mdi mdi-check-circle mr-3 text-lg"></i>
-          <span class="font-medium">Confirm Wisata</span>
+          <i class="mdi mdi-check-circle mr-3 text-2xl"></i>
+          <span class="font-semibold text-lg">Confirm Wisata</span>
+          <span
+            class="ml-auto bg-yellow-100 text-yellow-700 text-xs font-bold px-2 py-1 rounded-full"
+            >{{ pendingWisata.length }}</span
+          >
         </div>
-
-        <!-- Report Wisata -->
         <div
           @click="active = 'report-wisata'"
           :class="[
@@ -312,11 +429,12 @@ const rejectReport = () => {
               : 'hover:bg-green-700 text-white',
           ]"
         >
-          <i class="mdi mdi-file-document mr-3 text-lg"></i>
-          <span class="font-medium">Report Wisata</span>
+          <i class="mdi mdi-file-document mr-3 text-2xl"></i>
+          <span class="font-semibold text-lg">Report Wisata</span>
+          <span class="ml-auto bg-red-100 text-red-700 text-xs font-bold px-2 py-1 rounded-full">{{
+            reportData.length
+          }}</span>
         </div>
-
-        <!-- User Manage -->
         <div
           @click="active = 'user-manage'"
           :class="[
@@ -326,286 +444,276 @@ const rejectReport = () => {
               : 'hover:bg-green-700 text-white',
           ]"
         >
-          <i class="mdi mdi-account-group mr-3 text-lg"></i>
-          <span class="font-medium">User Manage</span>
+          <i class="mdi mdi-account-group mr-3 text-2xl"></i>
+          <span class="font-semibold text-lg">User Manage</span>
         </div>
       </nav>
     </aside>
 
-    <!-- Main Content with Slide Transition -->
-    <main class="flex-1 p-10 relative overflow-hidden">
-      <transition :name="`slide-${direction}`" mode="out-in">
-        <div :key="active">
-          <!-- Dashboard -->
-          <div v-if="active === 'dashboard'">
-            <h2 class="text-3xl font-bold text-green-700 mb-6">Dashboard</h2>
-            <div class="grid grid-cols-2 gap-6">
-              <!-- User Card -->
-              <div class="bg-white p-6 rounded-lg shadow-md">
-                <div class="flex items-center justify-between">
-                  <div>
-                    <p class="text-sm text-gray-600 mb-1">User</p>
-                    <p class="text-3xl font-bold text-green-700">1006</p>
-                  </div>
-                  <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <i class="mdi mdi-account text-2xl text-blue-600"></i>
-                  </div>
-                </div>
-              </div>
+    <!-- Main Content -->
+    <main class="flex-1 p-10 relative overflow-hidden bg-white rounded-tr-3xl rounded-br-3xl">
+      <div v-if="active === 'user-manage'">
+        <h2 class="text-6xl font-extrabold text-green-700 mb-2">User Manage</h2>
+        <div class="text-lg font-semibold text-green-700 mb-6">
+          {{ userData.length }} User Found
+        </div>
+        <div class="overflow-x-auto">
+          <table class="min-w-full rounded-lg">
+            <thead>
+              <tr class="bg-green-100">
+                <th class="py-3 px-6 text-left font-semibold">
+                  <i class="mdi mdi-account-circle mr-2"></i>user name
+                </th>
+                <th class="py-3 px-6 text-left font-semibold">Email</th>
+                <th class="py-3 px-6 text-left font-semibold">Status</th>
+                <th class="py-3 px-6 text-left font-semibold">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="user in userData" :key="user.email" class="border-b hover:bg-green-50">
+                <td class="py-3 px-6 flex items-center">
+                  <i class="mdi mdi-account-circle mr-2 text-xl"></i>
+                  {{ user.username }}
+                </td>
+                <td class="py-3 px-6">{{ user.email }}</td>
+                <td class="py-3 px-6">{{ user.status || 'User' }}</td>
+                <td class="py-3 px-6 flex items-center space-x-2">
+                  <button class="text-green-600 hover:text-green-800" @click="approveUser(user)">
+                    <i class="mdi mdi-check-circle-outline text-xl"></i>
+                  </button>
+                  <button
+                    class="text-yellow-600 hover:text-yellow-800"
+                    @click="setUserPending(user)"
+                  >
+                    <i class="mdi mdi-timer-sand text-xl"></i>
+                  </button>
+                  <button class="text-red-600 hover:text-red-800" @click="rejectUser(user)">
+                    <i class="mdi mdi-close-circle-outline text-xl"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-              <!-- Location Card -->
-              <div class="bg-white p-6 rounded-lg shadow-md">
-                <div class="flex items-center justify-between">
-                  <div>
-                    <p class="text-sm text-gray-600 mb-1">Location</p>
-                    <p class="text-3xl font-bold text-green-700">1006</p>
-                  </div>
-                  <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                    <i class="mdi mdi-map-marker text-2xl text-green-600"></i>
-                  </div>
-                </div>
+      <!-- Dashboard -->
+      <div v-else-if="active === 'dashboard'">
+        <h2 class="text-3xl font-bold text-green-700 mb-6">Dashboard</h2>
+        <div class="grid grid-cols-2 gap-6">
+          <!-- User Card -->
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-gray-600 mb-1">User</p>
+                <p class="text-3xl font-bold text-green-700">1006</p>
               </div>
-            </div>
-          </div>
-
-          <!-- Wisata Manage -->
-          <div v-else-if="active === 'wisata-manage'">
-            <h2 class="text-3xl font-bold text-green-700 mb-6">Wisata Manage</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div
-                v-for="wisata in wisataList"
-                :key="wisata.id"
-                class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
-              >
-                <div
-                  class="h-48 bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center"
-                >
-                  <i class="mdi mdi-image text-4xl text-white opacity-50"></i>
-                </div>
-                <div class="p-4">
-                  <h3 class="font-semibold text-gray-800 mb-2">{{ wisata.name }}</h3>
-                  <p class="text-sm text-gray-600 mb-3">{{ wisata.category }}</p>
-                  <div class="flex space-x-2">
-                    <button
-                      @click="viewWisataDetail(wisata)"
-                      class="px-3 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600 transition-colors"
-                    >
-                      View Detail
-                    </button>
-                    <button
-                      class="px-3 py-1 bg-gray-500 text-white text-xs rounded hover:bg-gray-600 transition-colors"
-                    >
-                      Edit
-                    </button>
-                  </div>
-                </div>
+              <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                <i class="mdi mdi-account text-2xl text-blue-600"></i>
               </div>
             </div>
           </div>
 
-          <!-- Detail Wisata (pop up modal) -->
-          <div
-            v-if="showWisataModal"
-            class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-          >
-            <div class="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 shadow-xl">
-              <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-green-700">Detail Wisata</h2>
-                <button @click="closeWisataModal" class="text-gray-400 hover:text-gray-600 p-1">
-                  <i class="mdi mdi-close text-xl"></i>
-                </button>
+          <!-- Location Card -->
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-gray-600 mb-1">Location</p>
+                <p class="text-3xl font-bold text-green-700">1006</p>
               </div>
-              <div class="bg-white rounded-lg p-0">
-                <div class="flex flex-col lg:flex-row gap-6">
-                  <div>
-                    <div
-                      class="h-64 w-full bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center mb-4"
-                    >
-                      <i class="mdi mdi-image text-4xl text-white opacity-50"></i>
-                    </div>
-                  </div>
-                  <div class="flex-1 space-y-4">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">{{ selectedWisata.name }}</h3>
-                    <div class="space-y-1 text-sm text-gray-600">
-                      <p>
-                        <span class="font-medium">Estimated entry:</span> {{ selectedWisata.price }}
-                      </p>
-                      <p>
-                        <span class="font-medium">Rating:</span> ⭐ {{ selectedWisata.rating }}/5
-                      </p>
-                      <p><span class="font-medium">Address:</span> {{ selectedWisata.address }}</p>
-                    </div>
-                    <div>
-                      <h4 class="font-semibold text-gray-800 mb-2">Description:</h4>
-                      <p class="text-sm text-gray-600 leading-relaxed">
-                        {{ selectedWisata.description }}
-                      </p>
-                    </div>
-                    <div>
-                      <h4 class="font-semibold text-gray-800 mb-2">Link Google Maps:</h4>
-                      <a
-                        :href="selectedWisata.mapsLink"
-                        target="_blank"
-                        class="text-blue-500 hover:text-blue-600 text-sm break-all"
-                      >
-                        {{ selectedWisata.mapsLink }}
-                      </a>
-                    </div>
-                    <div>
-                      <h4 class="font-semibold text-gray-800 mb-2">Uploaded by:</h4>
-                      <p class="text-sm text-gray-600">{{ selectedWisata.uploader }}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- End Detail Wisata Modal -->
-
-          <!-- Confirm Wisata -->
-          <div v-else-if="active === 'confirm-wisata'">
-            <h2 class="text-3xl font-bold text-green-700 mb-6">Confirm Wisata</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div
-                v-for="wisata in pendingWisata"
-                :key="wisata.id"
-                class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
-              >
-                <div
-                  class="h-48 bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center"
-                >
-                  <i class="mdi mdi-image text-4xl text-white opacity-50"></i>
-                </div>
-                <div class="p-4">
-                  <h3 class="font-semibold text-gray-800 mb-2">{{ wisata.name }}</h3>
-                  <p class="text-sm text-gray-600 mb-1">{{ wisata.category }}</p>
-                  <p class="text-xs text-gray-500 mb-3">{{ wisata.location }}</p>
-                  <div class="flex space-x-2">
-                    <button
-                      @click="approveWisata(wisata)"
-                      class="px-3 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600 transition-colors"
-                    >
-                      Approve
-                    </button>
-                    <button
-                      @click="rejectWisata(wisata)"
-                      class="px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600 transition-colors"
-                    >
-                      Reject
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Report Wisata -->
-          <div v-else-if="active === 'report-wisata'">
-            <h2 class="text-3xl font-bold text-green-700 mb-6">Wisata Report</h2>
-
-            <div class="bg-white rounded-lg shadow-md overflow-hidden">
-              <div class="overflow-x-auto">
-                <table class="min-w-full">
-                  <thead>
-                    <tr class="bg-gray-50 border-b border-gray-200">
-                      <th class="text-left py-4 px-6 font-semibold text-gray-700">Location</th>
-                      <th class="text-left py-4 px-6 font-semibold text-gray-700">Name</th>
-                      <th class="text-left py-4 px-6 font-semibold text-gray-700">Status</th>
-                      <th class="text-left py-4 px-6 font-semibold text-gray-700">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      v-for="report in reportData"
-                      :key="report.id"
-                      class="border-b border-gray-100 hover:bg-gray-50"
-                    >
-                      <td class="py-4 px-6 text-sm text-gray-800">{{ report.location }}</td>
-                      <td class="py-4 px-6 text-sm text-gray-800">{{ report.name }}</td>
-                      <td class="py-4 px-6">
-                        <span
-                          :class="[
-                            'px-3 py-1 rounded-full text-xs font-medium',
-                            report.status === 'approved'
-                              ? 'bg-green-100 text-green-800'
-                              : report.status === 'pending'
-                                ? 'bg-yellow-100 text-yellow-800'
-                                : 'bg-red-100 text-red-800',
-                          ]"
-                        >
-                          {{ report.status }}
-                        </span>
-                      </td>
-                      <td class="py-4 px-6">
-                        <button
-                          @click="viewReportDetail(report)"
-                          class="text-blue-500 hover:text-blue-600 text-sm font-medium"
-                        >
-                          View Detail
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-
-          <!-- User Manage -->
-          <div v-else-if="active === 'user-manage'">
-            <h2 class="text-3xl font-bold text-green-700 mb-6">User Manage</h2>
-
-            <div class="bg-white rounded-lg shadow-md overflow-hidden">
-              <div class="overflow-x-auto">
-                <table class="min-w-full">
-                  <thead>
-                    <tr class="bg-gray-50 border-b border-gray-200">
-                      <th class="text-left py-4 px-6 font-semibold text-gray-700">No</th>
-                      <th class="text-left py-4 px-6 font-semibold text-gray-700">Username</th>
-                      <th class="text-left py-4 px-6 font-semibold text-gray-700">Email</th>
-                      <th class="text-left py-4 px-6 font-semibold text-gray-700">Status</th>
-                      <th class="text-left py-4 px-6 font-semibold text-gray-700">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      v-for="(user, index) in userData"
-                      :key="user.id"
-                      class="border-b border-gray-100 hover:bg-gray-50"
-                    >
-                      <td class="py-4 px-6 text-sm text-gray-800">{{ index + 1 }}</td>
-                      <td class="py-4 px-6 text-sm text-gray-800">{{ user.username }}</td>
-                      <td class="py-4 px-6 text-sm text-gray-800">{{ user.email }}</td>
-                      <td class="py-4 px-6">
-                        <span
-                          :class="[
-                            'px-3 py-1 rounded-full text-xs font-medium',
-                            user.status === 'active'
-                              ? 'bg-green-100 text-green-800'
-                              : 'bg-red-100 text-red-800',
-                          ]"
-                        >
-                          {{ user.status }}
-                        </span>
-                      </td>
-                      <td class="py-4 px-6">
-                        <div class="flex space-x-3">
-                          <button class="text-blue-500 hover:text-blue-600 text-sm font-medium">
-                            Edit
-                          </button>
-                          <button class="text-red-500 hover:text-red-600 text-sm font-medium">
-                            Delete
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+              <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                <i class="mdi mdi-map-marker text-2xl text-green-600"></i>
               </div>
             </div>
           </div>
         </div>
-      </transition>
+      </div>
+
+      <!-- Wisata Manage -->
+      <div v-else-if="active === 'wisata-manage'">
+        <h2 class="text-3xl font-bold text-green-700 mb-6">Wisata Manage</h2>
+        <div class="text-lg font-semibold text-green-700 mb-6">{{ wisataList.length }} Wisata</div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div
+            v-for="wisata in wisataList"
+            :key="wisata.id"
+            class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+          >
+            <div
+              class="h-48 bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center"
+            >
+              <i class="mdi mdi-image text-4xl text-white opacity-50"></i>
+            </div>
+            <div class="p-4">
+              <h3 class="font-semibold text-gray-800 mb-2">{{ wisata.name }}</h3>
+              <p class="text-sm text-gray-600 mb-3">{{ wisata.category }}</p>
+              <div class="flex space-x-2">
+                <button
+                  @click="viewWisataDetail(wisata)"
+                  class="px-3 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600 transition-colors"
+                >
+                  View Detail
+                </button>
+                <button
+                  class="px-3 py-1 bg-gray-500 text-white text-xs rounded hover:bg-gray-600 transition-colors"
+                >
+                  Edit
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detail Wisata (pop up modal) -->
+      <div
+        v-if="showWisataModal"
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      >
+        <div class="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 shadow-xl">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-green-700">Detail Wisata</h2>
+            <button @click="closeWisataModal" class="text-gray-400 hover:text-gray-600 p-1">
+              <i class="mdi mdi-close text-xl"></i>
+            </button>
+          </div>
+          <div class="bg-white rounded-lg p-0">
+            <div class="flex flex-col lg:flex-row gap-6">
+              <div>
+                <div
+                  class="h-64 w-full bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center mb-4"
+                >
+                  <i class="mdi mdi-image text-4xl text-white opacity-50"></i>
+                </div>
+              </div>
+              <div class="flex-1 space-y-4">
+                <h3 class="text-xl font-bold text-gray-800 mb-2">{{ selectedWisata.name }}</h3>
+                <div class="space-y-1 text-sm text-gray-600">
+                  <p>
+                    <span class="font-medium">Estimated entry:</span> {{ selectedWisata.price }}
+                  </p>
+                  <p><span class="font-medium">Rating:</span> ⭐ {{ selectedWisata.rating }}/5</p>
+                  <p><span class="font-medium">Address:</span> {{ selectedWisata.address }}</p>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-800 mb-2">Description:</h4>
+                  <p class="text-sm text-gray-600 leading-relaxed">
+                    {{ selectedWisata.description }}
+                  </p>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-800 mb-2">Link Google Maps:</h4>
+                  <a
+                    :href="selectedWisata.mapsLink"
+                    target="_blank"
+                    class="text-blue-500 hover:text-blue-600 text-sm break-all"
+                  >
+                    {{ selectedWisata.mapsLink }}
+                  </a>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-800 mb-2">Uploaded by:</h4>
+                  <p class="text-sm text-gray-600">{{ selectedWisata.uploader }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End Detail Wisata Modal -->
+
+      <!-- Confirm Wisata -->
+      <div v-else-if="active === 'confirm-wisata'">
+        <h2 class="text-3xl font-bold text-green-700 mb-6">Confirm Wisata</h2>
+        <div class="text-lg font-semibold text-green-700 mb-6">
+          {{ pendingWisata.length }} Pending Wisata
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div
+            v-for="wisata in pendingWisata"
+            :key="wisata.id"
+            class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+          >
+            <div
+              class="h-48 bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center"
+            >
+              <i class="mdi mdi-image text-4xl text-white opacity-50"></i>
+            </div>
+            <div class="p-4">
+              <h3 class="font-semibold text-gray-800 mb-2">{{ wisata.name }}</h3>
+              <p class="text-sm text-gray-600 mb-1">{{ wisata.category }}</p>
+              <p class="text-xs text-gray-500 mb-3">{{ wisata.location }}</p>
+              <div class="flex space-x-2">
+                <button
+                  @click="approveWisata(wisata)"
+                  class="px-3 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600 transition-colors"
+                >
+                  Approve
+                </button>
+                <button
+                  @click="rejectWisata(wisata)"
+                  class="px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600 transition-colors"
+                >
+                  Reject
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Report Wisata -->
+      <div v-else-if="active === 'report-wisata'">
+        <h2 class="text-3xl font-bold text-green-700 mb-6">Wisata Report</h2>
+        <div class="text-lg font-semibold text-green-700 mb-6">{{ reportData.length }} Report</div>
+
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="min-w-full">
+              <thead>
+                <tr class="bg-gray-50 border-b border-gray-200">
+                  <th class="text-left py-4 px-6 font-semibold text-gray-700">Location</th>
+                  <th class="text-left py-4 px-6 font-semibold text-gray-700">Name</th>
+                  <th class="text-left py-4 px-6 font-semibold text-gray-700">Status</th>
+                  <th class="text-left py-4 px-6 font-semibold text-gray-700">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="report in reportData"
+                  :key="report.id"
+                  class="border-b border-gray-100 hover:bg-gray-50"
+                >
+                  <td class="py-4 px-6 text-sm text-gray-800">{{ report.location }}</td>
+                  <td class="py-4 px-6 text-sm text-gray-800">{{ report.name }}</td>
+                  <td class="py-4 px-6">
+                    <span
+                      :class="[
+                        'px-3 py-1 rounded-full text-xs font-medium',
+                        report.status === 'approved'
+                          ? 'bg-green-100 text-green-800'
+                          : report.status === 'pending'
+                            ? 'bg-yellow-100 text-yellow-800'
+                            : 'bg-red-100 text-red-800',
+                      ]"
+                    >
+                      {{ report.status }}
+                    </span>
+                  </td>
+                  <td class="py-4 px-6">
+                    <button
+                      @click="viewReportDetail(report)"
+                      class="text-blue-500 hover:text-blue-600 text-sm font-medium"
+                    >
+                      View Detail
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </main>
 
     <!-- Modal for Report Detail -->
