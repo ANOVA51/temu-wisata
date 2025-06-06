@@ -12,7 +12,7 @@ const route = useRoute()
 const hideNavbar = computed(() => ['login', 'signup'].includes(route.name as string))
 
 const isWhiteBackgroundPage = computed(() =>
-  ['destination', 'about', 'login', 'signup'].includes(route.name as string)
+  ['destination'].includes(route.name as string)
 )
 
 const router = useRouter()
@@ -63,8 +63,8 @@ const handleLogout = () => {
             <RouterLink
               :to="{ name: 'home' }"
               :class="[
-                isWhiteBackgroundPage ? 'text-black hover:text-green-600' : 'text-white hover:text-green-500',
-                'font-semibold group-hover:underline'
+                isWhiteBackgroundPage ? 'text-black' : 'text-white',
+                
               ]"
             >
               HOME
@@ -74,8 +74,8 @@ const handleLogout = () => {
             <RouterLink
               :to="{ name: 'destination' }"
               :class="[
-                isWhiteBackgroundPage ? 'text-black hover:text-green-600' : 'text-white hover:text-green-500',
-                'group-hover:underline'
+                isWhiteBackgroundPage ? 'text-black' : 'text-white',
+                
               ]"
             >
               DESTINATION
@@ -85,8 +85,8 @@ const handleLogout = () => {
             <RouterLink
               :to="{ name: 'about' }"
               :class="[
-                isWhiteBackgroundPage ? 'text-black hover:text-green-600' : 'text-white hover:text-green-500',
-                'group-hover:underline'
+                isWhiteBackgroundPage ? 'text-black' : 'text-white',
+                
               ]"
             >
               ABOUT
