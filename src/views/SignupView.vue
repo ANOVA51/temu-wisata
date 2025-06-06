@@ -76,7 +76,7 @@ const username = ref('')
 const password = ref('')
 
 const handleSignup = async () => {
-    const userData = { username: name.value, email: email.value, password_hash: password.value };
+    const userData = { username: username.value, email: email.value, password: password.value };
 
     try {
         const response = await createUser(userData);

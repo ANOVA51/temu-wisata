@@ -54,21 +54,12 @@
           <!-- Facilities Section -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Facilities</label>
-            <div class="flex flex-wrap gap-2">
-              <button
-                v-for="facility in facilities"
-                :key="facility"
-                @click="toggleFacility(facility)"
-                :class="[
-                  'px-4 py-2 rounded-full text-sm transition-colors',
-                  form.selectedFacilities.includes(facility)
-                    ? 'bg-blue-500 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200',
-                ]"
-              >
-                {{ facility }}
-              </button>
-            </div>
+            <input
+              v-model="form.fasilitas"
+              type="text"
+              class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Contoh: Toilet, Parkir, Wifi"
+            />
           </div>
 
           <!-- Price Section -->
@@ -135,22 +126,30 @@
           <!-- Map Location -->
           <div class="space-y-4">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Street</label>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Full Address</label>
               <input
                 v-model="form.street"
                 type="text"
-                placeholder="Jalan Gautama Ubud"
+                placeholder="e.g. Jln Wistu Marga"
                 class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
-
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Village</label>
+                <input
+                  v-model="form.desa"
+                  type="text"
+                  placeholder="e.g. Ubud"
+                  class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Sub-district</label>
                 <input
                   v-model="form.subDistrict"
                   type="text"
-                  placeholder="Ubud"
+                  placeholder="e.g. Ubud"
                   class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
@@ -159,19 +158,19 @@
                 <input
                   v-model="form.regency"
                   type="text"
-                  placeholder="Glanyar"
+                  placeholder="e.g. Gianyar"
                   class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Maps Link</label>
-                <input
-                  v-model="form.mapsLink"
-                  type="url"
-                  placeholder="https://maps.app.goo.gl/Cyj8K3kxVFT2iq9DA"
-                  class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Maps Link</label>
+              <input
+                v-model="form.mapsLink"
+                type="url"
+                placeholder="https://maps.app.goo.gl/Cyj8K3kxVFT2iq9DA"
+                class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
             </div>
           </div>
 
@@ -204,44 +203,92 @@
 
 <script setup>
 import { ref } from 'vue'
+import axios from 'axios'
 
-// Path ke gambar lokal di folder assets
 const backgroundImage = ref(new URL('../assets/forminput.jpg', import.meta.url).href)
 
 const form = ref({
   name: '',
   category: '',
   description: '',
-  selectedFacilities: [],
+  fasilitas: '', // string, bukan array
   minPrice: null,
   maxPrice: null,
   phone: '',
   email: '',
-  photos: [],
   street: '',
   subDistrict: '',
   regency: '',
   mapsLink: '',
+  desa: '',
 })
 
 const categories = ref(['Nature', 'Adventure', 'Cultural', 'Beach', 'Mountain'])
-const facilities = ref(['Restroom', 'Parking Area', 'Wifi', 'Cafe', 'First Aid'])
-
-const toggleFacility = (facility) => {
-  const index = form.value.selectedFacilities.indexOf(facility)
-  if (index > -1) {
-    form.value.selectedFacilities.splice(index, 1)
-  } else {
-    form.value.selectedFacilities.push(facility)
-  }
-}
 
 const handleFileUpload = (event) => {
   form.value.photos = Array.from(event.target.files)
 }
 
-const submitForm = () => {
-  console.log('Form submitted:', form.value)
+const submitForm = async () => {
+  const token = localStorage.getItem('access') || sessionStorage.getItem('access')
+  if (!token) {
+    alert('Anda harus login terlebih dahulu!')
+    return
+  }
+
+  const payload = {
+    name: form.value.name,
+    description: form.value.description,
+    address: form.value.street,
+    kota: form.value.regency,
+    kecamatan: form.value.subDistrict,
+    desa: form.value.desa || '',
+    fasilitas: form.value.fasilitas || '',
+    google_maps_url: form.value.mapsLink || '',
+    category: form.value.category,
+    price_min: Number(form.value.minPrice) || 0,
+    price_max: Number(form.value.maxPrice) || 0,
+  }
+
+  try {
+    await axios.post('http://localhost:8000/api/touristspots/', payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    alert('Data wisata berhasil dikirim!')
+    // Reset form
+    form.value = {
+      name: '',
+      category: '',
+      description: '',
+      fasilitas: '',
+      minPrice: null,
+      maxPrice: null,
+      phone: '',
+      email: '',
+      street: '',
+      subDistrict: '',
+      regency: '',
+      mapsLink: '',
+      desa: '',
+    }
+  } catch (err) {
+    if (err.response && err.response.data) {
+      let msg = ''
+      const data = err.response.data
+      for (const key in data) {
+        if (typeof data[key] === 'object') {
+          msg += `${key}: ${JSON.stringify(data[key])}\n`
+        } else {
+          msg += `${key}: ${data[key]}\n`
+        }
+      }
+      alert(msg || 'Gagal mengirim data wisata!')
+    } else {
+      alert('Gagal mengirim data wisata!')
+    }
+  }
 }
 </script>
 
