@@ -83,7 +83,7 @@ const rememberMe = ref(false)
 
 const handleLogin = async () => {
   try {
-    const response = await axios.post('http://localhost:8000/api/token/', {
+    const response = await axios.post('http://localhost:8000/api/login/', {
       username: username.value,
       password: password.value,
     })
