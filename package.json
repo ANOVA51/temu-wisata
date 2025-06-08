@@ -11,9 +11,11 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "aos": "^2.3.4",
     "axios": "^1.9.0",
     "gsap": "^3.13.0",
     "pinia": "^3.0.1",
+    "sweetalert2": "^11.22.0",
     "temu-wisata": "file:",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
