@@ -134,7 +134,7 @@ const filteredDestinasi = computed(() => {
         <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-black">
           Hidden Gem
         </span>
-        in Bali’s tourist destinations
+        in Bali's tourist destinations
       </h1>
     </div>
     <!-- Hero Section -->
@@ -215,7 +215,6 @@ const filteredDestinasi = computed(() => {
           {{ showAll ? 'Show Less' : 'Show More' }}
         </button>
       </div>
-
       <!--button tambah postingan-->
     </section>
 
@@ -281,7 +280,11 @@ const filteredDestinasi = computed(() => {
         <p class="text-gray-700">{{ activeModal.deskripsi }}</p>
 
         <!-- Tombol Close -->
-        <div class="text-right mt-4">
+        <div class="text-right mt-4 flex justify-between">
+          <button @click="activeModal = null" class="px-4 py-2 bg-lime-500 text-white rounded">
+            Add to Favorites
+          </button>
+
           <button @click="activeModal = null" class="px-4 py-2 bg-lime-500 text-white rounded">
             Close
           </button>

@@ -4,8 +4,7 @@ import penari from '@/assets/images/penari.jpg'
 
 const menuItems = [
   { label: 'Dashboard', key: 'dashboard' },
-  { label: 'Wishlist', key: 'wishlist' },
-  { label: 'Booking History', key: 'booking' },
+  { label: 'Favorite Destination', key: 'Favorite' },
   { label: 'Settings', key: 'settings' },
   { label: 'Logout', key: 'logout' }
 ]
@@ -64,13 +63,10 @@ function selectMenu(key) {
         </div>
       </section>
 
-      <section v-if="currentView === 'wishlist'">
-        <p>Ini adalah halaman Wishlist.</p>
+      <section v-if="currentView === 'Favorite'">
+        <p>Ini adalah halaman Favorite.</p>
       </section>
 
-      <section v-if="currentView === 'booking'">
-        <p>Ini adalah halaman Booking History.</p>
-      </section>
 
       <section v-if="currentView === 'settings'">
         <p>Ini adalah halaman Settings.</p>
