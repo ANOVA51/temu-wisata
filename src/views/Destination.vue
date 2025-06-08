@@ -4,7 +4,14 @@ import Search from '@/assets/icon/Search.vue'
 import FooterSection from '@/components/FooterSection.vue'
 import Navbar from '@/components/Navbar.vue'
 
-import { computed, onMounted, ref } from 'vue'
+import kecak from '@/assets/images/kecak.jpg'
+import penari from '@/assets/images/penari.jpg'
+import statue from '@/assets/images/statue1.jpg'
+import waterfall from '@/assets/images/waterfall1.jpg'
+
+import { computed, onMounted, ref, watch } from 'vue'
+import AOS from 'aos'
+import 'aos/dist/aos.css'
 
 const allDestinations = [
   'Ubud',
@@ -29,68 +36,156 @@ import savana from '@/assets/images/destinasi/savana.png'
 
 const destinasi = [
   {
-    image: savana,
+    images: [savana, kecak, penari, statue, waterfall],
     name: 'savana tianyar',
     deskripsi:
       'Savana Tianyar adalah salah satu hidden gem di Bali yang memiliki suasana eksotik ala Afrika.',
     mapUrl:
       'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.785349860783!2d115.50615607456099!3d-8.224328682550388!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd1fa262ae6d15f%3A0x21d7bc44437e774c!2sSavana%20Tianyar!5e0!3m2!1sid!2sid!4v1748139614578!5m2!1sid!2sid',
+    tabel: {
+      Category: 'Nature',
+      Facilities: 'Restroom, Parking Area',
+      'Entrance Ticket': 'Rp 10.000 - Rp 250.000',
+      Contact: '+62 812 3456 7890',
+      Email: 'example@temuwisata.my.id',
+      Street: 'Jalan Gautama Ubud',
+      'Sub-district': 'Ubud',
+      Regency: 'Gianyar',
+      'Maps Link': 'https://maps.app.goo.gl/CjYk3kxVF1ziqkDAA',
+    },
   },
   {
-    image: savana,
+    images: [savana, kecak, penari, statue, waterfall],
     name: 'savana tianyar',
     deskripsi:
       'Savana Tianyar adalah salah satu hidden gem di Bali yang memiliki suasana eksotik ala Afrika.',
     mapUrl:
       'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.785349860783!2d115.50615607456099!3d-8.224328682550388!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd1fa262ae6d15f%3A0x21d7bc44437e774c!2sSavana%20Tianyar!5e0!3m2!1sid!2sid!4v1748139614578!5m2!1sid!2sid',
+    tabel: {
+      Category: 'Nature',
+      Facilities: 'Restroom, Parking Area',
+      'Entrance Ticket': 'Rp 10.000 - Rp 250.000',
+      Contact: '+62 812 3456 7890',
+      Email: 'example@temuwisata.my.id',
+      Street: 'Jalan Gautama Ubud',
+      'Sub-district': 'Ubud',
+      Regency: 'Gianyar',
+      'Maps Link': 'https://maps.app.goo.gl/CjYk3kxVF1ziqkDAA',
+    },
   },
   {
-    image: savana,
+    images: [savana, kecak, penari, statue, waterfall],
     name: 'savana tianyar',
     deskripsi:
       'Savana Tianyar adalah salah satu hidden gem di Bali yang memiliki suasana eksotik ala Afrika.',
     mapUrl:
       'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.785349860783!2d115.50615607456099!3d-8.224328682550388!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd1fa262ae6d15f%3A0x21d7bc44437e774c!2sSavana%20Tianyar!5e0!3m2!1sid!2sid!4v1748139614578!5m2!1sid!2sid',
+    tabel: {
+      Category: 'Nature',
+      Facilities: 'Restroom, Parking Area',
+      'Entrance Ticket': 'Rp 10.000 - Rp 250.000',
+      Contact: '+62 812 3456 7890',
+      Email: 'example@temuwisata.my.id',
+      Street: 'Jalan Gautama Ubud',
+      'Sub-district': 'Ubud',
+      Regency: 'Gianyar',
+      'Maps Link': 'https://maps.app.goo.gl/CjYk3kxVF1ziqkDAA',
+    },
   },
   {
-    image: savana,
+    images: [savana, kecak, penari, statue, waterfall],
     name: 'savana tianyar',
     deskripsi:
       'Savana Tianyar adalah salah satu hidden gem di Bali yang memiliki suasana eksotik ala Afrika.',
     mapUrl:
       'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.785349860783!2d115.50615607456099!3d-8.224328682550388!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd1fa262ae6d15f%3A0x21d7bc44437e774c!2sSavana%20Tianyar!5e0!3m2!1sid!2sid!4v1748139614578!5m2!1sid!2sid',
+    tabel: {
+      Category: 'Nature',
+      Facilities: 'Restroom, Parking Area',
+      'Entrance Ticket': 'Rp 10.000 - Rp 250.000',
+      Contact: '+62 812 3456 7890',
+      Email: 'example@temuwisata.my.id',
+      Street: 'Jalan Gautama Ubud',
+      'Sub-district': 'Ubud',
+      Regency: 'Gianyar',
+      'Maps Link': 'https://maps.app.goo.gl/CjYk3kxVF1ziqkDAA',
+    },
   },
   {
-    image: savana,
+    images: [savana, kecak, penari, statue, waterfall],
     name: 'savana tianyar',
     deskripsi:
       'Savana Tianyar adalah salah satu hidden gem di Bali yang memiliki suasana eksotik ala Afrika.',
     mapUrl:
       'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.785349860783!2d115.50615607456099!3d-8.224328682550388!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd1fa262ae6d15f%3A0x21d7bc44437e774c!2sSavana%20Tianyar!5e0!3m2!1sid!2sid!4v1748139614578!5m2!1sid!2sid',
+    tabel: {
+      Category: 'Nature',
+      Facilities: 'Restroom, Parking Area',
+      'Entrance Ticket': 'Rp 10.000 - Rp 250.000',
+      Contact: '+62 812 3456 7890',
+      Email: 'example@temuwisata.my.id',
+      Street: 'Jalan Gautama Ubud',
+      'Sub-district': 'Ubud',
+      Regency: 'Gianyar',
+      'Maps Link': 'https://maps.app.goo.gl/CjYk3kxVF1ziqkDAA',
+    },
   },
   {
-    image: savana,
+    images: [savana, kecak, penari, statue, waterfall],
     name: 'savana tianyar',
     deskripsi:
       'Savana Tianyar adalah salah satu hidden gem di Bali yang memiliki suasana eksotik ala Afrika.',
     mapUrl:
       'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.785349860783!2d115.50615607456099!3d-8.224328682550388!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd1fa262ae6d15f%3A0x21d7bc44437e774c!2sSavana%20Tianyar!5e0!3m2!1sid!2sid!4v1748139614578!5m2!1sid!2sid',
+    tabel: {
+      Category: 'Nature',
+      Facilities: 'Restroom, Parking Area',
+      'Entrance Ticket': 'Rp 10.000 - Rp 250.000',
+      Contact: '+62 812 3456 7890',
+      Email: 'example@temuwisata.my.id',
+      Street: 'Jalan Gautama Ubud',
+      'Sub-district': 'Ubud',
+      Regency: 'Gianyar',
+      'Maps Link': 'https://maps.app.goo.gl/CjYk3kxVF1ziqkDAA',
+    },
   },
   {
-    image: savana,
+    images: [savana, kecak, penari, statue, waterfall],
     name: 'savana tianyar',
     deskripsi:
       'Savana Tianyar adalah salah satu hidden gem di Bali yang memiliki suasana eksotik ala Afrika.',
     mapUrl:
       'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.785349860783!2d115.50615607456099!3d-8.224328682550388!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd1fa262ae6d15f%3A0x21d7bc44437e774c!2sSavana%20Tianyar!5e0!3m2!1sid!2sid!4v1748139614578!5m2!1sid!2sid',
+    tabel: {
+      Category: 'Nature',
+      Facilities: 'Restroom, Parking Area',
+      'Entrance Ticket': 'Rp 10.000 - Rp 250.000',
+      Contact: '+62 812 3456 7890',
+      Email: 'example@temuwisata.my.id',
+      Street: 'Jalan Gautama Ubud',
+      'Sub-district': 'Ubud',
+      Regency: 'Gianyar',
+      'Maps Link': 'https://maps.app.goo.gl/CjYk3kxVF1ziqkDAA',
+    },
   },
   {
-    image: savana,
+    images: [savana],
     name: 'savana tianyar',
     deskripsi:
       'Savana Tianyar adalah salah satu hidden gem di Bali yang memiliki suasana eksotik ala Afrika.',
     mapUrl:
       'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.785349860783!2d115.50615607456099!3d-8.224328682550388!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd1fa262ae6d15f%3A0x21d7bc44437e774c!2sSavana%20Tianyar!5e0!3m2!1sid!2sid!4v1748139614578!5m2!1sid!2sid',
+    tabel: {
+      Category: 'Nature',
+      Facilities: 'Restroom, Parking Area',
+      'Entrance Ticket': 'Rp 10.000 - Rp 250.000',
+      Contact: '+62 812 3456 7890',
+      Email: 'example@temuwisata.my.id',
+      Street: 'Jalan Gautama Ubud',
+      'Sub-district': 'Ubud',
+      Regency: 'Gianyar',
+      'Maps Link': 'https://maps.app.goo.gl/CjYk3kxVF1ziqkDAA',
+    },
   },
 ]
 
@@ -99,9 +194,11 @@ const selectedLocation = ref('')
 const favorites = ref([])
 const loading = ref(true)
 const activeModal = ref(null)
+const currentIndex = ref(0)
 
 onMounted(() => {
   setTimeout(() => (loading.value = false), 1000)
+  AOS.init()
 })
 
 const toggleFavorite = (index) => {
@@ -123,6 +220,18 @@ const filteredDestinasi = computed(() => {
   }
   return showAll.value ? result : result.slice(0, 8)
 })
+
+const nextImage = () => {
+  if (activeModal.value && activeModal.value.images && activeModal.value.images.length > 0) {
+    currentIndex.value = (currentIndex.value + 1) % activeModal.value.images.length
+  }
+}
+
+watch(activeModal, (val) => {
+  if (val && val.images && val.images.length > 0) {
+    currentIndex.value = 0
+  }
+})
 </script>
 
 <template>
@@ -134,7 +243,7 @@ const filteredDestinasi = computed(() => {
         <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-black">
           Hidden Gem
         </span>
-        in Bali’s tourist destinations
+        in Bali's tourist destinations
       </h1>
     </div>
     <!-- Hero Section -->
@@ -195,7 +304,7 @@ const filteredDestinasi = computed(() => {
           >
             <div class="w-full h-full overflow-hidden">
               <img
-                :src="img.image"
+                :src="img.images ? img.images[0] : ''"
                 :alt="img.name"
                 class="w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-110"
               />
@@ -215,7 +324,6 @@ const filteredDestinasi = computed(() => {
           {{ showAll ? 'Show Less' : 'Show More' }}
         </button>
       </div>
-
       <!--button tambah postingan-->
     </section>
 
@@ -251,39 +359,89 @@ const filteredDestinasi = computed(() => {
       v-if="activeModal"
       class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
       @click.self="activeModal = null"
+      data-aos="zoom-in"
     >
-      <div class="bg-white rounded-xl p-6 w-full max-w-4xl shadow-lg flex flex-col gap-6">
-        <h3 class="text-2xl font-bold mb-2">{{ activeModal.name }}</h3>
-
-        <!-- Bagian atas: gambar dan iframe sejajar -->
-        <div class="flex flex-row gap-10" style="height: 300px">
+      <div
+        class="bg-white rounded-xl p-8 w-full max-w-5xl shadow-lg flex flex-col md:flex-row gap-10 items-center relative"
+      >
+        <!-- Left: Image/Carousel -->
+        <div class="flex flex-col items-center w-full md:w-1/2">
+          <div
+            v-if="activeModal.images && activeModal.images.length > 0"
+            class="relative w-full max-w-[360px] mx-auto h-[250px] cursor-pointer"
+            @click="nextImage"
+          >
+            <div class="relative w-full h-full">
+              <div
+                v-for="(img, index) in activeModal.images"
+                :key="img"
+                class="absolute top-0 transition-all duration-500 ease-in-out rounded-xl overflow-hidden shadow-lg"
+                :class="[
+                  index === currentIndex
+                    ? 'z-30 scale-100 left-0'
+                    : index === (currentIndex + 1) % activeModal.images.length
+                      ? 'z-20 scale-95 left-[25%]'
+                      : 'z-10 scale-90 left-[25%]',
+                ]"
+                style="width: 100%; height: 100%"
+              >
+                <img
+                  :src="img"
+                  class="w-full h-full object-cover rounded-xl"
+                  :alt="`Image ${index + 1}`"
+                />
+              </div>
+            </div>
+          </div>
           <img
+            v-else-if="activeModal.image"
             :src="activeModal.image"
-            alt="destinasi"
-            class="rounded-lg object-cover"
-            style="width: 60%; height: 100%"
+            :alt="activeModal.name"
+            class="rounded-lg object-cover mb-6"
+            style="width: 320px; height: 320px; max-width: 100%; max-height: 320px"
           />
-
-          <iframe
-            v-if="activeModal.mapUrl"
-            :src="activeModal.mapUrl"
-            width="40%"
-            height="100%"
-            class="rounded-lg"
-            style="border: 0"
-            allow="fullscreen"
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-          ></iframe>
         </div>
-
-        <!-- Bagian bawah: deskripsi -->
-        <p class="text-gray-700">{{ activeModal.deskripsi }}</p>
-
-        <!-- Tombol Close -->
-        <div class="text-right mt-4">
-          <button @click="activeModal = null" class="px-4 py-2 bg-lime-500 text-white rounded">
-            Close
+        <!-- Right: Details -->
+        <div class="flex-1 flex flex-col justify-between w-full md:w-1/2">
+          <div>
+            <div class="text-2xl font-bold text-gray-700 mb-2">{{ activeModal.name }}</div>
+            <div class="text-base text-gray-800 mb-4">{{ activeModal.deskripsi }}</div>
+            <div v-if="activeModal.tabel" class="mb-4">
+              <table class="w-full text-sm">
+                <tbody>
+                  <tr v-for="(val, key) in activeModal.tabel" :key="key">
+                    <td class="font-semibold py-1 pr-2 text-gray-600">{{ key }}</td>
+                    <td class="py-1 text-gray-800">
+                      <template v-if="key === 'Maps Link'">
+                        <a :href="val" target="_blank" class="text-green-600 underline"
+                          >Lihat di Maps</a
+                        >
+                      </template>
+                      <template v-else>
+                        {{ val }}
+                      </template>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div v-if="activeModal.mapUrl" class="mb-4">
+              <iframe
+                :src="activeModal.mapUrl"
+                width="100%"
+                height="200"
+                style="border: 0; border-radius: 12px"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+              ></iframe>
+            </div>
+          </div>
+          <button
+            @click="activeModal = null"
+            class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-2xl"
+          >
+            &times;
           </button>
         </div>
       </div>
