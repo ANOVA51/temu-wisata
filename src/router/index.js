@@ -42,16 +42,28 @@ const router = createRouter({
       name: 'signup',
       component: () => import('@/views/SignupView.vue'),
     },
-
     {
       path: '/forminput',
       name: 'forminput',
       component: () => import('@/views/FormInputWisata.vue'),
     },
     {
-      path: '/profile',
-      name: 'profile',
-      component: () => import('@/views/Userprofile.vue'),
+      path: '/tesa',
+      name: 'tesa',
+      component: () => import('@/views/ChatTesa.vue'),
+    },
+    {
+      path: '/coba2',
+      name: 'coba2',
+      component: () => import('@/views/Coba2.vue'),
+    },
+    {
+      // path: '/admin',
+      // name: 'admin',
+      // // route level code-splitting
+      // // this generates a separate chunk (About.[hash].js) for this route
+      // // which is lazy-loaded when the route is visited.
+      // component: () => import('../views/AdminDashboardView.vue'),
     },
   ],
 })

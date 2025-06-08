@@ -2,18 +2,25 @@
   <div class="min-h-screen flex overflow-hidden bg-gray-900">
     <!-- Left Side - Welcome Section with Background Image -->
     <div class="hidden md:flex flex-1 relative items-center justify-center">
-      <img :src="loginBG" alt="Login Background" class="absolute inset-0 w-full h-full object-cover z-0" />
+      <img
+        :src="loginBG"
+        alt="Login Background"
+        class="absolute inset-0 w-full h-full object-cover z-0"
+      />
       <div class="relative z-10 text-left px-12">
-        <h1 class="text-6xl font-bold text-white leading-tight">
-          Welcome<br />Back!
-        </h1>
+        <h1 class="text-6xl font-bold text-white leading-tight">Welcome<br />Back!</h1>
       </div>
     </div>
 
     <!-- Right Side - Login Form -->
     <div class="w-full md:w-96 bg-white flex items-center justify-center p-8">
       <div class="w-full max-w-sm">
-        <div class="mb-8">
+        <div class="mb-8 flex flex-col items-center">
+          <img
+            src="@/assets/images/logotesa.png"
+            alt="Logo Tesa"
+            class="w-50 h-50 mb-4 rounded-full object-cover"
+          />
           <h2 class="text-2xl font-bold text-gray-800 mb-2">Login</h2>
           <p class="text-sm text-gray-600">Welcome back! Please login to your account.</p>
         </div>

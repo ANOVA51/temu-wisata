@@ -5,7 +5,7 @@
       <img :src="SignupBG" class="object-cover w-full h-full" alt="Signup Background" />
       <div class="absolute z-10 px-10">
         <h2 class="text-black text-6xl font-bold text-start">
-          Signup <br>
+          Signup <br />
           <span class="text-black text-5xl font-semibold">Join Us!</span>
         </h2>
       </div>
@@ -14,6 +14,11 @@
     <!-- Right side: Form Signup -->
     <div class="flex w-full md:w-1/2 items-center justify-center bg-white p-8">
       <div class="w-full max-w-sm">
+        <img
+          src="@/assets/images/logotesa.png"
+          alt="Logo Tesa"
+          class="w-50 h-50 mb-4 rounded-full object-cover mx-auto block"
+        />
         <h2 class="text-3xl font-bold mb-2 text-gray-800">Signup</h2>
         <p class="text-sm text-gray-600 mb-6">Welcome! Register your account for free.</p>
         <form @submit.prevent="handleSignup" class="space-y-6">
@@ -57,7 +62,9 @@
 
         <p class="text-center text-sm text-gray-600 mt-6">
           Already have an account?
-          <RouterLink to="/login" class="text-green-600 hover:underline font-medium">Login</RouterLink>
+          <RouterLink to="/login" class="text-green-600 hover:underline font-medium"
+            >Login</RouterLink
+          >
         </p>
       </div>
     </div>

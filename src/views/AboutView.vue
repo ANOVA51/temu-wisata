@@ -68,6 +68,7 @@ const teamMembers = [
 </script>
 
 <template>
+  
   <div>
     <Navbar/>
 
