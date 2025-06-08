@@ -109,16 +109,28 @@
             <div
               class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-blue-500 transition-colors"
               @click="$refs.fileInput.click()"
+              @dragover.prevent
+              @drop.prevent="handleDrop"
             >
               <div class="text-gray-500">
                 <p>Click to add photos or drag & drop</p>
                 <input
                   type="file"
                   multiple
+                  accept="image/*"
                   @change="handleFileUpload"
                   class="hidden"
                   ref="fileInput"
                 />
+              </div>
+              <div class="flex flex-wrap gap-4 justify-center mt-4">
+                <div
+                  v-for="(img, idx) in imagePreviews"
+                  :key="idx"
+                  class="w-24 h-24 rounded overflow-hidden border border-gray-200 bg-white flex items-center justify-center"
+                >
+                  <img :src="img" alt="preview" class="object-cover w-full h-full" />
+                </div>
               </div>
             </div>
           </div>
@@ -223,10 +235,48 @@ const form = ref({
   desa: '',
 })
 
+const imagePreviews = ref([])
+form.value.photos = []
+
 const categories = ref(['Nature', 'Adventure', 'Cultural', 'Beach', 'Mountain'])
 
 const handleFileUpload = (event) => {
-  form.value.photos = Array.from(event.target.files)
+  const files = Array.from(event.target.files)
+  addImages(files)
+}
+
+const handleDrop = (event) => {
+  const files = Array.from(event.dataTransfer.files)
+  addImages(files)
+}
+
+function addImages(files) {
+  const imageFiles = files.filter(file => file.type.startsWith('image/'))
+  form.value.photos = [...(form.value.photos || []), ...imageFiles]
+  imageFiles.forEach(file => {
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      imagePreviews.value.push(e.target.result)
+    }
+    reader.readAsDataURL(file)
+  })
+}
+
+async function uploadImages(files, token) {
+  // Upload semua file satu per satu, dapatkan array nama file
+  const uploadedNames = []
+  for (const file of files) {
+    const formData = new FormData()
+    formData.append('image', file)
+    const res = await axios.post('http://localhost:8000/api/upload-image/', formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    uploadedNames.push(res.data.filename) // sesuaikan dengan response backend
+  }
+  return uploadedNames
 }
 
 const submitForm = async () => {
@@ -236,28 +286,34 @@ const submitForm = async () => {
     return
   }
 
-  const payload = {
-    name: form.value.name,
-    description: form.value.description,
-    address: form.value.street,
-    kota: form.value.regency,
-    kecamatan: form.value.subDistrict,
-    desa: form.value.desa || '',
-    fasilitas: form.value.fasilitas || '',
-    google_maps_url: form.value.mapsLink || '',
-    category: form.value.category,
-    price_min: Number(form.value.minPrice) || 0,
-    price_max: Number(form.value.maxPrice) || 0,
+  // Buat FormData
+  const formData = new FormData()
+  formData.append('name', form.value.name)
+  formData.append('description', form.value.description)
+  formData.append('address', form.value.street)
+  formData.append('kota', form.value.regency)
+  formData.append('kecamatan', form.value.subDistrict)
+  formData.append('desa', form.value.desa || '')
+  formData.append('fasilitas', form.value.fasilitas || '')
+  formData.append('google_maps_url', form.value.mapsLink || '')
+  formData.append('category', form.value.category)
+  formData.append('price_min', Number(form.value.minPrice) || 0)
+  formData.append('price_max', Number(form.value.maxPrice) || 0)
+  if (form.value.photos && form.value.photos.length > 0) {
+    form.value.photos.forEach(file => {
+      formData.append('images', file)
+    })
   }
 
   try {
-    await axios.post('http://localhost:8000/api/touristspots/', payload, {
+    await axios.post('http://localhost:8000/api/touristspots/', formData, {
       headers: {
         Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
       },
     })
     alert('Data wisata berhasil dikirim!')
-    // Reset form
+    // Reset form & preview
     form.value = {
       name: '',
       category: '',
@@ -272,16 +328,20 @@ const submitForm = async () => {
       regency: '',
       mapsLink: '',
       desa: '',
+      images: [],
     }
+    imagePreviews.value = []
   } catch (err) {
     if (err.response && err.response.data) {
       let msg = ''
       const data = err.response.data
-      for (const key in data) {
-        if (typeof data[key] === 'object') {
+      if (Array.isArray(data)) {
+        msg = data.join('\n')
+      } else if (typeof data === 'string') {
+        msg = data
+      } else if (typeof data === 'object') {
+        for (const key in data) {
           msg += `${key}: ${JSON.stringify(data[key])}\n`
-        } else {
-          msg += `${key}: ${data[key]}\n`
         }
       }
       alert(msg || 'Gagal mengirim data wisata!')
