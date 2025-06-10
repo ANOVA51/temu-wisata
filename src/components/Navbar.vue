@@ -11,13 +11,11 @@ const toggleSidebar = () => {
 const route = useRoute()
 const hideNavbar = computed(() => ['login', 'signup'].includes(String(route.name)))
 
-const isWhiteBackgroundPage = computed(() =>
-  ['destination'].includes(route.name as string)
-)
+const isWhiteBackgroundPage = computed(() => ['destination'].includes(route.name as string))
 
 const router = useRouter()
-const isLoggedIn = computed(() =>
-  !!localStorage.getItem('access') || !!sessionStorage.getItem('access')
+const isLoggedIn = computed(
+  () => !!localStorage.getItem('access') || !!sessionStorage.getItem('access'),
 )
 
 const handleLogout = () => {
@@ -27,6 +25,10 @@ const handleLogout = () => {
   sessionStorage.removeItem('refresh')
   router.push({ name: 'login' })
 }
+
+const profilepicture = computed(() => {
+  return localStorage.getItem('profilepicture') || 'penari'
+})
 </script>
 
 <template>
@@ -41,10 +43,6 @@ const handleLogout = () => {
       <div class="container mx-auto flex items-center justify-between px-4 md:px-20">
         <!-- Logo -->
         <div class="flex items-center space-x-2">
-          <!-- <div
-            class="w-8 h-8 rounded-full border"
-            :class="isWhiteBackgroundPage ? 'bg-black' : 'bg-white'"
-          ></div> -->
           <img
             src="@/assets/images/logotesa.png"
             alt="Logo Tesa"
@@ -65,10 +63,7 @@ const handleLogout = () => {
           <li class="nav-item relative group py-1 px-6">
             <RouterLink
               :to="{ name: 'home' }"
-              :class="[
-                isWhiteBackgroundPage ? 'text-black' : 'text-white',
-                
-              ]"
+              :class="[isWhiteBackgroundPage ? 'text-black' : 'text-white']"
             >
               HOME
             </RouterLink>
@@ -76,10 +71,7 @@ const handleLogout = () => {
           <li class="nav-item relative group py-1 px-6">
             <RouterLink
               :to="{ name: 'destination' }"
-              :class="[
-                isWhiteBackgroundPage ? 'text-black' : 'text-white',
-                
-              ]"
+              :class="[isWhiteBackgroundPage ? 'text-black' : 'text-white']"
             >
               DESTINATION
             </RouterLink>
@@ -87,10 +79,7 @@ const handleLogout = () => {
           <li class="nav-item relative group py-1 px-6">
             <RouterLink
               :to="{ name: 'about' }"
-              :class="[
-                isWhiteBackgroundPage ? 'text-black' : 'text-white',
-                
-              ]"
+              :class="[isWhiteBackgroundPage ? 'text-black' : 'text-white']"
             >
               ABOUT
             </RouterLink>
@@ -100,12 +89,13 @@ const handleLogout = () => {
         <!-- Auth Buttons (Desktop) -->
         <div class="hidden md:flex space-x-4">
           <template v-if="isLoggedIn">
-            <button
-              @click="handleLogout"
-              class="px-4 py-2 rounded-lg font-semibold text-white bg-red-600 hover:bg-red-700"
-            >
-              Logout
-            </button>
+            <RouterLink :to="{ name: 'profile' }">
+              <img
+                :src="profilepicture"
+                alt="User Profile"
+                class="w-12 h-12 rounded-full border border-white object-cover"
+              />
+            </RouterLink>
           </template>
           <template v-else>
             <RouterLink
@@ -175,45 +165,17 @@ const handleLogout = () => {
       class="fixed top-0 right-0 h-full w-64 bg-white text-black p-6 z-50 transform transition-transform duration-300 shadow-lg"
       :class="{ 'translate-x-0': isSidebarOpen, 'translate-x-full': !isSidebarOpen }"
     >
-      <ul class="space-y-4 font-semibold mt-12">
-        <li>
-          <RouterLink
-            @click="toggleSidebar"
-            :to="{ name: 'home' }"
-            class="block text-center py-2 hover:underline transition"
-          >
-            HOME
-          </RouterLink>
-        </li>
-        <li>
-          <RouterLink
-            @click="toggleSidebar"
-            :to="{ name: 'destination' }"
-            class="block text-center py-2 hover:underline transition"
-          >
-            DESTINATION
-          </RouterLink>
-        </li>
-        <li>
-          <RouterLink
-            @click="toggleSidebar"
-            :to="{ name: 'about' }"
-            class="block text-center py-2 hover:underline transition"
-          >
-            ABOUT
-          </RouterLink>
-        </li>
-      </ul>
 
-      <!-- Auth Buttons (Mobile) -->
-      <div class="mt-10 flex flex-col space-y-4">
+    <!-- Auth Buttons (Mobile) -->
+      <div class="mt-6 flex flex-col space-y-4 items-center">
         <template v-if="isLoggedIn">
-          <button
-            @click="() => { handleLogout(); toggleSidebar(); }"
-            class="w-full text-center px-4 py-2 rounded-lg font-semibold transition bg-red-600 text-white hover:bg-red-700"
-          >
-            Logout
-          </button>
+          <RouterLink :to="{ name: 'profile' }">
+            <img
+              :src="profilepicture"
+              alt="User Profile"
+              class="w-15 h-15 rounded-full border border-white object-cover"
+            />
+          </RouterLink>
         </template>
         <template v-else>
           <RouterLink
@@ -232,6 +194,38 @@ const handleLogout = () => {
           </RouterLink>
         </template>
       </div>
+
+      <ul class="space-y-4 font-semibold mt-6">
+        <li>
+          <RouterLink
+            @click="toggleSidebar"
+            :to="{ name: 'home' }"
+            class="w-full flex justify-center py-2 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-all"
+          >
+            HOME
+          </RouterLink>
+        </li>
+        <li>
+          <RouterLink
+            @click="toggleSidebar"
+            :to="{ name: 'destination' }"
+            class="w-full flex justify-center py-2 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-all"
+          >
+            DESTINATION
+          </RouterLink>
+        </li>
+        <li>
+          <RouterLink
+            @click="toggleSidebar"
+            :to="{ name: 'about' }"
+            class="w-full flex justify-center py-2 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-all"
+          >
+            ABOUT
+          </RouterLink>
+        </li>
+      </ul>
+
+      
     </aside>
   </div>
 </template>
