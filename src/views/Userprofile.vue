@@ -1,6 +1,16 @@
 <script setup>
 import { ref } from 'vue'
 import penari from '@/assets/images/penari.jpg'
+import { useRouter } from 'vue-router'
+import { onMounted } from 'vue'
+
+
+
+onMounted (() => {
+  if (!localStorage.getItem('profilepicture')) {
+    localStorage.setItem('profilepicture',penari)
+  }
+})
 
 const menuItems = [
   { label: 'Dashboard', key: 'dashboard' },
@@ -10,11 +20,19 @@ const menuItems = [
 ]
 
 const currentView = ref('dashboard')
+const router = useRouter()
+
+function handleLogout() {
+  localStorage.removeItem('access')
+  localStorage.removeItem('refresh')
+  sessionStorage.removeItem('access')
+  sessionStorage.removeItem('refresh')
+  router.push({ name: 'home' })
+}
 
 function selectMenu(key) {
   if (key === 'logout') {
-    alert('Logout clicked!'); 
-    // lakukan proses logout di sini (misal clear token, redirect)
+    handleLogout()
     return
   }
   currentView.value = key
