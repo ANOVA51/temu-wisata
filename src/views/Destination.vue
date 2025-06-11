@@ -50,7 +50,7 @@ const destinasi = [
       Street: 'Jalan Gautama Ubud',
       'Sub-district': 'Ubud',
       Regency: 'Gianyar',
-      'Maps Link': 'https://maps.app.goo.gl/CjYk3kxVF1ziqkDAA',
+      'Maps Link': 'https://maps.app.goo.gl/HDxazXZxpj9wh5pN6',
     },
   },
   {
@@ -69,7 +69,7 @@ const destinasi = [
       Street: 'Jalan Gautama Ubud',
       'Sub-district': 'Ubud',
       Regency: 'Gianyar',
-      'Maps Link': 'https://maps.app.goo.gl/CjYk3kxVF1ziqkDAA',
+      'Maps Link': 'https://maps.app.goo.gl/HDxazXZxpj9wh5pN6',
     },
   },
   {
@@ -88,7 +88,7 @@ const destinasi = [
       Street: 'Jalan Gautama Ubud',
       'Sub-district': 'Ubud',
       Regency: 'Gianyar',
-      'Maps Link': 'https://maps.app.goo.gl/CjYk3kxVF1ziqkDAA',
+      'Maps Link': 'https://maps.app.goo.gl/HDxazXZxpj9wh5pN6',
     },
   },
   {
@@ -107,7 +107,7 @@ const destinasi = [
       Street: 'Jalan Gautama Ubud',
       'Sub-district': 'Ubud',
       Regency: 'Gianyar',
-      'Maps Link': 'https://maps.app.goo.gl/CjYk3kxVF1ziqkDAA',
+      'Maps Link': 'https://maps.app.goo.gl/HDxazXZxpj9wh5pN6',
     },
   },
   {
@@ -126,7 +126,7 @@ const destinasi = [
       Street: 'Jalan Gautama Ubud',
       'Sub-district': 'Ubud',
       Regency: 'Gianyar',
-      'Maps Link': 'https://maps.app.goo.gl/CjYk3kxVF1ziqkDAA',
+      'Maps Link': 'https://maps.app.goo.gl/HDxazXZxpj9wh5pN6',
     },
   },
   {
@@ -145,7 +145,7 @@ const destinasi = [
       Street: 'Jalan Gautama Ubud',
       'Sub-district': 'Ubud',
       Regency: 'Gianyar',
-      'Maps Link': 'https://maps.app.goo.gl/CjYk3kxVF1ziqkDAA',
+      'Maps Link': 'https://maps.app.goo.gl/HDxazXZxpj9wh5pN6',
     },
   },
   {
@@ -164,7 +164,7 @@ const destinasi = [
       Street: 'Jalan Gautama Ubud',
       'Sub-district': 'Ubud',
       Regency: 'Gianyar',
-      'Maps Link': 'https://maps.app.goo.gl/CjYk3kxVF1ziqkDAA',
+      'Maps Link': 'https://maps.app.goo.gl/HDxazXZxpj9wh5pN6',
     },
   },
   {
@@ -183,7 +183,7 @@ const destinasi = [
       Street: 'Jalan Gautama Ubud',
       'Sub-district': 'Ubud',
       Regency: 'Gianyar',
-      'Maps Link': 'https://maps.app.goo.gl/CjYk3kxVF1ziqkDAA',
+      'Maps Link': 'https://maps.app.goo.gl/HDxazXZxpj9wh5pN6',
     },
   },
 ]
