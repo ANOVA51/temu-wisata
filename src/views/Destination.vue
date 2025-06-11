@@ -1,17 +1,18 @@
 <script setup>
-import plussicon from '@/assets/icon/plussbutton.png'
 import Search from '@/assets/icon/Search.vue'
 import FooterSection from '@/components/FooterSection.vue'
 import Navbar from '@/components/Navbar.vue'
+import loveoutline from '@/components/icons/loveoutline.vue'
+import filledLove from '@/components/icons/filledLove.vue'
 
 import kecak from '@/assets/images/kecak.jpg'
 import penari from '@/assets/images/penari.jpg'
 import statue from '@/assets/images/statue1.jpg'
 import waterfall from '@/assets/images/waterfall1.jpg'
 
-import { computed, onMounted, ref, watch } from 'vue'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
+import { computed, onMounted, ref, watch } from 'vue'
 
 const allDestinations = [
   'Ubud',
@@ -33,6 +34,8 @@ const allDestinations = [
 ]
 
 import savana from '@/assets/images/destinasi/savana.png'
+import FilledLove from '@/components/icons/filledLove.vue'
+import Loveoutline from '@/components/icons/loveoutline.vue'
 
 const destinasi = [
   {
@@ -302,6 +305,12 @@ watch(activeModal, (val) => {
             class="group relative bg-white rounded-xl overflow-hidden h-96 flex-shrink-0 shadow-md transform transition duration-300 hover:scale-105 animate-fade-in"
             @click="activeModal = img"
           >
+            <button
+              @click.stop="toggleFavorite(index)"
+              class="absolute top-3 right-3 p-2 bg-white rounded-full shadow-md hover:scale-110 transition z-20"
+            >
+              <component :is="isFavorite(index) ? filledLove :loveoutline" class="w-7 h-7"/>
+            </button>
             <div class="w-full h-full overflow-hidden">
               <img
                 :src="img.images ? img.images[0] : ''"
@@ -328,31 +337,42 @@ watch(activeModal, (val) => {
     </section>
 
     <!-- Floating Add Button -->
-     
-     <div class="fixed bottom-20 right-6 z-50 flex flex-col items-center">
-  <!-- Balon chat -->
-  <div class="relative mb-2 px-4 py-2 bg-white text-gray-700 text-sm font-medium rounded-full shadow-md">
-    Add a Travel Spot
-    <!-- Segitiga bawah -->
-    <div class="absolute bottom-[-6px] left-1/2 transform -translate-x-1/2 w-3 h-3 bg-white rotate-45 shadow-md"></div>
-  </div>
 
-  <!-- Tombol plus -->
-  <RouterLink to="/forminput">
-    <button
-      class="w-14 h-14 bg-white text-green-600 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center border border-gray-200"
-      aria-label="Add Destination"
-    >
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-      </svg>
-    </button>
-  </RouterLink>
-</div>
+    <div class="fixed bottom-20 right-6 z-50 flex flex-col items-center">
+      <!-- Balon chat -->
+      <div
+        class="relative mb-2 px-4 py-2 bg-white text-gray-700 text-sm font-medium rounded-full shadow-md"
+      >
+        Add a Travel Spot
+        <!-- Segitiga bawah -->
+        <div
+          class="absolute bottom-[-6px] left-1/2 transform -translate-x-1/2 w-3 h-3 bg-white rotate-45 shadow-md"
+        ></div>
+      </div>
 
-
-
-
+      <!-- Tombol plus -->
+      <RouterLink to="/forminput">
+        <button
+          class="w-14 h-14 bg-white text-green-600 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center border border-gray-200"
+          aria-label="Add Destination"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-6 h-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 4v16m8-8H4"
+            />
+          </svg>
+        </button>
+      </RouterLink>
+    </div>
 
     <!-- Modal -->
     <div
