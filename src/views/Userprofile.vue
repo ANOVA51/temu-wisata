@@ -17,7 +17,6 @@ const menuItems = [
   { label: 'Dashboard', key: 'dashboard' },
   { label: 'Favorite Destination', key: 'Favorite' },
   { label: 'wishlist', key: 'wishlist' },
-  { label: 'Settings', key: 'settings' },
   { label: 'Logout', key: 'logout' },
   { label: 'back', key: 'back' },
 ]
@@ -144,14 +143,6 @@ function selectMenu(key) {
         <p>Ini adalah halaman Favorite.</p>
       </section>
 
-      <section v-if="currentView === 'wishlist'">
-        <p>Ini adalah halaman Wishlist.</p>
-
-      </section>
-
-      <section v-if="currentView === 'settings'">
-        <p>Ini adalah halaman Settings.</p>
-      </section>
 
       <section v-if="currentView === 'logout'">
         <!-- Logout biasanya tidak render konten, tapi kita sudah handle di method -->

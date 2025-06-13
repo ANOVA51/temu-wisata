@@ -5,6 +5,7 @@ import Navbar from '@/components/Navbar.vue'
 import Favhiddengem from '@/components/favhiddengem.vue'
 import Testimoni from '@/components/testimoni.vue'
 import FooterSection from '@/components/FooterSection.vue'
+import AskTesa from '@/components/AskTesa.vue'
 
 const allDestinations = [
   'Ubud',
@@ -139,6 +140,7 @@ const toDo = [
         </div>
       </div>
     </section>
+    <AskTesa/>
       <FooterSection />
   </div>
 </template>

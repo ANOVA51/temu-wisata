@@ -36,6 +36,7 @@ const allDestinations = [
 import savana from '@/assets/images/destinasi/savana.png'
 import FilledLove from '@/components/icons/filledLove.vue'
 import Loveoutline from '@/components/icons/loveoutline.vue'
+import AskTesa from '@/components/AskTesa.vue'
 
 const destinasi = [
   {
@@ -333,15 +334,13 @@ watch(activeModal, (val) => {
           {{ showAll ? 'Show Less' : 'Show More' }}
         </button>
       </div>
-      <!--button tambah postingan-->
     </section>
 
-    <!-- Floating Add Button -->
-
-    <div class="fixed bottom-20 right-6 z-50 flex flex-col items-center">
+ <!--add button-->
+    <div class="fixed bottom-40 right-2 z-20 flex flex-col items-center">
       <!-- Balon chat -->
       <div
-        class="relative mb-2 px-4 py-2 bg-white text-gray-700 text-sm font-medium rounded-full shadow-md"
+        class="relative mb-2 px-2 py-2 bg-white text-gray-700 text-sm font-medium rounded-full shadow-md"
       >
         Add a Travel Spot
         <!-- Segitiga bawah -->
@@ -373,7 +372,7 @@ watch(activeModal, (val) => {
         </button>
       </RouterLink>
     </div>
-
+  
     <!-- Modal -->
     <div
       v-if="activeModal"
@@ -485,7 +484,7 @@ watch(activeModal, (val) => {
         </div>
       </div>
     </section>
-
+        <AskTesa/>
     <FooterSection />
   </div>
 </template>
