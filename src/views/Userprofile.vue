@@ -1,6 +1,11 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import penari from '@/assets/images/penari.jpg'
+import HousePoint from '@/components/icons/house-point.vue'
+import Review from '@/components/icons/review.vue'
+import Star from '@/components/icons/star.vue'
+import Wishlist from '@/components/icons/wishlist.vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 
@@ -9,8 +14,9 @@ const currentView = ref('dashboard')
 const menuItems = [
   { label: 'Dashboard', key: 'dashboard' },
   { label: 'Favorite Destination', key: 'Favorite' },
-  { label: 'Settings', key: 'settings' },
-  { label: 'Logout', key: 'logout' }
+  { label: 'wishlist', key: 'wishlist' },
+  { label: 'Logout', key: 'logout' },
+  { label: 'back', key: 'back' },
 ]
 
 // State user
@@ -55,10 +61,16 @@ function handleLogout() {
   sessionStorage.removeItem('refresh')
   router.push({ name: 'home' })
 }
+function goBack() {
+  router.back({name: 'home'})
+}
 
 function selectMenu(key) {
   if (key === 'logout') {
     handleLogout()
+    return
+  } else if (key === 'back') {
+    goBack()
     return
   }
   currentView.value = key
@@ -107,14 +119,22 @@ async function updateProfile() {
     alert('Gagal update profile')
   }
 }
+
+
+
 </script>
 
 <template>
   <div class="flex min-h-screen bg-gray-50">
     <!-- Sidebar -->
-    <aside class="w-64 bg-gradient-to-b from-green-400 to-white shadow-lg p-6 space-y-8 hidden md:block">
+    <aside
+      class="w-64 bg-gradient-to-b from-green-400 to-white shadow-lg p-6 space-y-8 hidden md:block"
+    >
       <!-- User Profile -->
       <div class="text-center">
+        <img
+          :src="penari"
+          alt="User Avatar"
         <img
           :src="profilePreview"
           alt="User Avatar"
@@ -202,9 +222,7 @@ async function updateProfile() {
         <p>Ini adalah halaman Favorite.</p>
       </section>
 
-      <section v-if="currentView === 'settings'">
-        <p>Ini adalah halaman Settings.</p>
-      </section>
+
     </main>
   </div>
 </template>

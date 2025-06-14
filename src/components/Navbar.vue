@@ -2,6 +2,7 @@
 import '@/assets/main.css'
 import { computed, ref } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
+import AskTesa from './AskTesa.vue'
 
 const isSidebarOpen = ref(false)
 const toggleSidebar = () => {
