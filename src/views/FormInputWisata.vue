@@ -81,28 +81,6 @@
             </div>
           </div>
 
-          <!-- Contact Section -->
-          <div class="space-y-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
-              <input
-                v-model="form.phone"
-                type="tel"
-                placeholder="+62 812 3456 7890"
-                class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-              <input
-                v-model="form.email"
-                type="email"
-                placeholder="example@temuwisata.my.id"
-                class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-          </div>
-
           <!-- Photo Upload -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Photo</label>
@@ -226,8 +204,6 @@ const form = ref({
   fasilitas: '', // string, bukan array
   minPrice: null,
   maxPrice: null,
-  phone: '',
-  email: '',
   street: '',
   subDistrict: '',
   regency: '',
@@ -321,8 +297,6 @@ const submitForm = async () => {
       fasilitas: '',
       minPrice: null,
       maxPrice: null,
-      phone: '',
-      email: '',
       street: '',
       subDistrict: '',
       regency: '',
