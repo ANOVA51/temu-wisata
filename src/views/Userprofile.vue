@@ -5,7 +5,6 @@ import HousePoint from '@/components/icons/house-point.vue'
 import Review from '@/components/icons/review.vue'
 import Star from '@/components/icons/star.vue'
 import Wishlist from '@/components/icons/wishlist.vue'
-import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 
@@ -132,9 +131,6 @@ async function updateProfile() {
     >
       <!-- User Profile -->
       <div class="text-center">
-        <img
-          :src="penari"
-          alt="User Avatar"
         <img
           :src="profilePreview"
           alt="User Avatar"
