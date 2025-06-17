@@ -1,208 +1,50 @@
 <script setup>
+import { ref, onMounted, computed } from 'vue'
+import axios from 'axios'
 import Search from '@/assets/icon/Search.vue'
 import FooterSection from '@/components/FooterSection.vue'
 import Navbar from '@/components/Navbar.vue'
 import loveoutline from '@/components/icons/loveoutline.vue'
 import filledLove from '@/components/icons/filledLove.vue'
-
-import kecak from '@/assets/images/kecak.jpg'
-import penari from '@/assets/images/penari.jpg'
-import statue from '@/assets/images/statue1.jpg'
-import waterfall from '@/assets/images/waterfall1.jpg'
-
-import AOS from 'aos'
-import 'aos/dist/aos.css'
-import { computed, onMounted, ref, watch } from 'vue'
-
-const allDestinations = [
-  'Ubud',
-  'Kuta Selatan',
-  'Dalung',
-  'Tegallalang',
-  'Kuta',
-  'Mengwi',
-  'Denpasar',
-  'Payangan',
-  'Sukawati',
-  'Sanur',
-  'Jimbaran',
-  'Nusa Dua',
-  'Canggu',
-  'Seminyak',
-  'Bangli',
-  'Gianyar',
-]
-
-import savana from '@/assets/images/destinasi/savana.png'
 import FilledLove from '@/components/icons/filledLove.vue'
 import Loveoutline from '@/components/icons/loveoutline.vue'
 import AskTesa from '@/components/AskTesa.vue'
+import AOS from 'aos'
+import 'aos/dist/aos.css'
 
-const destinasi = [
-  {
-    images: [savana, kecak, penari, statue, waterfall],
-    name: 'savana tianyar',
-    deskripsi:
-      'Savana Tianyar adalah salah satu hidden gem di Bali yang memiliki suasana eksotik ala Afrika.',
-    mapUrl:
-      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.785349860783!2d115.50615607456099!3d-8.224328682550388!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd1fa262ae6d15f%3A0x21d7bc44437e774c!2sSavana%20Tianyar!5e0!3m2!1sid!2sid!4v1748139614578!5m2!1sid!2sid',
-    tabel: {
-      Category: 'Nature',
-      Facilities: 'Restroom, Parking Area',
-      'Entrance Ticket': 'Rp 10.000 - Rp 250.000',
-      Contact: '+62 812 3456 7890',
-      Email: 'example@temuwisata.my.id',
-      Street: 'Jalan Gautama Ubud',
-      'Sub-district': 'Ubud',
-      Regency: 'Gianyar',
-      'Maps Link': 'https://maps.app.goo.gl/CjYk3kxVF1ziqkDAA',
-    },
-  },
-  {
-    images: [savana, kecak, penari, statue, waterfall],
-    name: 'savana tianyar',
-    deskripsi:
-      'Savana Tianyar adalah salah satu hidden gem di Bali yang memiliki suasana eksotik ala Afrika.',
-    mapUrl:
-      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.785349860783!2d115.50615607456099!3d-8.224328682550388!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd1fa262ae6d15f%3A0x21d7bc44437e774c!2sSavana%20Tianyar!5e0!3m2!1sid!2sid!4v1748139614578!5m2!1sid!2sid',
-    tabel: {
-      Category: 'Nature',
-      Facilities: 'Restroom, Parking Area',
-      'Entrance Ticket': 'Rp 10.000 - Rp 250.000',
-      Contact: '+62 812 3456 7890',
-      Email: 'example@temuwisata.my.id',
-      Street: 'Jalan Gautama Ubud',
-      'Sub-district': 'Ubud',
-      Regency: 'Gianyar',
-      'Maps Link': 'https://maps.app.goo.gl/CjYk3kxVF1ziqkDAA',
-    },
-  },
-  {
-    images: [savana, kecak, penari, statue, waterfall],
-    name: 'savana tianyar',
-    deskripsi:
-      'Savana Tianyar adalah salah satu hidden gem di Bali yang memiliki suasana eksotik ala Afrika.',
-    mapUrl:
-      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.785349860783!2d115.50615607456099!3d-8.224328682550388!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd1fa262ae6d15f%3A0x21d7bc44437e774c!2sSavana%20Tianyar!5e0!3m2!1sid!2sid!4v1748139614578!5m2!1sid!2sid',
-    tabel: {
-      Category: 'Nature',
-      Facilities: 'Restroom, Parking Area',
-      'Entrance Ticket': 'Rp 10.000 - Rp 250.000',
-      Contact: '+62 812 3456 7890',
-      Email: 'example@temuwisata.my.id',
-      Street: 'Jalan Gautama Ubud',
-      'Sub-district': 'Ubud',
-      Regency: 'Gianyar',
-      'Maps Link': 'https://maps.app.goo.gl/CjYk3kxVF1ziqkDAA',
-    },
-  },
-  {
-    images: [savana, kecak, penari, statue, waterfall],
-    name: 'savana tianyar',
-    deskripsi:
-      'Savana Tianyar adalah salah satu hidden gem di Bali yang memiliki suasana eksotik ala Afrika.',
-    mapUrl:
-      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.785349860783!2d115.50615607456099!3d-8.224328682550388!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd1fa262ae6d15f%3A0x21d7bc44437e774c!2sSavana%20Tianyar!5e0!3m2!1sid!2sid!4v1748139614578!5m2!1sid!2sid',
-    tabel: {
-      Category: 'Nature',
-      Facilities: 'Restroom, Parking Area',
-      'Entrance Ticket': 'Rp 10.000 - Rp 250.000',
-      Contact: '+62 812 3456 7890',
-      Email: 'example@temuwisata.my.id',
-      Street: 'Jalan Gautama Ubud',
-      'Sub-district': 'Ubud',
-      Regency: 'Gianyar',
-      'Maps Link': 'https://maps.app.goo.gl/CjYk3kxVF1ziqkDAA',
-    },
-  },
-  {
-    images: [savana, kecak, penari, statue, waterfall],
-    name: 'savana tianyar',
-    deskripsi:
-      'Savana Tianyar adalah salah satu hidden gem di Bali yang memiliki suasana eksotik ala Afrika.',
-    mapUrl:
-      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.785349860783!2d115.50615607456099!3d-8.224328682550388!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd1fa262ae6d15f%3A0x21d7bc44437e774c!2sSavana%20Tianyar!5e0!3m2!1sid!2sid!4v1748139614578!5m2!1sid!2sid',
-    tabel: {
-      Category: 'Nature',
-      Facilities: 'Restroom, Parking Area',
-      'Entrance Ticket': 'Rp 10.000 - Rp 250.000',
-      Contact: '+62 812 3456 7890',
-      Email: 'example@temuwisata.my.id',
-      Street: 'Jalan Gautama Ubud',
-      'Sub-district': 'Ubud',
-      Regency: 'Gianyar',
-      'Maps Link': 'https://maps.app.goo.gl/CjYk3kxVF1ziqkDAA',
-    },
-  },
-  {
-    images: [savana, kecak, penari, statue, waterfall],
-    name: 'savana tianyar',
-    deskripsi:
-      'Savana Tianyar adalah salah satu hidden gem di Bali yang memiliki suasana eksotik ala Afrika.',
-    mapUrl:
-      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.785349860783!2d115.50615607456099!3d-8.224328682550388!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd1fa262ae6d15f%3A0x21d7bc44437e774c!2sSavana%20Tianyar!5e0!3m2!1sid!2sid!4v1748139614578!5m2!1sid!2sid',
-    tabel: {
-      Category: 'Nature',
-      Facilities: 'Restroom, Parking Area',
-      'Entrance Ticket': 'Rp 10.000 - Rp 250.000',
-      Contact: '+62 812 3456 7890',
-      Email: 'example@temuwisata.my.id',
-      Street: 'Jalan Gautama Ubud',
-      'Sub-district': 'Ubud',
-      Regency: 'Gianyar',
-      'Maps Link': 'https://maps.app.goo.gl/CjYk3kxVF1ziqkDAA',
-    },
-  },
-  {
-    images: [savana, kecak, penari, statue, waterfall],
-    name: 'savana tianyar',
-    deskripsi:
-      'Savana Tianyar adalah salah satu hidden gem di Bali yang memiliki suasana eksotik ala Afrika.',
-    mapUrl:
-      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.785349860783!2d115.50615607456099!3d-8.224328682550388!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd1fa262ae6d15f%3A0x21d7bc44437e774c!2sSavana%20Tianyar!5e0!3m2!1sid!2sid!4v1748139614578!5m2!1sid!2sid',
-    tabel: {
-      Category: 'Nature',
-      Facilities: 'Restroom, Parking Area',
-      'Entrance Ticket': 'Rp 10.000 - Rp 250.000',
-      Contact: '+62 812 3456 7890',
-      Email: 'example@temuwisata.my.id',
-      Street: 'Jalan Gautama Ubud',
-      'Sub-district': 'Ubud',
-      Regency: 'Gianyar',
-      'Maps Link': 'https://maps.app.goo.gl/CjYk3kxVF1ziqkDAA',
-    },
-  },
-  {
-    images: [savana],
-    name: 'savana tianyar',
-    deskripsi:
-      'Savana Tianyar adalah salah satu hidden gem di Bali yang memiliki suasana eksotik ala Afrika.',
-    mapUrl:
-      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.785349860783!2d115.50615607456099!3d-8.224328682550388!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd1fa262ae6d15f%3A0x21d7bc44437e774c!2sSavana%20Tianyar!5e0!3m2!1sid!2sid!4v1748139614578!5m2!1sid!2sid',
-    tabel: {
-      Category: 'Nature',
-      Facilities: 'Restroom, Parking Area',
-      'Entrance Ticket': 'Rp 10.000 - Rp 250.000',
-      Contact: '+62 812 3456 7890',
-      Email: 'example@temuwisata.my.id',
-      Street: 'Jalan Gautama Ubud',
-      'Sub-district': 'Ubud',
-      Regency: 'Gianyar',
-      'Maps Link': 'https://maps.app.goo.gl/CjYk3kxVF1ziqkDAA',
-    },
-  },
-]
-
+const spots = ref([])
+const loading = ref(true)
 const showAll = ref(false)
 const selectedLocation = ref('')
 const favorites = ref([])
-const loading = ref(true)
 const activeModal = ref(null)
-const currentIndex = ref(0)
+const modalImages = ref([])
+const modalCurrentIndex = ref(0)
 
-onMounted(() => {
+onMounted(async () => {
+  try {
+    const res = await axios.get('http://127.0.0.1:8000/api/touristspots/all/')
+    spots.value = res.data.data
+  } catch (e) {
+    alert('Gagal mengambil data destinasi')
+  }
   setTimeout(() => (loading.value = false), 1000)
   AOS.init()
+})
+
+function getPrimaryImage(spot) {
+  const img = spot.images.find(img => img.is_primary)
+  return img ? `http://127.0.0.1:8000${img.file_name}` : ''
+}
+
+const filteredSpots = computed(() => {
+  let result = spots.value
+  if (selectedLocation.value) {
+    result = result.filter((d) =>
+      d.name.toLowerCase().includes(selectedLocation.value.toLowerCase())
+    )
+  }
+  return showAll.value ? result : result.slice(0, 8)
 })
 
 const toggleFavorite = (index) => {
@@ -215,27 +57,16 @@ const toggleFavorite = (index) => {
 
 const isFavorite = (index) => favorites.value.includes(index)
 
-const filteredDestinasi = computed(() => {
-  let result = destinasi
-  if (selectedLocation.value) {
-    result = result.filter((d) =>
-      d.name.toLowerCase().includes(selectedLocation.value.toLowerCase()),
-    )
-  }
-  return showAll.value ? result : result.slice(0, 8)
-})
-
-const nextImage = () => {
-  if (activeModal.value && activeModal.value.images && activeModal.value.images.length > 0) {
-    currentIndex.value = (currentIndex.value + 1) % activeModal.value.images.length
-  }
+// Modal: tampilkan semua gambar (tanpa memperhitungkan is_primary)
+function openModal(spot) {
+  activeModal.value = spot
+  modalImages.value = spot.images.map(img => `http://127.0.0.1:8000${img.file_name}`)
+  modalCurrentIndex.value = 0
 }
-
-watch(activeModal, (val) => {
-  if (val && val.images && val.images.length > 0) {
-    currentIndex.value = 0
-  }
-})
+function nextImage() {
+  if (!modalImages.value.length) return
+  modalCurrentIndex.value = (modalCurrentIndex.value + 1) % modalImages.value.length
+}
 </script>
 
 <template>
@@ -271,8 +102,8 @@ watch(activeModal, (val) => {
       <div class="flex justify-center mb-6">
         <select v-model="selectedLocation" class="border rounded px-4 py-2 shadow">
           <option value="">All Locations</option>
-          <option v-for="loc in allDestinations" :key="loc" :value="loc">
-            {{ loc }}
+          <option v-for="spot in spots" :key="spot.spot_id" :value="spot.kota">
+            {{ spot.kota }}
           </option>
         </select>
       </div>
@@ -284,6 +115,7 @@ watch(activeModal, (val) => {
             type="text"
             placeholder="Search..."
             class="w-full py-3 pl-5 pr-12 rounded-full border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-lime-400"
+            v-model="selectedLocation"
           />
           <Search
             class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5"
@@ -301,29 +133,31 @@ watch(activeModal, (val) => {
         </template>
         <template v-else>
           <div
-            v-for="(img, index) in filteredDestinasi"
-            :key="index"
+            v-for="(spot, index) in filteredSpots"
+            :key="spot.spot_id"
             class="group relative bg-white rounded-xl overflow-hidden h-96 flex-shrink-0 shadow-md transform transition duration-300 hover:scale-105 animate-fade-in"
-            @click="activeModal = img"
+            @click="openModal(spot)"
           >
             <button
               @click.stop="toggleFavorite(index)"
               class="absolute top-3 right-3 p-2 bg-white rounded-full shadow-md hover:scale-110 transition z-20"
             >
-              <component :is="isFavorite(index) ? filledLove :loveoutline" class="w-7 h-7"/>
+              <component :is="isFavorite(index) ? filledLove : loveoutline" class="w-7 h-7"/>
             </button>
             <div class="w-full h-full overflow-hidden">
               <img
-                :src="img.images ? img.images[0] : ''"
-                :alt="img.name"
+                :src="getPrimaryImage(spot)"
+                :alt="spot.name"
                 class="w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-110"
               />
             </div>
             <div
-              class="absolute z-10 bg-gradient-to-t from-black/80 to-transparent text-white bottom-0 h-1/2 px-4 py-3"
+              class="absolute z-10 inset-x-0 bottom-0 h-full bg-gradient-to-t from-black/80 to-transparent text-white px-4 py-6 flex flex-col justify-end"
             >
-              <p class="font-semibold text-lg text-center pb-1">{{ img.name }}</p>
-              <p class="text-sm">{{ img.deskripsi }}</p>
+              <p class="font-bold text-xl mb-1">{{ spot.name }}</p>
+              <p class="text-sm leading-snug">
+                {{ spot.description.slice(0, 60) }}{{ spot.description.length > 60 ? '...' : '' }}
+              </p>
             </div>
           </div>
         </template>
@@ -336,7 +170,7 @@ watch(activeModal, (val) => {
       </div>
     </section>
 
- <!--add button-->
+    <!--add button-->
     <div class="fixed bottom-40 right-2 z-20 flex flex-col items-center">
       <!-- Balon chat -->
       <div
@@ -372,8 +206,8 @@ watch(activeModal, (val) => {
         </button>
       </RouterLink>
     </div>
-  
-    <!-- Modal -->
+
+    <!-- Modal (Detail Spot Wisata) -->
     <div
       v-if="activeModal"
       class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
@@ -383,22 +217,21 @@ watch(activeModal, (val) => {
       <div
         class="bg-white rounded-xl p-8 w-full max-w-5xl shadow-lg flex flex-col md:flex-row gap-10 items-center relative"
       >
-        <!-- Left: Image/Carousel -->
+        <!-- Gambar carousel style klik untuk next, tampilkan semua gambar -->
         <div class="flex flex-col items-center w-full md:w-1/2">
           <div
-            v-if="activeModal.images && activeModal.images.length > 0"
             class="relative w-full max-w-[360px] mx-auto h-[250px] cursor-pointer"
             @click="nextImage"
           >
             <div class="relative w-full h-full">
               <div
-                v-for="(img, index) in activeModal.images"
+                v-for="(img, index) in modalImages"
                 :key="img"
                 class="absolute top-0 transition-all duration-500 ease-in-out rounded-xl overflow-hidden shadow-lg"
                 :class="[
-                  index === currentIndex
+                  index === modalCurrentIndex
                     ? 'z-30 scale-100 left-0'
-                    : index === (currentIndex + 1) % activeModal.images.length
+                    : index === (modalCurrentIndex + 1) % modalImages.length
                       ? 'z-20 scale-95 left-[25%]'
                       : 'z-10 scale-90 left-[25%]',
                 ]"
@@ -412,48 +245,45 @@ watch(activeModal, (val) => {
               </div>
             </div>
           </div>
-          <img
-            v-else-if="activeModal.image"
-            :src="activeModal.image"
-            :alt="activeModal.name"
-            class="rounded-lg object-cover mb-6"
-            style="width: 320px; height: 320px; max-width: 100%; max-height: 320px"
-          />
+          <div class="text-xs text-gray-500 mt-2">
+            Klik gambar untuk melihat selanjutnya ({{ modalCurrentIndex + 1 }}/{{ modalImages.length }})
+          </div>
         </div>
         <!-- Right: Details -->
         <div class="flex-1 flex flex-col justify-between w-full md:w-1/2">
           <div>
             <div class="text-2xl font-bold text-gray-700 mb-2">{{ activeModal.name }}</div>
-            <div class="text-base text-gray-800 mb-4">{{ activeModal.deskripsi }}</div>
-            <div v-if="activeModal.tabel" class="mb-4">
-              <table class="w-full text-sm">
-                <tbody>
-                  <tr v-for="(val, key) in activeModal.tabel" :key="key">
-                    <td class="font-semibold py-1 pr-2 text-gray-600">{{ key }}</td>
-                    <td class="py-1 text-gray-800">
-                      <template v-if="key === 'Maps Link'">
-                        <a :href="val" target="_blank" class="text-green-600 underline"
-                          >Lihat di Maps</a
-                        >
-                      </template>
-                      <template v-else>
-                        {{ val }}
-                      </template>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+            <div class="text-base text-gray-800 mb-4">{{ activeModal.description }}</div>
+            <div class="mb-2">
+              <span class="font-semibold">Kategori:</span>
+              <span>{{ activeModal.category }}</span>
             </div>
-            <div v-if="activeModal.mapUrl" class="mb-4">
-              <iframe
-                :src="activeModal.mapUrl"
-                width="100%"
-                height="200"
-                style="border: 0; border-radius: 12px"
-                allowfullscreen=""
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"
-              ></iframe>
+            <div class="mb-2">
+              <span class="font-semibold">Fasilitas:</span>
+              <span>{{ activeModal.fasilitas }}</span>
+            </div>
+            <div class="mb-2">
+              <span class="font-semibold">Harga:</span>
+              <span>
+                Rp{{ Number(activeModal.price_min).toLocaleString() }} - Rp{{ Number(activeModal.price_max).toLocaleString() }}
+              </span>
+            </div>
+            <div class="mb-2">
+              <span class="font-semibold">Alamat:</span>
+              <span>
+                {{ activeModal.address }},
+                {{ activeModal.desa }},
+                {{ activeModal.kecamatan }},
+                {{ activeModal.kota }}
+              </span>
+            </div>
+            <div class="mb-2">
+              <span class="font-semibold">Google Maps:</span>
+              <a
+                :href="activeModal.google_maps_url"
+                target="_blank"
+                class="text-green-600 underline break-all"
+              >{{ activeModal.google_maps_url }}</a>
             </div>
           </div>
           <button
@@ -484,7 +314,7 @@ watch(activeModal, (val) => {
         </div>
       </div>
     </section>
-        <AskTesa/>
+    <AskTesa/>
     <FooterSection />
   </div>
 </template>
