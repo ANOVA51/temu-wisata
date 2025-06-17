@@ -115,8 +115,8 @@ const profilepicture = computed(() => {
               class="px-4 py-2 rounded-lg font-semibold"
               :class="
                 isWhiteBackgroundPage
-                  ? 'bg-black text-white hover:bg-gray-800'
-                  : 'bg-white text-black hover:bg-gray-200'
+                  ? 'text-black border border-black hover:bg-black hover:text-white'
+                  : 'text-white border border-white hover:bg-white hover:text-black'
               "
             >
               Signup
@@ -226,7 +226,7 @@ const profilepicture = computed(() => {
         </li>
       </ul>
 
-      
+
     </aside>
   </div>
 </template>
