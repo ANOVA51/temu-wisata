@@ -17,6 +17,7 @@ const menuItems = [
   { label: 'Dashboard', key: 'dashboard' },
   { label: 'Favorite Destination', key: 'Favorite' },
   { label: 'wishlist', key: 'wishlist' },
+  { label: 'Explored Destination', key: 'Explored Destination' },
   { label: 'Logout', key: 'logout' },
   { label: 'back', key: 'back' },
 ]
@@ -96,7 +97,8 @@ function selectMenu(key) {
           </p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6 ">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6 "
+        @click="selectMenu('Explored Destination')">
           <div class="bg-white shadow rounded-xl p-4 text-center hover:shadow-lg transform transition duration-300 hover:scale-105">
             <div class="flex items-center justify-center mb-2">
               <HousePoint class="h-10 text-blue-500"/>
@@ -141,6 +143,14 @@ function selectMenu(key) {
 
       <section v-if="currentView === 'Favorite'">
         <p>Ini adalah halaman Favorite.</p>
+      </section>
+
+      <section v-if="currentView === 'wishlist'">
+        <p>Ini adalah halaman wishlist.</p>
+      </section>
+
+      <section v-if="currentView === 'Explored Destination'">
+        <p>Ini adalah halaman explored destination.</p>
       </section>
 
 

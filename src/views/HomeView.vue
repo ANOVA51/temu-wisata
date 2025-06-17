@@ -32,6 +32,10 @@ const visibleDestinations = computed(() =>
 
 import nature from '@/assets/icon/landscape.png'
 import FnB from '@/assets/icon/FnB.png'
+import relax from '@/assets/icon/yoga.png'
+import nightlife from '@/assets/icon/nightlife.png'
+import beach from '@/assets/icon/sunset.png'
+
 
 const toDo = [
   {
@@ -41,20 +45,15 @@ const toDo = [
     image : FnB,
   },
   {
-    image : FnB,
+    image : relax,
   },
   {
-    image : FnB,
+    image : nightlife,
   },
   {
-    image : FnB,
+    image : beach,
   },
-  {
-    image : FnB,
-  },
-  {
-    image : FnB,
-  },
+  
 ]
 </script>
 
