@@ -82,11 +82,11 @@ function nextImage() {
       </h1>
     </div>
     <!-- Hero Section -->
-    <section class="py-16 flex justify-center">
+    <section class="py-10 flex justify-center">
       <img
         src="@/assets/images/herobanner1.png"
         alt="Hero Banner"
-        class="rounded-3xl max-w-7xl w-full max-h-3xl h-full shadow-lg"
+        class="rounded-3xl w-300 h-150  shadow-LG"
       />
     </section>
 
@@ -125,8 +125,8 @@ function nextImage() {
 
       <!-- Grid Card -->
       <div
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 px-10"
-        style="min-width: max-content"
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 px-10 overflow-x-hidden"
+      
       >
         <template v-if="loading">
           <div v-for="i in 8" :key="i" class="animate-pulse bg-gray-200 rounded-xl h-72"></div>
