@@ -63,49 +63,9 @@ import tesa from '@/assets/images/profile-tesa.png'
 const showChatCard = ref(false)
 const userInput = ref('')
 const chatHistory = ref([
-  { sender: 'bot', message: "Hi there! I'm Tesa . Ask me anything!" }
+  { sender: 'bot', message: "Hi there! I'm Tesa. Ask me anything!" }
 ])
 const chatContainer = ref(null)
-
-
-// NLP Intent Matching
-const intents = [
-  {
-    name: 'greeting',
-    keywords: ['hi', 'hello', 'hey'],
-    response: "Hello! How can I help you today?"
-  },
-  {
-    name: 'recommendation',
-    keywords: ['recommend', 'suggestion', 'advise'],
-    response: "I suggest visiting Ubud or Kuta! "
-  },
-  {
-    name: 'beach',
-    keywords: ['beach', 'sea', 'coast'],
-    response: "You might love Kuta Beach or Nusa Dua "
-  },
-  {
-    name: 'waterfall',
-    keywords: ['waterfall', 'fall', 'water'],
-    response: "Sekumpul and Gitgit waterfalls are great! "
-  },
-  {
-    name: 'thanks',
-    keywords: ['thanks', 'thank you'],
-    response: "You're welcome! "
-  }
-]
-
-function getIntent(input) {
-  const text = input.toLowerCase()
-  for (const intent of intents) {
-    if (intent.keywords.some(keyword => text.includes(keyword))) {
-      return intent.response
-    }
-  }
-  return "Sorry, I didn’t quite catch that "
-}
 
 function scrollToBottom() {
   nextTick(() => {
@@ -115,30 +75,38 @@ function scrollToBottom() {
   })
 }
 
-function handleUserInput() {
+async function handleUserInput() {
   const input = userInput.value.trim()
   if (!input) return
 
   chatHistory.value.push({ sender: 'user', message: input })
   scrollToBottom()
 
-  const reply = getIntent(input)
+  userInput.value = ''
 
-  setTimeout(() => {
+  // Kirim ke API chatbot backend
+  try {
+    const res = await fetch('http://127.0.0.1:8000/api/chat/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt: input })
+    })
+    const data = await res.json()
+    const reply = data.response || "Maaf, Tesa tidak bisa menjawab saat ini."
     chatHistory.value.push({ sender: 'bot', message: reply })
     scrollToBottom()
-  }, 500)
-
-  userInput.value = ''
+  } catch (e) {
+    chatHistory.value.push({ sender: 'bot', message: "Maaf, terjadi kesalahan pada server." })
+    scrollToBottom()
+  }
 }
 
 // Toggle chat card
 function toggleChatCard() {
+  
   showChatCard.value = !showChatCard.value
   nextTick(() => scrollToBottom())
 }
-
-
 </script>
 
 <style scoped>
