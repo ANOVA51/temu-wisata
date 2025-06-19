@@ -36,9 +36,6 @@
             placeholder="Ask something..."
             class="flex-1 border px-3 py-2 rounded-md text-sm focus:ring-2 focus:ring-purple-400"
           />
-          <button type="button" @click="startVoice" class="text-purple-600 hover:text-purple-800">
-            🎙️
-          </button>
           <button
             type="submit"
             class="bg-purple-600 text-white px-3 rounded hover:bg-purple-700"
@@ -46,7 +43,6 @@
             Send
           </button>
         </form>
-        <p v-if="isListening" class="text-xs text-purple-500 mt-1">Listening...</p>
       </div>
     </transition>
 
@@ -71,35 +67,33 @@ const chatHistory = ref([
 ])
 const chatContainer = ref(null)
 
-const isListening = ref(false)
-let recognition
 
 // NLP Intent Matching
 const intents = [
   {
     name: 'greeting',
     keywords: ['hi', 'hello', 'hey'],
-    response: "Hello! 👋 How can I help you today?"
+    response: "Hello! How can I help you today?"
   },
   {
     name: 'recommendation',
     keywords: ['recommend', 'suggestion', 'advise'],
-    response: "I suggest visiting Ubud or Kuta! 🌴"
+    response: "I suggest visiting Ubud or Kuta! "
   },
   {
     name: 'beach',
     keywords: ['beach', 'sea', 'coast'],
-    response: "You might love Kuta Beach or Nusa Dua 🏖️"
+    response: "You might love Kuta Beach or Nusa Dua "
   },
   {
     name: 'waterfall',
     keywords: ['waterfall', 'fall', 'water'],
-    response: "Sekumpul and Gitgit waterfalls are great! 💧"
+    response: "Sekumpul and Gitgit waterfalls are great! "
   },
   {
     name: 'thanks',
     keywords: ['thanks', 'thank you'],
-    response: "You're welcome! 😊"
+    response: "You're welcome! "
   }
 ]
 
@@ -110,7 +104,7 @@ function getIntent(input) {
       return intent.response
     }
   }
-  return "Sorry, I didn’t quite catch that 😅"
+  return "Sorry, I didn’t quite catch that "
 }
 
 function scrollToBottom() {
@@ -144,39 +138,7 @@ function toggleChatCard() {
   nextTick(() => scrollToBottom())
 }
 
-// Start voice recognition
-function startVoice() {
-  if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
-    alert("Voice recognition not supported in your browser.")
-    return
-  }
 
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
-  recognition = new SpeechRecognition()
-  recognition.lang = 'en-US'
-  recognition.interimResults = false
-  recognition.maxAlternatives = 1
-
-  recognition.onstart = () => {
-    isListening.value = true
-  }
-
-  recognition.onresult = event => {
-    const transcript = event.results[0][0].transcript
-    userInput.value = transcript
-    handleUserInput()
-  }
-
-  recognition.onerror = event => {
-    console.error("Voice error:", event.error)
-  }
-
-  recognition.onend = () => {
-    isListening.value = false
-  }
-
-  recognition.start()
-}
 </script>
 
 <style scoped>
