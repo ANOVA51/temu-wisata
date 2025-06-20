@@ -28,6 +28,7 @@ const router = useRouter()
 const user = ref(null)
 const testimoniForm = ref({message:''})
 const testimoniImage = ref(null)
+const favoriteSpotIds = ref([]) // Menyimpan spot_id yang sudah jadi favorit
 
 onMounted(async () => {
   try {
@@ -36,10 +37,21 @@ onMounted(async () => {
   } catch (e) {
     alert('Gagal mengambil data destinasi')
   }
-  // Ambil data user login dari localstorage
-  const userData =JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user'))
-  if (userData) user.value = userData
-    
+  // Ambil data user login dari localstorage/sessionstorage
+  const userData = JSON.parse(localStorage.getItem('userData') || sessionStorage.getItem('userData'))
+  if (userData) {
+    user.value = userData
+    // Ambil daftar favorit user dari backend
+    try {
+      const token = localStorage.getItem('access') || sessionStorage.getItem('access')
+      const res = await axios.get('http://localhost:8000/api/favorites/',
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+      favoriteSpotIds.value = res.data.favorites.map(fav => fav.spot_id)
+    } catch (e) {
+      favoriteSpotIds.value = []
+    }
+  }
   setTimeout(() => (loading.value = false), 1000)
   AOS.init()
 })
@@ -102,15 +114,44 @@ const filteredSpots = computed(() => {
   return showAll.value ? result : result.slice(0, 8)
 })
 
-const toggleFavorite = (index) => {
-  if (favorites.value.includes(index)) {
-    favorites.value = favorites.value.filter((i) => i !== index)
+async function toggleFavorite(spot) {
+  if (!user.value) {
+    alert('Silakan login untuk menambah destinasi favorit.')
+    router.push('/login')
+    return
+  }
+  const token = localStorage.getItem('access') || sessionStorage.getItem('access')
+  if (isFavorite(spot)) {
+    // Hapus dari favorit
+    try {
+      await axios.delete(
+        `http://localhost:8000/api/favorites/remove/${spot.spot_id}/`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+      // Update daftar favorit setelah hapus
+      favoriteSpotIds.value = favoriteSpotIds.value.filter(id => id !== spot.spot_id)
+    } catch (e) {
+      alert('Gagal menghapus dari favorit')
+    }
   } else {
-    favorites.value.push(index)
+    // Tambah ke favorit
+    try {
+      await axios.post(
+        `http://localhost:8000/api/favorites/add/${spot.spot_id}/`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+      // Update daftar favorit setelah tambah
+      favoriteSpotIds.value.push(spot.spot_id)
+    } catch (e) {
+      alert('Gagal menambah ke favorit')
+    }
   }
 }
 
-const isFavorite = (index) => favorites.value.includes(index)
+function isFavorite(spot) {
+  return favoriteSpotIds.value.includes(spot.spot_id)
+}
 
 // Modal: tampilkan semua gambar (tanpa memperhitungkan is_primary)
 function openModal(spot) {
@@ -181,7 +222,7 @@ function nextImage() {
       <!-- Grid Card -->
       <div
         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 px-10 overflow-x-hidden"
-      
+
       >
         <template v-if="loading">
           <div v-for="i in 8" :key="i" class="animate-pulse bg-gray-200 rounded-xl h-72"></div>
@@ -194,10 +235,10 @@ function nextImage() {
             @click="openModal(spot)"
           >
             <button
-              @click.stop="toggleFavorite(index)"
+              @click.stop="toggleFavorite(spot)"
               class="absolute top-3 right-3 p-2 bg-white rounded-full shadow-md hover:scale-110 transition z-20"
             >
-              <component :is="isFavorite(index) ? filledLove : loveoutline" class="w-7 h-7"/>
+              <component :is="isFavorite(spot) ? filledLove : loveoutline" class="w-7 h-7"/>
             </button>
             <div class="w-full h-full overflow-hidden">
               <img
@@ -391,7 +432,7 @@ function nextImage() {
     </div>
 
     <!-- Fakta Menarik Section -->
-    
+
     <AskTesa/>
     <FooterSection />
   </div>
