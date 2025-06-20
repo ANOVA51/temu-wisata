@@ -253,7 +253,7 @@ function nextImage() {
         <div class="flex-1 flex flex-col justify-between w-full md:w-1/2">
           <div>
             <div class="text-2xl font-bold text-gray-700 mb-2">{{ activeModal.name }}</div>
-            <div class="text-base text-gray-800 mb-4">{{ activeModal.description }}</div>
+            <div class="text-base text-gray-800 mb-4  whitespace-pre-line break-words">{{ activeModal.description }}</div>
             <div class="mb-2">
               <span class="font-semibold">Kategori:</span>
               <span>{{ activeModal.category }}</span>
@@ -297,23 +297,7 @@ function nextImage() {
     </div>
 
     <!-- Fakta Menarik Section -->
-    <section class="bg-gray-50 py-12 mt-20 px-6">
-      <h3 class="text-3xl font-bold text-center mb-6">Why Choose These Hidden Gems?</h3>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto text-center">
-        <div class="p-4 bg-white rounded-xl shadow">
-          <h4 class="text-xl font-semibold mb-2">Cultural Richness</h4>
-          <p>Each location offers deep cultural experiences and untouched traditions.</p>
-        </div>
-        <div class="p-4 bg-white rounded-xl shadow">
-          <h4 class="text-xl font-semibold mb-2">Peaceful Vibes</h4>
-          <p>Far from the crowd, ideal for those who seek nature and peace.</p>
-        </div>
-        <div class="p-4 bg-white rounded-xl shadow">
-          <h4 class="text-xl font-semibold mb-2">Instagrammable Views</h4>
-          <p>Perfect for stunning photography and lifetime memories.</p>
-        </div>
-      </div>
-    </section>
+    
     <AskTesa/>
     <FooterSection />
   </div>
