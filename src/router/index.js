@@ -27,6 +27,7 @@ const router = createRouter({
       path: '/admin',
       name: 'admin',
       component: AdminDashboardView,
+      meta: { requiresAuth: true, requiresAdmin: true } ,
     },
     {
       path: '/about',
@@ -42,6 +43,7 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: () => import('@/views/LoginView.vue'),
+
     },
     {
       path: '/signup',
@@ -57,6 +59,7 @@ const router = createRouter({
       path: '/tesa',
       name: 'tesa',
       component: () => import('@/views/ChatTesa.vue'),
+      
     },
     {
       path: '/coba2',
@@ -74,16 +77,44 @@ const router = createRouter({
   ],
 })
 
-// router.beforeEach((to, from, next) => {
-//   const publicPages = ['home', 'login', 'signup']
-//   const authRequired = !publicPages.includes(to.name)
-//   const isLoggedIn =
-//     !!localStorage.getItem('access') || !!sessionStorage.getItem('access')
+// Fungsi helper untuk auth
+const isAuthenticated = () => {
+  const token = localStorage.getItem('access') || sessionStorage.getItem('access')
+  return !!token
+}
 
-//   if (authRequired && !isLoggedIn) {
-//     return next({ name: 'login' })
-//   }
-//   next()
-// })
+const isAdmin = () => {
+  const userRole = localStorage.getItem('userRole') || sessionStorage.getItem('userRole')
+  return userRole === 'admin'
+}
+
+// Route Guard
+router.beforeEach((to, from, next) => {
+  // Halaman yang boleh diakses tanpa login
+  const publicPages = ['home', 'login', 'signup', 'about']
+
+  // Cek jika route membutuhkan autentikasi
+  const authRequired = !publicPages.includes(to.name)
+
+  // Jika route membutuhkan auth tapi user belum login
+  if (authRequired && !isAuthenticated()) {
+    return next({
+      name: 'login',
+      query: { redirect: to.fullPath } // Simpan URL tujuan untuk redirect setelah login
+    })
+  }
+
+  // Jika user sudah login tapi mencoba akses halaman login/signup
+  if ((to.name === 'login' || to.name === 'signup') && isAuthenticated()) {
+    return next({ name: isAdmin() ? 'admin' : 'home' })
+  }
+
+  // Cek akses admin
+  if (to.meta.requiresAdmin && !isAdmin()) {
+    return next({ name: 'home' })
+  }
+
+  next()
+})
 
 export default router

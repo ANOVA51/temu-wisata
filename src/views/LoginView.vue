@@ -60,11 +60,18 @@
             <a href="#" class="text-green-600 hover:text-green-700">Forgot Password?</a>
           </div>
 
+          <!-- Error Message (ditambahkan tanpa mengubah desain) -->
+          <div v-if="errorMessage" class="text-red-500 text-sm text-center pt-2">
+            {{ errorMessage }}
+          </div>
+
           <button
             type="submit"
-            class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition-colors font-medium"
+            :disabled="isLoading"
+            class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Login
+            <span v-if="!isLoading">Login</span>
+            <span v-else>Processing...</span>
           </button>
         </form>
 
@@ -87,25 +94,55 @@ const router = useRouter()
 const username = ref('')
 const password = ref('')
 const rememberMe = ref(false)
+const isLoading = ref(false)
+const errorMessage = ref('')
 
 const handleLogin = async () => {
   try {
+    isLoading.value = true
+    errorMessage.value = ''
+
     const response = await axios.post('http://localhost:8000/api/login/', {
       username: username.value,
       password: password.value,
     })
-    const data = response.data
-    // Simpan token JWT ke localStorage atau sessionStorage
-    if (rememberMe.value) {
-      localStorage.setItem('access', data.access)
-      localStorage.setItem('refresh', data.refresh)
-    } else {
-      sessionStorage.setItem('access', data.access)
-      sessionStorage.setItem('refresh', data.refresh)
+
+    const { access, refresh, role, ...userData } = response.data
+
+    if (!access || !refresh || !role) {
+      throw new Error('Invalid response from server')
     }
-    router.push({ name: 'home' })
-  } catch  {
-    alert('Login gagal! Username atau password salah.')
+
+    // Pilih storage berdasarkan rememberMe
+    const storage = rememberMe.value ? localStorage : sessionStorage
+    storage.setItem('access', access)
+    storage.setItem('refresh', refresh)
+    storage.setItem('userRole', role)
+    storage.setItem('userData', JSON.stringify(userData))
+
+    // Redirect berdasarkan role
+    router.push({ name: role === 'admin' ? 'admin' : 'home' })
+
+  } catch (error) {
+    console.error('Login error:', error)
+
+    if (error.response) {
+      // Error dari server
+      if (error.response.status === 401) {
+        errorMessage.value = 'Invalid username or password'
+      } else {
+        errorMessage.value = `Server error: ${error.response.status}`
+      }
+    } else if (error.request) {
+      // Tidak dapat terhubung ke server
+      errorMessage.value = 'Cannot connect to server'
+    } else {
+      // Error lainnya
+      errorMessage.value = error.message || 'Login failed'
+    }
+
+  } finally {
+    isLoading.value = false
   }
 }
 </script>
