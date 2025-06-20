@@ -1,16 +1,18 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
+import { useRouter} from 'vue-router'
 import axios from 'axios'
 import Search from '@/assets/icon/Search.vue'
 import FooterSection from '@/components/FooterSection.vue'
 import Navbar from '@/components/Navbar.vue'
 import loveoutline from '@/components/icons/loveoutline.vue'
 import filledLove from '@/components/icons/filledLove.vue'
-import FilledLove from '@/components/icons/filledLove.vue'
-import Loveoutline from '@/components/icons/loveoutline.vue'
 import AskTesa from '@/components/AskTesa.vue'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
+
+
+
 
 const spots = ref([])
 const loading = ref(true)
@@ -20,6 +22,12 @@ const favorites = ref([])
 const activeModal = ref(null)
 const modalImages = ref([])
 const modalCurrentIndex = ref(0)
+const router = useRouter()
+
+//State user login dan testimoni
+const user = ref(null)
+const testimoniForm = ref({message:''})
+const testimoniImage = ref(null)
 
 onMounted(async () => {
   try {
@@ -28,9 +36,56 @@ onMounted(async () => {
   } catch (e) {
     alert('Gagal mengambil data destinasi')
   }
+  // Ambil data user login dari localstorage
+  const userData =JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user'))
+  if (userData) user.value = userData
+    
   setTimeout(() => (loading.value = false), 1000)
   AOS.init()
 })
+
+// mengambil gambar dari file input dan simban sebagai base64
+function onImageChange(e) {
+  const file = e.target.files[0]
+  if (file) {
+    const reader = new FileReader()
+    reader.onload = () => {
+      testimoniImage.value = reader.result
+    }
+    reader.readAsDataURL(file)
+  }
+}
+
+// kirim testimoni ke localStoreage (sementara)
+function submitTestimoni() {
+  if (!user.value){
+    alert('Silahkan login terlebih dahulu untuk memberi testimoni.')
+    router.push('/login')
+    return
+  }
+
+  if (!testimoniForm.value.message) {
+    alert('pesan testimoni tidak boleh kosong.')
+    return
+  }
+
+  const newTestimoni = {
+    name : user.value.username, //ambil dari user login
+    message : testimoniForm.value.message,
+    image : testimoniImage.value
+  }
+
+  const existing = JSON.parse(localStorage.getItem('testimonies') || '[]')
+  existing.push(newTestimoni)
+  localStorage.setItem('testimonies', JSON.stringify(existing))
+
+  //rest form
+  testimoniForm.value.message = ''
+  testimoniImage.value = null
+
+  router.push({name: 'testimonials'})
+
+}
 
 function getPrimaryImage(spot) {
   const img = spot.images.find(img => img.is_primary)
@@ -286,6 +341,45 @@ function nextImage() {
               >{{ activeModal.google_maps_url }}</a>
             </div>
           </div>
+
+          <!-- FORM TESTIMONI -->
+      <div class="mt-6">
+        <h3 class="text-lg font-semibold text-gray-700 mb-2">Beri Testimoni</h3>
+        <form @submit.prevent="submitTestimoni" class="space-y-3">
+          <textarea
+            v-model="testimoniForm.message"
+            placeholder="Tulis pengalaman Anda..."
+            rows="3"
+            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+          ></textarea>
+
+          <input
+            type="file"
+            accept="image/*"
+            @change="onImageChange"
+            class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
+                   file:rounded-full file:border-0
+                   file:text-sm file:font-semibold
+                   file:bg-green-50 file:text-green-700
+                   hover:file:bg-green-100"
+          />
+
+          <button
+            type="submit"
+            class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition"
+          >
+            Kirim Testimoni
+          </button>
+
+          <RouterLink
+            to="/testimonials"
+            class="block text-sm text-green-600 underline hover:text-green-800 mt-1"
+          >
+            Lihat semua testimoni →
+          </RouterLink>
+        </form>
+      </div>
+
           <button
             @click="activeModal = null"
             class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-2xl"

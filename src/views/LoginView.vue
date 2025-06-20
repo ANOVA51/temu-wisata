@@ -78,10 +78,10 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 import loginBG from '@/assets/images/loginBG.jpg'
 import axios from 'axios'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const username = ref('')
@@ -95,16 +95,31 @@ const handleLogin = async () => {
       password: password.value,
     })
     const data = response.data
+
+    // Ambil data user dari endpoint misalnya /api/me/
+    const profileRes = await axios.get('http://localhost:8000/api/me/', {
+      headers: {
+        Authorization: `Bearer ${data.access}`,
+      },
+    })
+    const user = profileRes.data
+
+    // Hapus user sebelumnya dulu
+    localStorage.removeItem('user')
+    sessionStorage.removeItem('user')
+
     // Simpan token JWT ke localStorage atau sessionStorage
     if (rememberMe.value) {
       localStorage.setItem('access', data.access)
       localStorage.setItem('refresh', data.refresh)
+      localStorage.setItem('user', JSON.stringify(user))
     } else {
       sessionStorage.setItem('access', data.access)
       sessionStorage.setItem('refresh', data.refresh)
+      sessionStorage.setItem('user', JSON.stringify(user))
     }
     router.push({ name: 'home' })
-  } catch  {
+  } catch {
     alert('Login gagal! Username atau password salah.')
   }
 }
