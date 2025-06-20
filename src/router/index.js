@@ -67,6 +67,11 @@ const router = createRouter({
       component: () => import('@/views/Coba2.vue'),
     },
     {
+      path: '/testimonials',
+      name: 'testimonials',
+      component: () => import('@/views/Testimonials.vue'),
+    },
+    {
       // path: '/admin',
       // name: 'admin',
       // // route level code-splitting
