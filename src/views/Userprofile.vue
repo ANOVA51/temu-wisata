@@ -3,6 +3,7 @@ import penari from '@/assets/images/penari.jpg'
 import love from '@/components/icons/filledLove.vue'
 import logout from '@/components/icons/logout.vue'
 import profile from '@/components/icons/profile.vue'
+import loveoutline from '@/components/icons/loveoutline.vue'
 import axios from 'axios'
 import { onMounted, reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
@@ -167,7 +168,7 @@ async function toggleFavorite(spot) {
         { headers: { Authorization: `Bearer ${token}` } }
       )
       favoriteSpotIds.value = favoriteSpotIds.value.filter(id => id !== spot.spot_id)
-      favoriteSpots.value = favoriteSpots.value.filter(s => s.spot_id !== spot.spot_id)
+      // Jangan hapus dari favoriteSpots.value, biarkan tetap tampil
     } catch (e) {
       alert('Gagal menghapus dari favorit')
     }
@@ -367,7 +368,7 @@ function nextFavoriteImage() {
                 @click.stop="toggleFavorite(spot)"
                 class="absolute top-3 right-3 p-2 bg-white rounded-full shadow-md hover:scale-110 transition z-20"
               >
-                <component :is="isFavorite(spot) ? love : 'loveoutline'" class="w-7 h-7"/>
+                <component :is="isFavorite(spot) ? love : loveoutline" class="w-7 h-7"/>
               </button>
               <img
                 :src="spot.images && spot.images.length ? `http://127.0.0.1:8000${spot.images[0].file_name}` : ''"
