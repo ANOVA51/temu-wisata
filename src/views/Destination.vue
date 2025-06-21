@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
-import { useRouter} from 'vue-router'
+import { useRouter } from 'vue-router'
 import axios from 'axios'
 import Search from '@/assets/icon/Search.vue'
 import FooterSection from '@/components/FooterSection.vue'
@@ -10,166 +10,6 @@ import filledLove from '@/components/icons/filledLove.vue'
 import AskTesa from '@/components/AskTesa.vue'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
-
-
-
-<<<<<<< HEAD
-const destinasi = [
-  {
-    images: [savana, kecak, penari, statue, waterfall],
-    name: 'savana tianyar',
-    deskripsi:
-      'Savana Tianyar adalah salah satu hidden gem di Bali yang memiliki suasana eksotik ala Afrika.',
-    mapUrl:
-      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.785349860783!2d115.50615607456099!3d-8.224328682550388!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd1fa262ae6d15f%3A0x21d7bc44437e774c!2sSavana%20Tianyar!5e0!3m2!1sid!2sid!4v1748139614578!5m2!1sid!2sid',
-    tabel: {
-      Category: 'Nature',
-      Facilities: 'Restroom, Parking Area',
-      'Entrance Ticket': 'Rp 10.000 - Rp 250.000',
-      Contact: '+62 812 3456 7890',
-      Email: 'example@temuwisata.my.id',
-      Street: 'Jalan Gautama Ubud',
-      'Sub-district': 'Ubud',
-      Regency: 'Gianyar',
-      'Maps Link': 'https://maps.app.goo.gl/HDxazXZxpj9wh5pN6',
-    },
-  },
-  {
-    images: [savana, kecak, penari, statue, waterfall],
-    name: 'savana tianyar',
-    deskripsi:
-      'Savana Tianyar adalah salah satu hidden gem di Bali yang memiliki suasana eksotik ala Afrika.',
-    mapUrl:
-      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.785349860783!2d115.50615607456099!3d-8.224328682550388!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd1fa262ae6d15f%3A0x21d7bc44437e774c!2sSavana%20Tianyar!5e0!3m2!1sid!2sid!4v1748139614578!5m2!1sid!2sid',
-    tabel: {
-      Category: 'Nature',
-      Facilities: 'Restroom, Parking Area',
-      'Entrance Ticket': 'Rp 10.000 - Rp 250.000',
-      Contact: '+62 812 3456 7890',
-      Email: 'example@temuwisata.my.id',
-      Street: 'Jalan Gautama Ubud',
-      'Sub-district': 'Ubud',
-      Regency: 'Gianyar',
-      'Maps Link': 'https://maps.app.goo.gl/HDxazXZxpj9wh5pN6',
-    },
-  },
-  {
-    images: [savana, kecak, penari, statue, waterfall],
-    name: 'savana tianyar',
-    deskripsi:
-      'Savana Tianyar adalah salah satu hidden gem di Bali yang memiliki suasana eksotik ala Afrika.',
-    mapUrl:
-      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.785349860783!2d115.50615607456099!3d-8.224328682550388!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd1fa262ae6d15f%3A0x21d7bc44437e774c!2sSavana%20Tianyar!5e0!3m2!1sid!2sid!4v1748139614578!5m2!1sid!2sid',
-    tabel: {
-      Category: 'Nature',
-      Facilities: 'Restroom, Parking Area',
-      'Entrance Ticket': 'Rp 10.000 - Rp 250.000',
-      Contact: '+62 812 3456 7890',
-      Email: 'example@temuwisata.my.id',
-      Street: 'Jalan Gautama Ubud',
-      'Sub-district': 'Ubud',
-      Regency: 'Gianyar',
-      'Maps Link': 'https://maps.app.goo.gl/HDxazXZxpj9wh5pN6',
-    },
-  },
-  {
-    images: [savana, kecak, penari, statue, waterfall],
-    name: 'savana tianyar',
-    deskripsi:
-      'Savana Tianyar adalah salah satu hidden gem di Bali yang memiliki suasana eksotik ala Afrika.',
-    mapUrl:
-      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.785349860783!2d115.50615607456099!3d-8.224328682550388!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd1fa262ae6d15f%3A0x21d7bc44437e774c!2sSavana%20Tianyar!5e0!3m2!1sid!2sid!4v1748139614578!5m2!1sid!2sid',
-    tabel: {
-      Category: 'Nature',
-      Facilities: 'Restroom, Parking Area',
-      'Entrance Ticket': 'Rp 10.000 - Rp 250.000',
-      Contact: '+62 812 3456 7890',
-      Email: 'example@temuwisata.my.id',
-      Street: 'Jalan Gautama Ubud',
-      'Sub-district': 'Ubud',
-      Regency: 'Gianyar',
-      'Maps Link': 'https://maps.app.goo.gl/HDxazXZxpj9wh5pN6',
-    },
-  },
-  {
-    images: [savana, kecak, penari, statue, waterfall],
-    name: 'savana tianyar',
-    deskripsi:
-      'Savana Tianyar adalah salah satu hidden gem di Bali yang memiliki suasana eksotik ala Afrika.',
-    mapUrl:
-      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.785349860783!2d115.50615607456099!3d-8.224328682550388!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd1fa262ae6d15f%3A0x21d7bc44437e774c!2sSavana%20Tianyar!5e0!3m2!1sid!2sid!4v1748139614578!5m2!1sid!2sid',
-    tabel: {
-      Category: 'Nature',
-      Facilities: 'Restroom, Parking Area',
-      'Entrance Ticket': 'Rp 10.000 - Rp 250.000',
-      Contact: '+62 812 3456 7890',
-      Email: 'example@temuwisata.my.id',
-      Street: 'Jalan Gautama Ubud',
-      'Sub-district': 'Ubud',
-      Regency: 'Gianyar',
-      'Maps Link': 'https://maps.app.goo.gl/HDxazXZxpj9wh5pN6',
-    },
-  },
-  {
-    images: [savana, kecak, penari, statue, waterfall],
-    name: 'savana tianyar',
-    deskripsi:
-      'Savana Tianyar adalah salah satu hidden gem di Bali yang memiliki suasana eksotik ala Afrika.',
-    mapUrl:
-      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.785349860783!2d115.50615607456099!3d-8.224328682550388!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd1fa262ae6d15f%3A0x21d7bc44437e774c!2sSavana%20Tianyar!5e0!3m2!1sid!2sid!4v1748139614578!5m2!1sid!2sid',
-    tabel: {
-      Category: 'Nature',
-      Facilities: 'Restroom, Parking Area',
-      'Entrance Ticket': 'Rp 10.000 - Rp 250.000',
-      Contact: '+62 812 3456 7890',
-      Email: 'example@temuwisata.my.id',
-      Street: 'Jalan Gautama Ubud',
-      'Sub-district': 'Ubud',
-      Regency: 'Gianyar',
-      'Maps Link': 'https://maps.app.goo.gl/HDxazXZxpj9wh5pN6',
-    },
-  },
-  {
-    images: [savana, kecak, penari, statue, waterfall],
-    name: 'savana tianyar',
-    deskripsi:
-      'Savana Tianyar adalah salah satu hidden gem di Bali yang memiliki suasana eksotik ala Afrika.',
-    mapUrl:
-      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.785349860783!2d115.50615607456099!3d-8.224328682550388!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd1fa262ae6d15f%3A0x21d7bc44437e774c!2sSavana%20Tianyar!5e0!3m2!1sid!2sid!4v1748139614578!5m2!1sid!2sid',
-    tabel: {
-      Category: 'Nature',
-      Facilities: 'Restroom, Parking Area',
-      'Entrance Ticket': 'Rp 10.000 - Rp 250.000',
-      Contact: '+62 812 3456 7890',
-      Email: 'example@temuwisata.my.id',
-      Street: 'Jalan Gautama Ubud',
-      'Sub-district': 'Ubud',
-      Regency: 'Gianyar',
-      'Maps Link': 'https://maps.app.goo.gl/HDxazXZxpj9wh5pN6',
-    },
-  },
-  {
-    images: [savana],
-    name: 'savana tianyar',
-    deskripsi:
-      'Savana Tianyar adalah salah satu hidden gem di Bali yang memiliki suasana eksotik ala Afrika.',
-    mapUrl:
-      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.785349860783!2d115.50615607456099!3d-8.224328682550388!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd1fa262ae6d15f%3A0x21d7bc44437e774c!2sSavana%20Tianyar!5e0!3m2!1sid!2sid!4v1748139614578!5m2!1sid!2sid',
-    tabel: {
-      Category: 'Nature',
-      Facilities: 'Restroom, Parking Area',
-      'Entrance Ticket': 'Rp 10.000 - Rp 250.000',
-      Contact: '+62 812 3456 7890',
-      Email: 'example@temuwisata.my.id',
-      Street: 'Jalan Gautama Ubud',
-      'Sub-district': 'Ubud',
-      Regency: 'Gianyar',
-      'Maps Link': 'https://maps.app.goo.gl/HDxazXZxpj9wh5pN6',
-    },
-  },
-]
-=======
->>>>>>> origin/pius
 
 const spots = ref([])
 const loading = ref(true)
@@ -183,7 +23,7 @@ const router = useRouter()
 
 //State user login dan testimoni
 const user = ref(null)
-const testimoniForm = ref({message:''})
+const testimoniForm = ref({ message: '' })
 const testimoniImage = ref(null)
 const favoriteSpotIds = ref([]) // Menyimpan spot_id yang sudah jadi favorit
 
@@ -195,16 +35,18 @@ onMounted(async () => {
     alert('Gagal mengambil data destinasi')
   }
   // Ambil data user login dari localstorage/sessionstorage
-  const userData = JSON.parse(localStorage.getItem('userData') || sessionStorage.getItem('userData'))
+  const userData = JSON.parse(
+    localStorage.getItem('userData') || sessionStorage.getItem('userData'),
+  )
   if (userData) {
     user.value = userData
     // Ambil daftar favorit user dari backend
     try {
       const token = localStorage.getItem('access') || sessionStorage.getItem('access')
-      const res = await axios.get('http://localhost:8000/api/favorites/',
-      { headers: { Authorization: `Bearer ${token}` } }
-    )
-      favoriteSpotIds.value = res.data.favorites.map(fav => fav.spot_id)
+      const res = await axios.get('http://localhost:8000/api/favorites/', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      favoriteSpotIds.value = res.data.favorites.map((fav) => fav.spot_id)
     } catch (e) {
       favoriteSpotIds.value = []
     }
@@ -227,7 +69,7 @@ function onImageChange(e) {
 
 // kirim testimoni ke localStoreage (sementara)
 function submitTestimoni() {
-  if (!user.value){
+  if (!user.value) {
     alert('Silahkan login terlebih dahulu untuk memberi testimoni.')
     router.push('/login')
     return
@@ -239,9 +81,9 @@ function submitTestimoni() {
   }
 
   const newTestimoni = {
-    name : user.value.username, //ambil dari user login
-    message : testimoniForm.value.message,
-    image : testimoniImage.value
+    name: user.value.username, //ambil dari user login
+    message: testimoniForm.value.message,
+    image: testimoniImage.value,
   }
 
   const existing = JSON.parse(localStorage.getItem('testimonies') || '[]')
@@ -252,12 +94,11 @@ function submitTestimoni() {
   testimoniForm.value.message = ''
   testimoniImage.value = null
 
-  router.push({name: 'testimonials'})
-
+  router.push({ name: 'testimonials' })
 }
 
 function getPrimaryImage(spot) {
-  const img = spot.images.find(img => img.is_primary)
+  const img = spot.images.find((img) => img.is_primary)
   return img ? `http://127.0.0.1:8000${img.file_name}` : ''
 }
 
@@ -265,7 +106,7 @@ const filteredSpots = computed(() => {
   let result = spots.value
   if (selectedLocation.value) {
     result = result.filter((d) =>
-      d.name.toLowerCase().includes(selectedLocation.value.toLowerCase())
+      d.name.toLowerCase().includes(selectedLocation.value.toLowerCase()),
     )
   }
   return showAll.value ? result : result.slice(0, 8)
@@ -281,12 +122,11 @@ async function toggleFavorite(spot) {
   if (isFavorite(spot)) {
     // Hapus dari favorit
     try {
-      await axios.delete(
-        `http://localhost:8000/api/favorites/remove/${spot.spot_id}/`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      )
+      await axios.delete(`http://localhost:8000/api/favorites/remove/${spot.spot_id}/`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       // Update daftar favorit setelah hapus
-      favoriteSpotIds.value = favoriteSpotIds.value.filter(id => id !== spot.spot_id)
+      favoriteSpotIds.value = favoriteSpotIds.value.filter((id) => id !== spot.spot_id)
     } catch (e) {
       alert('Gagal menghapus dari favorit')
     }
@@ -296,7 +136,7 @@ async function toggleFavorite(spot) {
       await axios.post(
         `http://localhost:8000/api/favorites/add/${spot.spot_id}/`,
         {},
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       )
       // Update daftar favorit setelah tambah
       favoriteSpotIds.value.push(spot.spot_id)
@@ -313,7 +153,7 @@ function isFavorite(spot) {
 // Modal: tampilkan semua gambar (tanpa memperhitungkan is_primary)
 function openModal(spot) {
   activeModal.value = spot
-  modalImages.value = spot.images.map(img => `http://127.0.0.1:8000${img.file_name}`)
+  modalImages.value = spot.images.map((img) => `http://127.0.0.1:8000${img.file_name}`)
   modalCurrentIndex.value = 0
 }
 function nextImage() {
@@ -339,7 +179,7 @@ function nextImage() {
       <img
         src="@/assets/images/herobanner1.png"
         alt="Hero Banner"
-        class="rounded-3xl w-300 h-150  shadow-LG"
+        class="rounded-3xl w-300 h-150 shadow-LG"
       />
     </section>
 
@@ -377,10 +217,7 @@ function nextImage() {
       </div>
 
       <!-- Grid Card -->
-      <div
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 px-10 overflow-x-hidden"
-
-      >
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 px-10 overflow-x-hidden">
         <template v-if="loading">
           <div v-for="i in 8" :key="i" class="animate-pulse bg-gray-200 rounded-xl h-72"></div>
         </template>
@@ -395,7 +232,7 @@ function nextImage() {
               @click.stop="toggleFavorite(spot)"
               class="absolute top-3 right-3 p-2 bg-white rounded-full shadow-md hover:scale-110 transition z-20"
             >
-              <component :is="isFavorite(spot) ? filledLove : loveoutline" class="w-7 h-7"/>
+              <component :is="isFavorite(spot) ? filledLove : loveoutline" class="w-7 h-7" />
             </button>
             <div class="w-full h-full overflow-hidden">
               <img
@@ -499,14 +336,18 @@ function nextImage() {
             </div>
           </div>
           <div class="text-xs text-gray-500 mt-2">
-            Klik gambar untuk melihat selanjutnya ({{ modalCurrentIndex + 1 }}/{{ modalImages.length }})
+            Klik gambar untuk melihat selanjutnya ({{ modalCurrentIndex + 1 }}/{{
+              modalImages.length
+            }})
           </div>
         </div>
         <!-- Right: Details -->
         <div class="flex-1 flex flex-col justify-between w-full md:w-1/2">
           <div>
             <div class="text-2xl font-bold text-gray-700 mb-2">{{ activeModal.name }}</div>
-            <div class="text-base text-gray-800 mb-4  whitespace-pre-line break-words">{{ activeModal.description }}</div>
+            <div class="text-base text-gray-800 mb-4 whitespace-pre-line break-words">
+              {{ activeModal.description }}
+            </div>
             <div class="mb-2">
               <span class="font-semibold">Kategori:</span>
               <span>{{ activeModal.category }}</span>
@@ -518,15 +359,15 @@ function nextImage() {
             <div class="mb-2">
               <span class="font-semibold">Harga:</span>
               <span>
-                Rp{{ Number(activeModal.price_min).toLocaleString() }} - Rp{{ Number(activeModal.price_max).toLocaleString() }}
+                Rp{{ Number(activeModal.price_min).toLocaleString() }} - Rp{{
+                  Number(activeModal.price_max).toLocaleString()
+                }}
               </span>
             </div>
             <div class="mb-2">
               <span class="font-semibold">Alamat:</span>
               <span>
-                {{ activeModal.address }},
-                {{ activeModal.desa }},
-                {{ activeModal.kecamatan }},
+                {{ activeModal.address }}, {{ activeModal.desa }}, {{ activeModal.kecamatan }},
                 {{ activeModal.kota }}
               </span>
             </div>
@@ -536,47 +377,44 @@ function nextImage() {
                 :href="activeModal.google_maps_url"
                 target="_blank"
                 class="text-green-600 underline break-all"
-              >{{ activeModal.google_maps_url }}</a>
+                >{{ activeModal.google_maps_url }}</a
+              >
             </div>
           </div>
 
           <!-- FORM TESTIMONI -->
-      <div class="mt-6">
-        <h3 class="text-lg font-semibold text-gray-700 mb-2">Beri Testimoni</h3>
-        <form @submit.prevent="submitTestimoni" class="space-y-3">
-          <textarea
-            v-model="testimoniForm.message"
-            placeholder="Tulis pengalaman Anda..."
-            rows="3"
-            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
-          ></textarea>
+          <div class="mt-6">
+            <h3 class="text-lg font-semibold text-gray-700 mb-2">Beri Testimoni</h3>
+            <form @submit.prevent="submitTestimoni" class="space-y-3">
+              <textarea
+                v-model="testimoniForm.message"
+                placeholder="Tulis pengalaman Anda..."
+                rows="3"
+                class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+              ></textarea>
 
-          <input
-            type="file"
-            accept="image/*"
-            @change="onImageChange"
-            class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
-                   file:rounded-full file:border-0
-                   file:text-sm file:font-semibold
-                   file:bg-green-50 file:text-green-700
-                   hover:file:bg-green-100"
-          />
+              <input
+                type="file"
+                accept="image/*"
+                @change="onImageChange"
+                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+              />
 
-          <button
-            type="submit"
-            class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition"
-          >
-            Kirim Testimoni
-          </button>
+              <button
+                type="submit"
+                class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition"
+              >
+                Kirim Testimoni
+              </button>
 
-          <RouterLink
-            to="/testimonials"
-            class="block text-sm text-green-600 underline hover:text-green-800 mt-1"
-          >
-            Lihat semua testimoni →
-          </RouterLink>
-        </form>
-      </div>
+              <RouterLink
+                to="/testimonials"
+                class="block text-sm text-green-600 underline hover:text-green-800 mt-1"
+              >
+                Lihat semua testimoni →
+              </RouterLink>
+            </form>
+          </div>
 
           <button
             @click="activeModal = null"
@@ -590,7 +428,7 @@ function nextImage() {
 
     <!-- Fakta Menarik Section -->
 
-    <AskTesa/>
+    <AskTesa />
     <FooterSection />
   </div>
 </template>

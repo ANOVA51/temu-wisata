@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "aos": "^2.3.4",
-    "axios": "^1.9.0",
+    "axios": "^1.10.0",
     "gsap": "^3.13.0",
     "pinia": "^3.0.1",
     "sweetalert2": "^11.22.0",
