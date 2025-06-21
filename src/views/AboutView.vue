@@ -71,7 +71,6 @@ const teamMembers = [
   
   <div>
     <Navbar/>
-  
 
     <!-- Hero Section -->
     <section class="relative h-screen w-full">
@@ -205,7 +204,7 @@ const teamMembers = [
 
         <!-- Contact Form -->
         <div
-          class="p-4 sm:p-6 rounded-3xl min-w-full md:min-w-100 xl:min-w-[480px] border border-neu-200"
+          class="p-4 mb-6 sm:p-6 rounded-3xl min-w-full md:min-w-100 xl:min-w-[480px] border border-neu-200"
         >
           <h4 class="font-semibold text-2xl sm:text-[32px]">Contact Us</h4>
           <p class="text-neu-600 text-sm sm:text-base mb-6">

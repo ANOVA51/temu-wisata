@@ -1,38 +1,19 @@
 <script setup>
+import { ref, onMounted, computed } from 'vue'
+import { useRouter} from 'vue-router'
+import axios from 'axios'
 import Search from '@/assets/icon/Search.vue'
 import FooterSection from '@/components/FooterSection.vue'
 import Navbar from '@/components/Navbar.vue'
-
-import kecak from '@/assets/images/kecak.jpg'
-import penari from '@/assets/images/penari.jpg'
-import statue from '@/assets/images/statue1.jpg'
-import waterfall from '@/assets/images/waterfall1.jpg'
-
-import { computed, onMounted, ref, watch } from 'vue'
+import loveoutline from '@/components/icons/loveoutline.vue'
+import filledLove from '@/components/icons/filledLove.vue'
+import AskTesa from '@/components/AskTesa.vue'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 
-const allDestinations = [
-  'Ubud',
-  'Kuta Selatan',
-  'Dalung',
-  'Tegallalang',
-  'Kuta',
-  'Mengwi',
-  'Denpasar',
-  'Payangan',
-  'Sukawati',
-  'Sanur',
-  'Jimbaran',
-  'Nusa Dua',
-  'Canggu',
-  'Seminyak',
-  'Bangli',
-  'Gianyar',
-]
 
-import savana from '@/assets/images/destinasi/savana.png'
 
+<<<<<<< HEAD
 const destinasi = [
   {
     images: [savana, kecak, penari, statue, waterfall],
@@ -187,50 +168,158 @@ const destinasi = [
     },
   },
 ]
+=======
+>>>>>>> origin/pius
 
+const spots = ref([])
+const loading = ref(true)
 const showAll = ref(false)
 const selectedLocation = ref('')
 const favorites = ref([])
-const loading = ref(true)
 const activeModal = ref(null)
-const currentIndex = ref(0)
+const modalImages = ref([])
+const modalCurrentIndex = ref(0)
+const router = useRouter()
 
-onMounted(() => {
+//State user login dan testimoni
+const user = ref(null)
+const testimoniForm = ref({message:''})
+const testimoniImage = ref(null)
+const favoriteSpotIds = ref([]) // Menyimpan spot_id yang sudah jadi favorit
+
+onMounted(async () => {
+  try {
+    const res = await axios.get('http://127.0.0.1:8000/api/touristspots/all/')
+    spots.value = res.data.data
+  } catch (e) {
+    alert('Gagal mengambil data destinasi')
+  }
+  // Ambil data user login dari localstorage/sessionstorage
+  const userData = JSON.parse(localStorage.getItem('userData') || sessionStorage.getItem('userData'))
+  if (userData) {
+    user.value = userData
+    // Ambil daftar favorit user dari backend
+    try {
+      const token = localStorage.getItem('access') || sessionStorage.getItem('access')
+      const res = await axios.get('http://localhost:8000/api/favorites/',
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+      favoriteSpotIds.value = res.data.favorites.map(fav => fav.spot_id)
+    } catch (e) {
+      favoriteSpotIds.value = []
+    }
+  }
   setTimeout(() => (loading.value = false), 1000)
   AOS.init()
 })
 
-const toggleFavorite = (index) => {
-  if (favorites.value.includes(index)) {
-    favorites.value = favorites.value.filter((i) => i !== index)
-  } else {
-    favorites.value.push(index)
+// mengambil gambar dari file input dan simban sebagai base64
+function onImageChange(e) {
+  const file = e.target.files[0]
+  if (file) {
+    const reader = new FileReader()
+    reader.onload = () => {
+      testimoniImage.value = reader.result
+    }
+    reader.readAsDataURL(file)
   }
 }
 
-const isFavorite = (index) => favorites.value.includes(index)
+// kirim testimoni ke localStoreage (sementara)
+function submitTestimoni() {
+  if (!user.value){
+    alert('Silahkan login terlebih dahulu untuk memberi testimoni.')
+    router.push('/login')
+    return
+  }
 
-const filteredDestinasi = computed(() => {
-  let result = destinasi
+  if (!testimoniForm.value.message) {
+    alert('pesan testimoni tidak boleh kosong.')
+    return
+  }
+
+  const newTestimoni = {
+    name : user.value.username, //ambil dari user login
+    message : testimoniForm.value.message,
+    image : testimoniImage.value
+  }
+
+  const existing = JSON.parse(localStorage.getItem('testimonies') || '[]')
+  existing.push(newTestimoni)
+  localStorage.setItem('testimonies', JSON.stringify(existing))
+
+  //rest form
+  testimoniForm.value.message = ''
+  testimoniImage.value = null
+
+  router.push({name: 'testimonials'})
+
+}
+
+function getPrimaryImage(spot) {
+  const img = spot.images.find(img => img.is_primary)
+  return img ? `http://127.0.0.1:8000${img.file_name}` : ''
+}
+
+const filteredSpots = computed(() => {
+  let result = spots.value
   if (selectedLocation.value) {
     result = result.filter((d) =>
-      d.name.toLowerCase().includes(selectedLocation.value.toLowerCase()),
+      d.name.toLowerCase().includes(selectedLocation.value.toLowerCase())
     )
   }
   return showAll.value ? result : result.slice(0, 8)
 })
 
-const nextImage = () => {
-  if (activeModal.value && activeModal.value.images && activeModal.value.images.length > 0) {
-    currentIndex.value = (currentIndex.value + 1) % activeModal.value.images.length
+async function toggleFavorite(spot) {
+  if (!user.value) {
+    alert('Silakan login untuk menambah destinasi favorit.')
+    router.push('/login')
+    return
+  }
+  const token = localStorage.getItem('access') || sessionStorage.getItem('access')
+  if (isFavorite(spot)) {
+    // Hapus dari favorit
+    try {
+      await axios.delete(
+        `http://localhost:8000/api/favorites/remove/${spot.spot_id}/`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+      // Update daftar favorit setelah hapus
+      favoriteSpotIds.value = favoriteSpotIds.value.filter(id => id !== spot.spot_id)
+    } catch (e) {
+      alert('Gagal menghapus dari favorit')
+    }
+  } else {
+    // Tambah ke favorit
+    try {
+      await axios.post(
+        `http://localhost:8000/api/favorites/add/${spot.spot_id}/`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+      // Update daftar favorit setelah tambah
+      favoriteSpotIds.value.push(spot.spot_id)
+    } catch (e) {
+      alert('Gagal menambah ke favorit')
+    }
   }
 }
 
-watch(activeModal, (val) => {
-  if (val && val.images && val.images.length > 0) {
-    currentIndex.value = 0
-  }
-})
+function isFavorite(spot) {
+  return favoriteSpotIds.value.includes(spot.spot_id)
+}
+
+// Modal: tampilkan semua gambar (tanpa memperhitungkan is_primary)
+function openModal(spot) {
+  activeModal.value = spot
+  modalImages.value = spot.images.map(img => `http://127.0.0.1:8000${img.file_name}`)
+  modalCurrentIndex.value = 0
+}
+function nextImage() {
+  if (!modalImages.value.length) return
+  modalCurrentIndex.value = (modalCurrentIndex.value + 1) % modalImages.value.length
+}
 </script>
 
 <template>
@@ -242,15 +331,15 @@ watch(activeModal, (val) => {
         <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-black">
           Hidden Gem
         </span>
-        in Bali’s tourist destinations
+        in Bali's tourist destinations
       </h1>
     </div>
     <!-- Hero Section -->
-    <section class="py-16 flex justify-center">
+    <section class="py-10 flex justify-center">
       <img
         src="@/assets/images/herobanner1.png"
         alt="Hero Banner"
-        class="rounded-3xl max-w-7xl w-full max-h-3xl h-full shadow-lg"
+        class="rounded-3xl w-300 h-150  shadow-LG"
       />
     </section>
 
@@ -266,8 +355,8 @@ watch(activeModal, (val) => {
       <div class="flex justify-center mb-6">
         <select v-model="selectedLocation" class="border rounded px-4 py-2 shadow">
           <option value="">All Locations</option>
-          <option v-for="loc in allDestinations" :key="loc" :value="loc">
-            {{ loc }}
+          <option v-for="spot in spots" :key="spot.spot_id" :value="spot.kota">
+            {{ spot.kota }}
           </option>
         </select>
       </div>
@@ -279,6 +368,7 @@ watch(activeModal, (val) => {
             type="text"
             placeholder="Search..."
             class="w-full py-3 pl-5 pr-12 rounded-full border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-lime-400"
+            v-model="selectedLocation"
           />
           <Search
             class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5"
@@ -288,31 +378,39 @@ watch(activeModal, (val) => {
 
       <!-- Grid Card -->
       <div
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 px-10"
-        style="min-width: max-content"
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 px-10 overflow-x-hidden"
+
       >
         <template v-if="loading">
           <div v-for="i in 8" :key="i" class="animate-pulse bg-gray-200 rounded-xl h-72"></div>
         </template>
         <template v-else>
           <div
-            v-for="(img, index) in filteredDestinasi"
-            :key="index"
+            v-for="(spot, index) in filteredSpots"
+            :key="spot.spot_id"
             class="group relative bg-white rounded-xl overflow-hidden h-96 flex-shrink-0 shadow-md transform transition duration-300 hover:scale-105 animate-fade-in"
-            @click="activeModal = img"
+            @click="openModal(spot)"
           >
+            <button
+              @click.stop="toggleFavorite(spot)"
+              class="absolute top-3 right-3 p-2 bg-white rounded-full shadow-md hover:scale-110 transition z-20"
+            >
+              <component :is="isFavorite(spot) ? filledLove : loveoutline" class="w-7 h-7"/>
+            </button>
             <div class="w-full h-full overflow-hidden">
               <img
-                :src="img.images ? img.images[0] : ''"
-                :alt="img.name"
+                :src="getPrimaryImage(spot)"
+                :alt="spot.name"
                 class="w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-110"
               />
             </div>
             <div
-              class="absolute z-10 bg-gradient-to-t from-black/80 to-transparent text-white bottom-0 h-1/2 px-4 py-3"
+              class="absolute z-10 inset-x-0 bottom-0 h-full bg-gradient-to-t from-black/80 to-transparent text-white px-4 py-6 flex flex-col justify-end"
             >
-              <p class="font-semibold text-lg text-center pb-1">{{ img.name }}</p>
-              <p class="text-sm">{{ img.deskripsi }}</p>
+              <p class="font-bold text-xl mb-1">{{ spot.name }}</p>
+              <p class="text-sm leading-snug">
+                {{ spot.description.slice(0, 60) }}{{ spot.description.length > 60 ? '...' : '' }}
+              </p>
             </div>
           </div>
         </template>
@@ -325,7 +423,44 @@ watch(activeModal, (val) => {
       </div>
     </section>
 
-    <!-- Modal -->
+    <!--add button-->
+    <div class="fixed bottom-40 right-2 z-20 flex flex-col items-center">
+      <!-- Balon chat -->
+      <div
+        class="relative mb-2 px-2 py-2 bg-white text-gray-700 text-sm font-medium rounded-full shadow-md"
+      >
+        Add a Travel Spot
+        <!-- Segitiga bawah -->
+        <div
+          class="absolute bottom-[-6px] left-1/2 transform -translate-x-1/2 w-3 h-3 bg-white rotate-45 shadow-md"
+        ></div>
+      </div>
+
+      <!-- Tombol plus -->
+      <RouterLink to="/forminput">
+        <button
+          class="w-14 h-14 bg-white text-green-600 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center border border-gray-200"
+          aria-label="Add Destination"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-6 h-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 4v16m8-8H4"
+            />
+          </svg>
+        </button>
+      </RouterLink>
+    </div>
+
+    <!-- Modal (Detail Spot Wisata) -->
     <div
       v-if="activeModal"
       class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
@@ -335,22 +470,21 @@ watch(activeModal, (val) => {
       <div
         class="bg-white rounded-xl p-8 w-full max-w-5xl shadow-lg flex flex-col md:flex-row gap-10 items-center relative"
       >
-        <!-- Left: Image/Carousel -->
+        <!-- Gambar carousel style klik untuk next, tampilkan semua gambar -->
         <div class="flex flex-col items-center w-full md:w-1/2">
           <div
-            v-if="activeModal.images && activeModal.images.length > 0"
             class="relative w-full max-w-[360px] mx-auto h-[250px] cursor-pointer"
             @click="nextImage"
           >
             <div class="relative w-full h-full">
               <div
-                v-for="(img, index) in activeModal.images"
+                v-for="(img, index) in modalImages"
                 :key="img"
                 class="absolute top-0 transition-all duration-500 ease-in-out rounded-xl overflow-hidden shadow-lg"
                 :class="[
-                  index === currentIndex
+                  index === modalCurrentIndex
                     ? 'z-30 scale-100 left-0'
-                    : index === (currentIndex + 1) % activeModal.images.length
+                    : index === (modalCurrentIndex + 1) % modalImages.length
                       ? 'z-20 scale-95 left-[25%]'
                       : 'z-10 scale-90 left-[25%]',
                 ]"
@@ -364,50 +498,86 @@ watch(activeModal, (val) => {
               </div>
             </div>
           </div>
-          <img
-            v-else-if="activeModal.image"
-            :src="activeModal.image"
-            :alt="activeModal.name"
-            class="rounded-lg object-cover mb-6"
-            style="width: 320px; height: 320px; max-width: 100%; max-height: 320px"
-          />
+          <div class="text-xs text-gray-500 mt-2">
+            Klik gambar untuk melihat selanjutnya ({{ modalCurrentIndex + 1 }}/{{ modalImages.length }})
+          </div>
         </div>
         <!-- Right: Details -->
         <div class="flex-1 flex flex-col justify-between w-full md:w-1/2">
           <div>
             <div class="text-2xl font-bold text-gray-700 mb-2">{{ activeModal.name }}</div>
-            <div class="text-base text-gray-800 mb-4">{{ activeModal.deskripsi }}</div>
-            <div v-if="activeModal.tabel" class="mb-4">
-              <table class="w-full text-sm">
-                <tbody>
-                  <tr v-for="(val, key) in activeModal.tabel" :key="key">
-                    <td class="font-semibold py-1 pr-2 text-gray-600">{{ key }}</td>
-                    <td class="py-1 text-gray-800">
-                      <template v-if="key === 'Maps Link'">
-                        <a :href="val" target="_blank" class="text-green-600 underline"
-                          >Lihat di Maps</a
-                        >
-                      </template>
-                      <template v-else>
-                        {{ val }}
-                      </template>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+            <div class="text-base text-gray-800 mb-4  whitespace-pre-line break-words">{{ activeModal.description }}</div>
+            <div class="mb-2">
+              <span class="font-semibold">Kategori:</span>
+              <span>{{ activeModal.category }}</span>
             </div>
-            <div v-if="activeModal.mapUrl" class="mb-4">
-              <iframe
-                :src="activeModal.mapUrl"
-                width="100%"
-                height="200"
-                style="border: 0; border-radius: 12px"
-                allowfullscreen=""
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"
-              ></iframe>
+            <div class="mb-2">
+              <span class="font-semibold">Fasilitas:</span>
+              <span>{{ activeModal.fasilitas }}</span>
+            </div>
+            <div class="mb-2">
+              <span class="font-semibold">Harga:</span>
+              <span>
+                Rp{{ Number(activeModal.price_min).toLocaleString() }} - Rp{{ Number(activeModal.price_max).toLocaleString() }}
+              </span>
+            </div>
+            <div class="mb-2">
+              <span class="font-semibold">Alamat:</span>
+              <span>
+                {{ activeModal.address }},
+                {{ activeModal.desa }},
+                {{ activeModal.kecamatan }},
+                {{ activeModal.kota }}
+              </span>
+            </div>
+            <div class="mb-2">
+              <span class="font-semibold">Google Maps:</span>
+              <a
+                :href="activeModal.google_maps_url"
+                target="_blank"
+                class="text-green-600 underline break-all"
+              >{{ activeModal.google_maps_url }}</a>
             </div>
           </div>
+
+          <!-- FORM TESTIMONI -->
+      <div class="mt-6">
+        <h3 class="text-lg font-semibold text-gray-700 mb-2">Beri Testimoni</h3>
+        <form @submit.prevent="submitTestimoni" class="space-y-3">
+          <textarea
+            v-model="testimoniForm.message"
+            placeholder="Tulis pengalaman Anda..."
+            rows="3"
+            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+          ></textarea>
+
+          <input
+            type="file"
+            accept="image/*"
+            @change="onImageChange"
+            class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
+                   file:rounded-full file:border-0
+                   file:text-sm file:font-semibold
+                   file:bg-green-50 file:text-green-700
+                   hover:file:bg-green-100"
+          />
+
+          <button
+            type="submit"
+            class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition"
+          >
+            Kirim Testimoni
+          </button>
+
+          <RouterLink
+            to="/testimonials"
+            class="block text-sm text-green-600 underline hover:text-green-800 mt-1"
+          >
+            Lihat semua testimoni →
+          </RouterLink>
+        </form>
+      </div>
+
           <button
             @click="activeModal = null"
             class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-2xl"
@@ -419,24 +589,8 @@ watch(activeModal, (val) => {
     </div>
 
     <!-- Fakta Menarik Section -->
-    <section class="bg-gray-50 py-12 mt-20 px-6">
-      <h3 class="text-3xl font-bold text-center mb-6">Why Choose These Hidden Gems?</h3>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto text-center">
-        <div class="p-4 bg-white rounded-xl shadow">
-          <h4 class="text-xl font-semibold mb-2">Cultural Richness</h4>
-          <p>Each location offers deep cultural experiences and untouched traditions.</p>
-        </div>
-        <div class="p-4 bg-white rounded-xl shadow">
-          <h4 class="text-xl font-semibold mb-2">Peaceful Vibes</h4>
-          <p>Far from the crowd, ideal for those who seek nature and peace.</p>
-        </div>
-        <div class="p-4 bg-white rounded-xl shadow">
-          <h4 class="text-xl font-semibold mb-2">Instagrammable Views</h4>
-          <p>Perfect for stunning photography and lifetime memories.</p>
-        </div>
-      </div>
-    </section>
 
+    <AskTesa/>
     <FooterSection />
   </div>
 </template>
