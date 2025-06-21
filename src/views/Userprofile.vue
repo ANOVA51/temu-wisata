@@ -122,11 +122,26 @@ async function updateProfile() {
         'Content-Type': 'multipart/form-data',
       },
     })
+    // Fetch ulang data user terbaru
+    const res = await axios.get('http://127.0.0.1:8000/api/users/me/', {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    // Simpan ke sessionStorage (atau localStorage jika pakai rememberMe)
+    sessionStorage.setItem('userData', JSON.stringify(res.data.data))
+    // Jika pakai localStorage:
+    // localStorage.setItem('userData', JSON.stringify(res.data.data))
+
     alert('Profile updated!')
     editMode.value = false
     password1.value = ''
     password2.value = ''
     passwordError.value = ''
+    // Update preview foto jika berubah
+    profilePreview.value = res.data.data.foto_profile
+      ? res.data.data.foto_profile.startsWith('http')
+        ? res.data.data.foto_profile
+        : `http://127.0.0.1:8000${res.data.data.foto_profile}`
+      : penari
   } catch (e) {
     alert('Gagal update profile')
   }

@@ -28,7 +28,13 @@ const handleLogout = () => {
 }
 
 const profilepicture = computed(() => {
-  return localStorage.getItem('profilepicture') || 'penari'
+  // Ambil data user dari sessionStorage atau localStorage
+  const userData = JSON.parse(sessionStorage.getItem('userData') || localStorage.getItem('userData') || '{}')
+  let foto = userData.foto_profile
+  // Jika tidak ada, fallback ke gambar default
+  if (!foto) return require('@/assets/images/penari.jpg')
+  // Jika path relatif, tambahkan domain backend
+  return foto.startsWith('http') ? foto : `http://127.0.0.1:8000${foto}`
 })
 </script>
 
