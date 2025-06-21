@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
-import { useRouter} from 'vue-router'
+import { useRouter } from 'vue-router'
 import axios from 'axios'
 import Search from '@/assets/icon/Search.vue'
 import FooterSection from '@/components/FooterSection.vue'
@@ -10,9 +10,6 @@ import filledLove from '@/components/icons/filledLove.vue'
 import AskTesa from '@/components/AskTesa.vue'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
-
-
-
 
 const spots = ref([])
 const loading = ref(true)
@@ -24,11 +21,10 @@ const modalImages = ref([])
 const modalCurrentIndex = ref(0)
 const router = useRouter()
 
-//State user login dan testimoni
 const user = ref(null)
-const testimoniForm = ref({message:''})
+const testimoniForm = ref({ message: '' })
 const testimoniImage = ref(null)
-const favoriteSpotIds = ref([]) // Menyimpan spot_id yang sudah jadi favorit
+const favoriteSpotIds = ref([])
 
 onMounted(async () => {
   try {
@@ -37,16 +33,14 @@ onMounted(async () => {
   } catch (e) {
     alert('Gagal mengambil data destinasi')
   }
-  // Ambil data user login dari localstorage/sessionstorage
   const userData = JSON.parse(localStorage.getItem('userData') || sessionStorage.getItem('userData'))
   if (userData) {
     user.value = userData
-    // Ambil daftar favorit user dari backend
     try {
       const token = localStorage.getItem('access') || sessionStorage.getItem('access')
-      const res = await axios.get('http://localhost:8000/api/favorites/',
-      { headers: { Authorization: `Bearer ${token}` } }
-    )
+      const res = await axios.get('http://localhost:8000/api/favorites/', {
+        headers: { Authorization: `Bearer ${token}` }
+      })
       favoriteSpotIds.value = res.data.favorites.map(fav => fav.spot_id)
     } catch (e) {
       favoriteSpotIds.value = []
@@ -56,47 +50,57 @@ onMounted(async () => {
   AOS.init()
 })
 
-// mengambil gambar dari file input dan simban sebagai base64
+// Ambil file langsung dari input, simpan sebagai File
 function onImageChange(e) {
   const file = e.target.files[0]
-  if (file) {
-    const reader = new FileReader()
-    reader.onload = () => {
-      testimoniImage.value = reader.result
-    }
-    reader.readAsDataURL(file)
+  if (file && file.type.startsWith('image/')) {
+    testimoniImage.value = file
+  } else {
+    testimoniImage.value = null
+    alert('File harus berupa gambar!')
   }
 }
 
-// kirim testimoni ke localStoreage (sementara)
-function submitTestimoni() {
-  if (!user.value){
+async function submitTestimoni() {
+  if (!user.value) {
     alert('Silahkan login terlebih dahulu untuk memberi testimoni.')
     router.push('/login')
     return
   }
-
   if (!testimoniForm.value.message) {
     alert('pesan testimoni tidak boleh kosong.')
     return
   }
-
-  const newTestimoni = {
-    name : user.value.username, //ambil dari user login
-    message : testimoniForm.value.message,
-    image : testimoniImage.value
+  if (!activeModal.value) {
+    alert('Tidak ada destinasi yang dipilih.')
+    return
   }
 
-  const existing = JSON.parse(localStorage.getItem('testimonies') || '[]')
-  existing.push(newTestimoni)
-  localStorage.setItem('testimonies', JSON.stringify(existing))
+  const token = localStorage.getItem('access') || sessionStorage.getItem('access')
+  const formData = new FormData()
+  formData.append('testi_text', testimoniForm.value.message)
+  if (testimoniImage.value) {
+    formData.append('images', testimoniImage.value)
+  }
 
-  //rest form
-  testimoniForm.value.message = ''
-  testimoniImage.value = null
-
-  router.push({name: 'testimonials'})
-
+  try {
+    await axios.post(
+      `http://127.0.0.1:8000/api/testimoni/${activeModal.value.spot_id}/add/`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    alert('Testimoni berhasil dikirim!')
+    testimoniForm.value.message = ''
+    testimoniImage.value = null
+    router.push({ name: 'testimonials', query: { spot_id: activeModal.value.spot_id } })
+    return
+  } catch (e) {
+    alert('Gagal mengirim testimoni')
+  }
 }
 
 function getPrimaryImage(spot) {
@@ -105,7 +109,7 @@ function getPrimaryImage(spot) {
 }
 
 const filteredSpots = computed(() => {
-  let result = spots.value
+  let result = spots.value.filter(d => d.is_verified === true) // hanya yang terverifikasi
   if (selectedLocation.value) {
     result = result.filter((d) =>
       d.name.toLowerCase().includes(selectedLocation.value.toLowerCase())
@@ -122,26 +126,22 @@ async function toggleFavorite(spot) {
   }
   const token = localStorage.getItem('access') || sessionStorage.getItem('access')
   if (isFavorite(spot)) {
-    // Hapus dari favorit
     try {
       await axios.delete(
         `http://localhost:8000/api/favorites/remove/${spot.spot_id}/`,
         { headers: { Authorization: `Bearer ${token}` } }
       )
-      // Update daftar favorit setelah hapus
       favoriteSpotIds.value = favoriteSpotIds.value.filter(id => id !== spot.spot_id)
     } catch (e) {
       alert('Gagal menghapus dari favorit')
     }
   } else {
-    // Tambah ke favorit
     try {
       await axios.post(
         `http://localhost:8000/api/favorites/add/${spot.spot_id}/`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       )
-      // Update daftar favorit setelah tambah
       favoriteSpotIds.value.push(spot.spot_id)
     } catch (e) {
       alert('Gagal menambah ke favorit')
@@ -153,7 +153,6 @@ function isFavorite(spot) {
   return favoriteSpotIds.value.includes(spot.spot_id)
 }
 
-// Modal: tampilkan semua gambar (tanpa memperhitungkan is_primary)
 function openModal(spot) {
   activeModal.value = spot
   modalImages.value = spot.images.map(img => `http://127.0.0.1:8000${img.file_name}`)
@@ -162,6 +161,11 @@ function openModal(spot) {
 function nextImage() {
   if (!modalImages.value.length) return
   modalCurrentIndex.value = (modalCurrentIndex.value + 1) % modalImages.value.length
+}
+function goToTestimonials() {
+  if (!activeModal.value) return
+  sessionStorage.setItem('spot_id', activeModal.value.spot_id)
+  router.push({ name: 'testimonials' })
 }
 </script>
 
@@ -412,12 +416,13 @@ function nextImage() {
             Kirim Testimoni
           </button>
 
-          <RouterLink
-            to="/testimonials"
+          <button
+            type="button"
+            @click="goToTestimonials"
             class="block text-sm text-green-600 underline hover:text-green-800 mt-1"
           >
             Lihat semua testimoni →
-          </RouterLink>
+          </button>
         </form>
       </div>
 
