@@ -24,7 +24,6 @@ const showWisataModal = ref(false)
 
 const wisataList = ref([])
 
-
 // Tambahan: untuk gambar detail
 const selectedWisataImages = ref([])
 const selectedImageIndex = ref(0)
@@ -127,11 +126,11 @@ onMounted(async () => {
   try {
     const res = await fetch('http://127.0.0.1:8000/api/users/all/')
     const json = await res.json()
-    userData.value = json.data.map(u => ({
+    userData.value = json.data.map((u) => ({
       id: u.user_id,
       username: u.username,
       email: u.email,
-      role: u.role
+      role: u.role,
     }))
   } catch (e) {
     userData.value = []
@@ -149,36 +148,44 @@ onMounted(async () => {
     const res = await fetch('http://localhost:8000/api/touristspots/all/')
     const data = await res.json()
     // Filter hanya yang verified
-    wisataList.value = data.data.filter(w => w.is_verified).map(w => ({
-      id: w.spot_id,
-      name: w.name,
-      category: w.category,
-      price: w.price_min === w.price_max ? `Rp${Number(w.price_min).toLocaleString()}` : `Rp${Number(w.price_min).toLocaleString()} - Rp${Number(w.price_max).toLocaleString()}`,
-      rating: w.rating ?? '-',
-      address: `${w.address}, ${w.desa}, ${w.kecamatan}, ${w.kota}`,
-      description: w.description,
-      mapsLink: w.google_maps_url,
-      uploader: w.user_id?.username ?? '-',
-      images: w.images // <-- simpan array gambar asli
-    }))
+    wisataList.value = data.data
+      .filter((w) => w.is_verified)
+      .map((w) => ({
+        id: w.spot_id,
+        name: w.name,
+        category: w.category,
+        price:
+          w.price_min === w.price_max
+            ? `Rp${Number(w.price_min).toLocaleString()}`
+            : `Rp${Number(w.price_min).toLocaleString()} - Rp${Number(w.price_max).toLocaleString()}`,
+        rating: w.rating ?? '-',
+        address: `${w.address}, ${w.desa}, ${w.kecamatan}, ${w.kota}`,
+        description: w.description,
+        mapsLink: w.google_maps_url,
+        uploader: w.user_id?.username ?? '-',
+        images: w.images, // <-- simpan array gambar asli
+      }))
 
     // Pending wisata: hanya yang is_verified === false
     const pendingRes = await fetch('http://localhost:8000/api/touristspots/all/')
     const pendingData = await pendingRes.json()
     // Filter hanya yang belum diverifikasi
     pendingWisata.value = pendingData.data
-      .filter(w => !w.is_verified)
-      .map(w => ({
+      .filter((w) => !w.is_verified)
+      .map((w) => ({
         id: w.spot_id,
         name: w.name,
         category: w.category,
         address: `${w.address}, ${w.desa}, ${w.kecamatan}, ${w.kota}`,
         description: w.description,
-        price: w.price_min === w.price_max ? `Rp${Number(w.price_min).toLocaleString()}` : `Rp${Number(w.price_min).toLocaleString()} - Rp${Number(w.price_max).toLocaleString()}`,
+        price:
+          w.price_min === w.price_max
+            ? `Rp${Number(w.price_min).toLocaleString()}`
+            : `Rp${Number(w.price_min).toLocaleString()} - Rp${Number(w.price_max).toLocaleString()}`,
         rating: w.rating ?? '-',
         mapsLink: w.google_maps_url,
         uploader: w.user_id?.username ?? '-',
-        images: w.images
+        images: w.images,
       }))
 
     // ...userCount & verifiedSpotCount tetap...
@@ -201,7 +208,7 @@ const viewWisataDetail = (wisata) => {
   showAdminReply.value = false
   selectedWisata.value = wisata
   if (wisata.images && wisata.images.length > 0) {
-    selectedWisataImages.value = wisata.images.map(img => `http://localhost:8000${img.file_name}`)
+    selectedWisataImages.value = wisata.images.map((img) => `http://localhost:8000${img.file_name}`)
     selectedImageIndex.value = 0
   } else {
     selectedWisataImages.value = []
@@ -222,11 +229,11 @@ const approveWisata = async (wisata) => {
         'Content-Type': 'application/json',
         // Tambahkan Authorization jika perlu
       },
-      body: JSON.stringify({ is_verified: true })
+      body: JSON.stringify({ is_verified: true }),
     })
     if (!response.ok) throw new Error('Gagal approve di backend')
     // Hapus dari list frontend setelah sukses
-    pendingWisata.value = pendingWisata.value.filter(w => w.id !== wisata.id)
+    pendingWisata.value = pendingWisata.value.filter((w) => w.id !== wisata.id)
   } catch (e) {
     alert('Gagal approve wisata ke backend')
   }
@@ -235,10 +242,10 @@ const approveWisata = async (wisata) => {
 const rejectWisata = async (wisata) => {
   try {
     const response = await fetch(`http://localhost:8000/api/touristspots/${wisata.id}/delete/`, {
-      method: 'DELETE'
+      method: 'DELETE',
     })
     if (!response.ok) throw new Error('Gagal delete di backend')
-    pendingWisata.value = pendingWisata.value.filter(w => w.id !== wisata.id)
+    pendingWisata.value = pendingWisata.value.filter((w) => w.id !== wisata.id)
   } catch (e) {
     alert('Gagal menghapus wisata di backend')
   }
@@ -431,7 +438,7 @@ const rejectUser = (user) => {
             >{{ pendingWisata.length }}</span
           >
         </div>
-        <div
+        <!-- <div
           @click="active = 'report-wisata'"
           :class="[
             'flex items-center px-4 py-3 rounded-lg cursor-pointer transition-all duration-200',
@@ -445,7 +452,7 @@ const rejectUser = (user) => {
           <span class="ml-auto bg-red-100 text-red-700 text-xs font-bold px-2 py-1 rounded-full">{{
             reportData.length
           }}</span>
-        </div>
+        </div> -->
         <div
           @click="active = 'user-manage'"
           :class="[
@@ -496,7 +503,7 @@ const rejectUser = (user) => {
                     class="text-yellow-600 hover:text-yellow-800"
                     @click="setUserPending(user)"
                   >
-                    <i class="mdi mdi-timer-sand text-xl"></i>
+                    <!-- <i class="mdi mdi-timer-sand text-xl"></i> -->
                   </button>
                   <button class="text-red-600 hover:text-red-800" @click="rejectUser(user)">
                     <i class="mdi mdi-close-circle-outline text-xl"></i>
@@ -791,14 +798,11 @@ const rejectUser = (user) => {
 
     <!-- Modal/detail popup di sini -->
     <transition name="popup-fade">
-      <div
-        v-if="showWisataModal"
-        class="fixed inset-0 flex items-center justify-center z-50"
-      >
+      <div v-if="showWisataModal" class="fixed inset-0 flex items-center justify-center z-50">
         <!-- Overlay: gunakan warna gelap transparan, bukan hitam -->
         <div
           class="absolute inset-0"
-          style="background: rgba(30, 41, 59, 0.35); transition: background 0.3s;"
+          style="background: rgba(30, 41, 59, 0.35); transition: background 0.3s"
           @click="closeWisataModal"
         ></div>
         <!-- Popup: lebih lebar -->
@@ -820,7 +824,9 @@ const rejectUser = (user) => {
                 <div
                   v-if="selectedWisataImages.length"
                   class="relative w-[320px] h-[320px] cursor-pointer mb-4"
-                  @click="selectedImageIndex = (selectedImageIndex + 1) % selectedWisataImages.length"
+                  @click="
+                    selectedImageIndex = (selectedImageIndex + 1) % selectedWisataImages.length
+                  "
                 >
                   <div class="relative w-full h-full">
                     <div
@@ -844,7 +850,9 @@ const rejectUser = (user) => {
                     </div>
                   </div>
                   <div class="text-xs text-gray-500 mt-2 text-center">
-                    Klik gambar untuk melihat selanjutnya ({{ selectedImageIndex + 1 }}/{{ selectedWisataImages.length }})
+                    Klik gambar untuk melihat selanjutnya ({{ selectedImageIndex + 1 }}/{{
+                      selectedWisataImages.length
+                    }})
                   </div>
                 </div>
                 <div
