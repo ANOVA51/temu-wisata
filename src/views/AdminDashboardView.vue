@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch, onMounted } from 'vue'
 import Swal from 'sweetalert2'
+import router from '@/router'
 
 const active = ref('dashboard')
 const direction = ref('right')
@@ -376,6 +377,13 @@ const rejectUser = (user) => {
 //     alert('Gagal menghapus wisata')
 //   }
 // }
+
+function goToUpdateWisata(id) {
+  sessionStorage.setItem('update_spot_id', id)
+  // Pastikan route ke form update TIDAK pakai param id
+  // Contoh: /form-update-wisata
+  router.push({ name: 'formupdate' })
+}
 </script>
 
 <template>
@@ -574,6 +582,7 @@ const rejectUser = (user) => {
                 </button>
                 <button
                   class="px-3 py-1 bg-gray-500 text-white text-xs rounded hover:bg-gray-600 transition-colors"
+                  @click="goToUpdateWisata(wisata.id)"
                 >
                   Edit
                 </button>
