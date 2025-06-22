@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter  } from 'vue-router'
 import axios from 'axios'
 import Search from '@/assets/icon/Search.vue'
 import FooterSection from '@/components/FooterSection.vue'
@@ -33,7 +33,9 @@ onMounted(async () => {
   } catch (e) {
     alert('Gagal mengambil data destinasi')
   }
-  const userData = JSON.parse(localStorage.getItem('userData') || sessionStorage.getItem('userData'))
+  const userData = JSON.parse(
+    localStorage.getItem('userData') || sessionStorage.getItem('userData'),
+  )
   if (userData) {
     user.value = userData
     try {
@@ -104,7 +106,7 @@ async function submitTestimoni() {
 }
 
 function getPrimaryImage(spot) {
-  const img = spot.images.find(img => img.is_primary)
+  const img = spot.images.find((img) => img.is_primary)
   return img ? `http://127.0.0.1:8000${img.file_name}` : ''
 }
 
@@ -112,7 +114,7 @@ const filteredSpots = computed(() => {
   let result = spots.value.filter(d => d.is_verified === true) // hanya yang terverifikasi
   if (selectedLocation.value) {
     result = result.filter((d) =>
-      d.name.toLowerCase().includes(selectedLocation.value.toLowerCase())
+      d.name.toLowerCase().includes(selectedLocation.value.toLowerCase()),
     )
   }
   return showAll.value ? result : result.slice(0, 8)
@@ -127,11 +129,10 @@ async function toggleFavorite(spot) {
   const token = localStorage.getItem('access') || sessionStorage.getItem('access')
   if (isFavorite(spot)) {
     try {
-      await axios.delete(
-        `http://localhost:8000/api/favorites/remove/${spot.spot_id}/`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      )
-      favoriteSpotIds.value = favoriteSpotIds.value.filter(id => id !== spot.spot_id)
+      await axios.delete(`http://localhost:8000/api/favorites/remove/${spot.spot_id}/`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      favoriteSpotIds.value = favoriteSpotIds.value.filter((id) => id !== spot.spot_id)
     } catch (e) {
       alert('Gagal menghapus dari favorit')
     }
@@ -140,7 +141,7 @@ async function toggleFavorite(spot) {
       await axios.post(
         `http://localhost:8000/api/favorites/add/${spot.spot_id}/`,
         {},
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       )
       favoriteSpotIds.value.push(spot.spot_id)
     } catch (e) {
@@ -155,7 +156,7 @@ function isFavorite(spot) {
 
 function openModal(spot) {
   activeModal.value = spot
-  modalImages.value = spot.images.map(img => `http://127.0.0.1:8000${img.file_name}`)
+  modalImages.value = spot.images.map((img) => `http://127.0.0.1:8000${img.file_name}`)
   modalCurrentIndex.value = 0
 }
 function nextImage() {
@@ -186,7 +187,7 @@ function goToTestimonials() {
       <img
         src="@/assets/images/herobanner1.png"
         alt="Hero Banner"
-        class="rounded-3xl w-300 h-150  shadow-LG"
+        class="rounded-3xl w-300 h-150 shadow-LG"
       />
     </section>
 
@@ -224,10 +225,7 @@ function goToTestimonials() {
       </div>
 
       <!-- Grid Card -->
-      <div
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 px-10 overflow-x-hidden"
-
-      >
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 px-10 overflow-x-hidden">
         <template v-if="loading">
           <div v-for="i in 8" :key="i" class="animate-pulse bg-gray-200 rounded-xl h-72"></div>
         </template>
@@ -242,7 +240,7 @@ function goToTestimonials() {
               @click.stop="toggleFavorite(spot)"
               class="absolute top-3 right-3 p-2 bg-white rounded-full shadow-md hover:scale-110 transition z-20"
             >
-              <component :is="isFavorite(spot) ? filledLove : loveoutline" class="w-7 h-7"/>
+              <component :is="isFavorite(spot) ? filledLove : loveoutline" class="w-7 h-7" />
             </button>
             <div class="w-full h-full overflow-hidden">
               <img
@@ -346,14 +344,18 @@ function goToTestimonials() {
             </div>
           </div>
           <div class="text-xs text-gray-500 mt-2">
-            Klik gambar untuk melihat selanjutnya ({{ modalCurrentIndex + 1 }}/{{ modalImages.length }})
+            Klik gambar untuk melihat selanjutnya ({{ modalCurrentIndex + 1 }}/{{
+              modalImages.length
+            }})
           </div>
         </div>
         <!-- Right: Details -->
         <div class="flex-1 flex flex-col justify-between w-full md:w-1/2">
           <div>
             <div class="text-2xl font-bold text-gray-700 mb-2">{{ activeModal.name }}</div>
-            <div class="text-base text-gray-800 mb-4  whitespace-pre-line break-words">{{ activeModal.description }}</div>
+            <div class="text-base text-gray-800 mb-4 whitespace-pre-line break-words">
+              {{ activeModal.description }}
+            </div>
             <div class="mb-2">
               <span class="font-semibold">Kategori:</span>
               <span>{{ activeModal.category }}</span>
@@ -365,15 +367,15 @@ function goToTestimonials() {
             <div class="mb-2">
               <span class="font-semibold">Harga:</span>
               <span>
-                Rp{{ Number(activeModal.price_min).toLocaleString() }} - Rp{{ Number(activeModal.price_max).toLocaleString() }}
+                Rp{{ Number(activeModal.price_min).toLocaleString() }} - Rp{{
+                  Number(activeModal.price_max).toLocaleString()
+                }}
               </span>
             </div>
             <div class="mb-2">
               <span class="font-semibold">Alamat:</span>
               <span>
-                {{ activeModal.address }},
-                {{ activeModal.desa }},
-                {{ activeModal.kecamatan }},
+                {{ activeModal.address }}, {{ activeModal.desa }}, {{ activeModal.kecamatan }},
                 {{ activeModal.kota }}
               </span>
             </div>
@@ -383,48 +385,45 @@ function goToTestimonials() {
                 :href="activeModal.google_maps_url"
                 target="_blank"
                 class="text-green-600 underline break-all"
-              >{{ activeModal.google_maps_url }}</a>
+                >{{ activeModal.google_maps_url }}</a
+              >
             </div>
           </div>
 
           <!-- FORM TESTIMONI -->
-      <div class="mt-6">
-        <h3 class="text-lg font-semibold text-gray-700 mb-2">Beri Testimoni</h3>
-        <form @submit.prevent="submitTestimoni" class="space-y-3">
-          <textarea
-            v-model="testimoniForm.message"
-            placeholder="Tulis pengalaman Anda..."
-            rows="3"
-            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
-          ></textarea>
+          <div class="mt-6">
+            <h3 class="text-lg font-semibold text-gray-700 mb-2">Beri Testimoni</h3>
+            <form @submit.prevent="submitTestimoni" class="space-y-3">
+              <textarea
+                v-model="testimoniForm.message"
+                placeholder="Tulis pengalaman Anda..."
+                rows="3"
+                class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+              ></textarea>
 
-          <input
-            type="file"
-            accept="image/*"
-            @change="onImageChange"
-            class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
-                   file:rounded-full file:border-0
-                   file:text-sm file:font-semibold
-                   file:bg-green-50 file:text-green-700
-                   hover:file:bg-green-100"
-          />
+              <input
+                type="file"
+                accept="image/*"
+                @change="onImageChange"
+                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+              />
 
-          <button
-            type="submit"
-            class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition"
-          >
-            Kirim Testimoni
-          </button>
+              <button
+                type="submit"
+                class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition"
+              >
+                Kirim Testimoni
+              </button>
 
-          <button
-            type="button"
+              <button
+                type="button"
             @click="goToTestimonials"
-            class="block text-sm text-green-600 underline hover:text-green-800 mt-1"
-          >
-            Lihat semua testimoni →
-          </button>
-        </form>
-      </div>
+                class="block text-sm text-green-600 underline hover:text-green-800 mt-1"
+              >
+                Lihat semua testimoni →
+              </button>
+            </form>
+          </div>
 
           <button
             @click="activeModal = null"
@@ -438,7 +437,7 @@ function goToTestimonials() {
 
     <!-- Fakta Menarik Section -->
 
-    <AskTesa/>
+    <AskTesa />
     <FooterSection />
   </div>
 </template>

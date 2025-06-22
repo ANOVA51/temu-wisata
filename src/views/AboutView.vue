@@ -21,6 +21,7 @@ import dimas from '@/assets/images/profile/dimas.jpg'
 import emo from '@/assets/images/profile/emo.jpg'
 import nova from '@/assets/images/profile/nova.jpg'
 import pius from '@/assets/images/profile/pius.jpg'
+import daniel from '@/assets/images/profile/daniel.png'
 import Navbar from '@/components/Navbar.vue'
 
 const teamMembers = [
@@ -57,10 +58,10 @@ const teamMembers = [
     linkedin: '#',
   },
   {
-    name: 'Novanka',
+    name: 'Daniel Widhi',
     role: 'Backend of TESA',
-    image: dimas,
-    instagram: '#',
+    image: daniel,
+    instagram: 'instagram.com/danielwidhi_198',
     github: '#',
     linkedin: '#',
   },
@@ -68,9 +69,8 @@ const teamMembers = [
 </script>
 
 <template>
-  
   <div>
-    <Navbar/>
+    <Navbar />
 
     <!-- Hero Section -->
     <section class="relative h-screen w-full">
@@ -245,6 +245,6 @@ const teamMembers = [
         </div>
       </div>
     </section>
-    <FooterSection/>
+    <FooterSection />
   </div>
 </template>
