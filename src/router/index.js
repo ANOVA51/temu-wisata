@@ -59,6 +59,7 @@ const router = createRouter({
       path: '/formupdate',
       name: 'formupdate',
       component: () => import('@/views/FormUpdateWisata.vue'),
+      meta: { requiresAuth: true, requiresAdmin: true } ,
     },
     {
       path: '/tesa',

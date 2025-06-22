@@ -14,7 +14,14 @@
     <div class="relative z-10 py-8">
       <div class="max-w-4xl mx-auto px-4">
         <h1 class="text-3xl font-bold text-white mb-8">Update Destination</h1>
-
+        <!-- Button Back -->
+        <RouterLink to="/admin">
+          <button
+            class="mb-6 px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors"
+          >
+            ← Back
+          </button>
+        </RouterLink>
         <div class="bg-white/90 backdrop-blur-sm rounded-lg shadow-2xl p-6 space-y-6">
           <!-- Name Section -->
           <div>
