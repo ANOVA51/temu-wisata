@@ -151,7 +151,7 @@ onMounted(async () => {
         rating: w.rating ?? '-',
         address: `${w.address}, ${w.desa}, ${w.kecamatan}, ${w.kota}`,
         description: w.description,
-        mapsLink: w.Maps_url,
+        mapsLink: w.google_maps_url,
         uploader: w.user_id?.username ?? '-',
         images: w.images, // <-- simpan array gambar asli
       }))
@@ -863,7 +863,7 @@ function goToUpdateWisata(id) {
                   <i class="mdi mdi-image text-4xl text-white opacity-50"></i>
                 </div>
               </div>
-              <div class="flex-1 space-y-4">
+              <div class="flex-1 space-y-4 pl-11">
                 <h3 class="text-lg sm:text-xl font-bold text-gray-800 mb-2">
                   {{ selectedWisata.name }}
                 </h3>
