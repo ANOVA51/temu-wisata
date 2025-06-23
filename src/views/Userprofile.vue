@@ -9,10 +9,10 @@ import { onMounted, reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const currentView = ref('dashboard')
+const currentView = ref('Edit')
 const menuItems = [
   { label: 'Profile', key: 'Edit', icon:profile },
-  { label: 'Favorite Destination', key: 'Favorite', icon:love},
+  { label: 'Favorite', key: 'Favorite', icon:love},
   { label: 'Logout', key: 'logout', icon:logout},
   { label: 'back', key: 'back', },
 ]

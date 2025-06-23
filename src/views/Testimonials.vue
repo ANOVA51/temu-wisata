@@ -38,7 +38,7 @@
       </div>
 
       <div class="text-center mt-12">
-        <RouterLink to="/" class="text-green-600 hover:text-green-800 font-semibold underline">
+        <RouterLink to="/destination" class="text-green-600 hover:text-green-800 font-semibold underline">
           ← Kembali ke Destinasi
         </RouterLink>
       </div>
