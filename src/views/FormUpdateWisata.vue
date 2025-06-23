@@ -114,7 +114,7 @@
                   :key="idx"
                   class="relative w-24 h-24 rounded overflow-hidden border border-gray-200 bg-white flex items-center justify-center"
                 >
-                  <img :src="img" alt="preview" class="object-cover w-full h-full" />
+                  <img :src="img.url" alt="preview" class="object-cover w-full h-full" />
                   <!-- Tombol silang -->
                   <button
                     type="button"
@@ -234,7 +234,9 @@ const form = ref({
   photos: []
 })
 
-const imagePreviews = ref([])
+const imagePreviews = ref([]) // Untuk preview semua gambar (lama & baru)
+const oldImages = ref([])     // Untuk menyimpan gambar lama dari backend
+const deletedImages = ref([]) // Untuk menyimpan gambar lama yang dihapus
 const categories = ref(['Nature', 'Adventure', 'Cultural', 'Beach', 'Mountain'])
 
 onMounted(async () => {
@@ -256,14 +258,56 @@ onMounted(async () => {
     form.value.regency = data.kota
     form.value.desa = data.desa
     form.value.mapsLink = data.google_maps_url
-    imagePreviews.value = (data.images || []).map(img => `http://localhost:8000${img.file_name}`)
+    // Simpan gambar lama
+    oldImages.value = (data.images || []).map(img => ({
+      url: `http://localhost:8000${img.file_name}`,
+      id: img.id, // pastikan backend mengirim id gambar
+      file_name: img.file_name
+    }))
+    // Gabungkan gambar lama dan baru untuk preview
+    imagePreviews.value = [...oldImages.value]
     form.value.photos = []
   } catch (e) {
     alert('Gagal mengambil data wisata')
   }
 })
 
-// Fungsi update
+function handleFileUpload(event) {
+  const files = Array.from(event.target.files)
+  addImages(files)
+}
+
+function handleDrop(event) {
+  const files = Array.from(event.dataTransfer.files)
+  addImages(files)
+}
+
+function addImages(files) {
+  const imageFiles = files.filter((file) => file.type.startsWith('image/'))
+  form.value.photos = [...(form.value.photos || []), ...imageFiles]
+  imageFiles.forEach((file) => {
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      imagePreviews.value.push({ url: e.target.result, file })
+    }
+    reader.readAsDataURL(file)
+  })
+}
+
+// Hapus gambar
+function removeImage(idx) {
+  const img = imagePreviews.value[idx]
+  // Jika gambar lama (punya id/file_name), masukkan ke deletedImages
+  if (img.id || img.file_name) {
+    deletedImages.value.push(img.file_name)
+  } else if (img.file) {
+    // Jika gambar baru, hapus dari form.value.photos
+    const photoIdx = form.value.photos.findIndex(f => f === img.file)
+    if (photoIdx !== -1) form.value.photos.splice(photoIdx, 1)
+  }
+  imagePreviews.value.splice(idx, 1)
+}
+
 async function submitForm() {
   if (!spotId) {
     alert('ID wisata tidak ditemukan!')
@@ -284,6 +328,10 @@ async function submitForm() {
   // Tambahkan foto baru jika ada
   for (const file of form.value.photos) {
     formData.append('images', file)
+  }
+  // Kirim daftar file_name gambar yang dihapus (opsional, tergantung backend)
+  if (deletedImages.value.length > 0) {
+    deletedImages.value.forEach(name => formData.append('deleted_images', name))
   }
   try {
     await axios.patch(

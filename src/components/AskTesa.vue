@@ -57,15 +57,20 @@
 </template>
 
 <script setup>
-import { ref, nextTick } from 'vue'
+import { ref, nextTick, watch } from 'vue'
 import tesa from '@/assets/images/profile-tesa.png'
 
 const showChatCard = ref(false)
 const userInput = ref('')
-const chatHistory = ref([
-  { sender: 'bot', message: "Hi there! I'm Tesa. Ask me anything!" }
-])
+const chatHistory = ref(
+  JSON.parse(sessionStorage.getItem('tesa_chat_history')) ||
+  [{ sender: 'bot', message: "Hi there! I'm Tesa. Ask me anything!" }]
+)
 const chatContainer = ref(null)
+
+watch(chatHistory, (val) => {
+  sessionStorage.setItem('tesa_chat_history', JSON.stringify(val))
+}, { deep: true })
 
 function scrollToBottom() {
   nextTick(() => {
@@ -103,7 +108,7 @@ async function handleUserInput() {
 
 // Toggle chat card
 function toggleChatCard() {
-  
+
   showChatCard.value = !showChatCard.value
   nextTick(() => scrollToBottom())
 }
