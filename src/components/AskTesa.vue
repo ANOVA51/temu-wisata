@@ -26,6 +26,13 @@
               {{ chat.message }}
             </div>
           </div>
+          <div v-if="isLoading" class="flex items-center gap-2 text-gray-500 text-sm mb-2">
+            <svg class="animate-spin h-4 w-4 text-purple-500" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"/>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+            </svg>
+            Tesa is typing...
+          </div>
         </div>
 
         <!-- Input Form -->
@@ -43,6 +50,30 @@
             Send
           </button>
         </form>
+
+        <!-- Loading Spinner -->
+        <div v-if="isLoading" class="flex justify-center py-2">
+          <svg
+            class="animate-spin h-5 w-5 text-purple-600"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4zm16 0a8 8 0 01-8 8v-4a4 4 0 004-4h4z"
+            ></path>
+          </svg>
+        </div>
       </div>
     </transition>
 
@@ -62,6 +93,7 @@ import tesa from '@/assets/images/profile-tesa.png'
 
 const showChatCard = ref(false)
 const userInput = ref('')
+const isLoading = ref(false) // Tambahkan state loading
 const chatHistory = ref(
   JSON.parse(sessionStorage.getItem('tesa_chat_history')) ||
   [{ sender: 'bot', message: "Hi there! I'm Tesa. Ask me anything!" }]
@@ -88,6 +120,7 @@ async function handleUserInput() {
   scrollToBottom()
 
   userInput.value = ''
+  isLoading.value = true // Mulai loading
 
   // Ambil seluruh history prompt user dan respon bot
   const promptHistory = chatHistory.value
@@ -115,12 +148,13 @@ async function handleUserInput() {
   } catch (e) {
     chatHistory.value.push({ sender: 'bot', message: "Maaf, terjadi kesalahan pada server." })
     scrollToBottom()
+  } finally {
+    isLoading.value = false // Selesai loading
   }
 }
 
 // Toggle chat card
 function toggleChatCard() {
-
   showChatCard.value = !showChatCard.value
   nextTick(() => scrollToBottom())
 }
@@ -139,4 +173,3 @@ function toggleChatCard() {
   scroll-behavior: smooth;
 }
 </style>
-  
