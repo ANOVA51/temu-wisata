@@ -1,8 +1,8 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
-import { useRouter  } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import axios from 'axios'
-import Search from '@/assets/icon/Search.vue'
+import Search from '@/components/Search.vue'
 import FooterSection from '@/components/FooterSection.vue'
 import Navbar from '@/components/Navbar.vue'
 import loveoutline from '@/components/icons/loveoutline.vue'
@@ -20,11 +20,19 @@ const activeModal = ref(null)
 const modalImages = ref([])
 const modalCurrentIndex = ref(0)
 const router = useRouter()
+const route = useRoute()
 
 const user = ref(null)
 const testimoniForm = ref({ message: '' })
 const testimoniImage = ref(null)
 const favoriteSpotIds = ref([])
+const searchResults = ref([])
+
+// Static list kota di Bali
+const baliCities = [
+  'Denpasar', 'Badung', 'Bangli', 'Buleleng', 'Gianyar', 'Jembrana',
+  'Karangasem', 'Klungkung', 'Tabanan'
+]
 
 onMounted(async () => {
   try {
@@ -50,9 +58,18 @@ onMounted(async () => {
   }
   setTimeout(() => (loading.value = false), 1000)
   AOS.init()
+
+  // Scroll ke grid jika ada spot_id di query
+  if (route.query.spot_id) {
+    setTimeout(() => {
+      const grid = document.getElementById('destination-grid')
+      if (grid) {
+        grid.scrollIntoView({ behavior: 'smooth' })
+      }
+    }, 300)
+  }
 })
 
-// Ambil file langsung dari input, simpan sebagai File
 function onImageChange(e) {
   const file = e.target.files[0]
   if (file && file.type.startsWith('image/')) {
@@ -111,10 +128,17 @@ function getPrimaryImage(spot) {
 }
 
 const filteredSpots = computed(() => {
-  let result = spots.value.filter(d => d.is_verified === true) // hanya yang terverifikasi
+  if (searchResults.value.length > 0) {
+    return searchResults.value
+  }
+  const spotId = route.query.spot_id
+  if (spotId) {
+    return spots.value.filter(s => String(s.spot_id) === String(spotId))
+  }
+  let result = spots.value.filter(d => d.is_verified === true)
   if (selectedLocation.value) {
     result = result.filter((d) =>
-      d.name.toLowerCase().includes(selectedLocation.value.toLowerCase()),
+      d.kota && d.kota.toLowerCase() === selectedLocation.value.toLowerCase()
     )
   }
   return showAll.value ? result : result.slice(0, 8)
@@ -168,6 +192,16 @@ function goToTestimonials() {
   sessionStorage.setItem('spot_id', activeModal.value.spot_id)
   router.push({ name: 'testimonials' })
 }
+
+function handleSearchResults(results) {
+  if (route.query.spot_id) {
+    router.replace({
+      name: route.name,
+      query: { ...route.query, spot_id: undefined }
+    })
+  }
+  searchResults.value = results
+}
 </script>
 
 <template>
@@ -203,8 +237,8 @@ function goToTestimonials() {
       <div class="flex justify-center mb-6">
         <select v-model="selectedLocation" class="border rounded px-4 py-2 shadow">
           <option value="">All Locations</option>
-          <option v-for="spot in spots" :key="spot.spot_id" :value="spot.kota">
-            {{ spot.kota }}
+          <option v-for="city in baliCities" :key="city" :value="city">
+            {{ city }}
           </option>
         </select>
       </div>
@@ -212,20 +246,15 @@ function goToTestimonials() {
       <!-- Search -->
       <div class="flex justify-center mb-6">
         <div class="relative w-full max-w-md">
-          <input
-            type="text"
-            placeholder="Search..."
-            class="w-full py-3 pl-5 pr-12 rounded-full border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-lime-400"
-            v-model="selectedLocation"
-          />
-          <Search
-            class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5"
-          />
+          <Search @update:results="handleSearchResults" />
         </div>
       </div>
 
       <!-- Grid Card -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 px-10 overflow-x-hidden">
+      <div
+        id="destination-grid"
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 px-10 overflow-x-hidden"
+      >
         <template v-if="loading">
           <div v-for="i in 8" :key="i" class="animate-pulse bg-gray-200 rounded-xl h-72"></div>
         </template>
