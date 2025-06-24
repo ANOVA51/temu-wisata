@@ -89,12 +89,24 @@ async function handleUserInput() {
 
   userInput.value = ''
 
+  // Ambil seluruh history prompt user dan respon bot
+  const promptHistory = chatHistory.value
+    .filter(chat => chat.sender === 'user')
+    .map(chat => chat.message)
+  const botHistory = chatHistory.value
+    .filter(chat => chat.sender === 'bot')
+    .map(chat => chat.message)
+
   // Kirim ke API chatbot backend
   try {
     const res = await fetch('http://127.0.0.1:8000/api/chat/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt: input })
+      body: JSON.stringify({
+        prompt: input,
+        prompt_history: promptHistory,
+        bot_history: botHistory
+      })
     })
     const data = await res.json()
     const reply = data.response || "Maaf, Tesa tidak bisa menjawab saat ini."
@@ -127,3 +139,4 @@ function toggleChatCard() {
   scroll-behavior: smooth;
 }
 </style>
+  
