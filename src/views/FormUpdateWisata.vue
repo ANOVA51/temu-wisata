@@ -261,10 +261,9 @@ onMounted(async () => {
     // Simpan gambar lama
     oldImages.value = (data.images || []).map(img => ({
       url: `http://localhost:8000${img.file_name}`,
-      id: img.id, // pastikan backend mengirim id gambar
+      image_id: img.image_id, // gunakan image_id dari backend
       file_name: img.file_name
     }))
-    // Gabungkan gambar lama dan baru untuk preview
     imagePreviews.value = [...oldImages.value]
     form.value.photos = []
   } catch (e) {
@@ -297,9 +296,9 @@ function addImages(files) {
 // Hapus gambar
 function removeImage(idx) {
   const img = imagePreviews.value[idx]
-  // Jika gambar lama (punya id/file_name), masukkan ke deletedImages
-  if (img.id || img.file_name) {
-    deletedImages.value.push(img.file_name)
+  // Jika gambar lama (punya image_id), masukkan ke deletedImages
+  if (img.image_id) {
+    deletedImages.value.push(img.image_id) // <-- hanya image_id (angka)
   } else if (img.file) {
     // Jika gambar baru, hapus dari form.value.photos
     const photoIdx = form.value.photos.findIndex(f => f === img.file)
@@ -331,7 +330,7 @@ async function submitForm() {
   }
   // Kirim daftar file_name gambar yang dihapus (opsional, tergantung backend)
   if (deletedImages.value.length > 0) {
-    deletedImages.value.forEach(name => formData.append('deleted_images', name))
+    deletedImages.value.forEach(id => formData.append('deleted_images', id))
   }
   try {
     await axios.patch(
