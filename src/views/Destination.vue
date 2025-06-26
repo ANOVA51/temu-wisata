@@ -351,7 +351,7 @@ watch(
       </RouterLink>
     </div>
 
-    <!-- Model (Detail Spot Wisata) -->
+    <!-- Modal (Detail Spot Wisata) -->
     <div
       v-if="activeModal"
       class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
