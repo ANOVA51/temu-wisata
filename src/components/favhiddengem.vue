@@ -1,108 +1,59 @@
-<script setup>
-import bluelagoon from '@/assets/images/hiddengem/bluelagoon.png'
-
-import { ref, computed } from 'vue'
-
-const showAll = ref(false)
-
-const toggleShow = () => {
-  showAll.value = !showAll.value
-}
-
-
-const hiddengem = [
-  {
-    image: bluelagoon,
-    name: 'Bluelagoon waterfall',
-    deskripsi: 'Air terjun tersembunyi yang indah...',
-    rating: 4.5,
-  },
-  {
-    image: bluelagoon,
-    name: 'Bluelagoon waterfall',
-    deskripsi: 'Air terjun tersembunyi yang indah...',
-    rating: 4.5,
-  },
-  {
-    image: bluelagoon,
-    name: 'Bluelagoon waterfall',
-    deskripsi: 'Air terjun tersembunyi yang indah...',
-    rating: 4.5,
-  },
-  {
-    image: bluelagoon,
-    name: 'Bluelagoon waterfall',
-    deskripsi: 'Air terjun tersembunyi yang indah...',
-    rating: 4.5,
-  },
-  {
-    image: bluelagoon,
-    name: 'Bluelagoon waterfall',
-    deskripsi: 'Air terjun tersembunyi yang indah...',
-    rating: 4.5,
-  },
-  {
-    image: bluelagoon,
-    name: 'Bluelagoon waterfall',
-    deskripsi: 'Air terjun tersembunyi yang indah...',
-    rating: 4.5,
-  },
-  {
-    image: bluelagoon,
-    name: 'Bluelagoon waterfall',
-    deskripsi: 'Air terjun tersembunyi yang indah...',
-    rating: 4.5,
-  },
-]
-const displayedItems = computed(() => {
-  return showAll.value ? hiddengem : hiddengem.slice(0, 4)
-})
-</script>
-
 <template>
   <section class="py-10">
-    <!--Favorite Hidden Gem-->
-    <h2 class="text-xl md:text-3xl font-black mb-1 text-center">
-      Favorite
-      <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-black">
-        Hidden Gem
-      </span>
-    </h2>
-
-    <!-- Grid Card -->
-    <div class="py-10">
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 px-10" style="min-width: max-content">
-        <div
-          v-for="(item, index) in displayedItems"
-          :key="index"
-          class="bg-white rounded-xl w-50 sm:w-85 h-50 sm:h-93 flex-shrink-0 overflow-hidden drop-shadow-md hover:shadow-xl transition-shadow duration-300"
-        >
-          <div class="h-1/2 w-full">
-            <img :src="item.image" :alt="item.name" class="w-full h-full object-cover" />
-          </div>
-
-          <!--info-->
-          <div class="h-1/2 p-3 flex flex-col justify-between">
-            <p class="font-bold text-sm md:text-xl flex justify-center">{{ item.name }}</p>
-            <p class="text-xs md:text-sm text-gray-600 truncate">{{ item.deskripsi }}</p>
-
-            <div class="flex items-center gap-1 mt-2">
-              <span v-for="i in 5" :key="i" class="text-yellow-400 text-2xl leading-none">
-                {{ i <= Math.floor(item.rating) ? '★' : i - item.rating < 1 ? '⯪' : '☆' }}
-              </span>
-              <span class="text-xs text-gray-500 ml-1">({{ item.rating }})</span>
+    <h2 class="text-2xl font-bold text-green-700 mb-6 text-center">Favourite Hidden Gem</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-10 mb-10">
+      <div
+        v-for="spot in spots"
+        :key="spot.spot_id"
+        class="relative bg-white rounded-xl overflow-hidden shadow-md hover:scale-105 transition cursor-pointer"
+      >
+        <div class="w-full h-48 overflow-hidden">
+          <img
+            :src="spot.image || 'https://placehold.co/400x300?text=No+Image'"
+            :alt="spot.name"
+            class="w-full h-full object-cover"
+          />
+        </div>
+        <div class="p-4">
+          <div class="flex items-center justify-between mb-2">
+            <h3 class="font-bold text-lg text-gray-800">{{ spot.name }}</h3>
+            <div class="flex items-center text-yellow-500">
+              <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 18.343l-6.828-6.829a4 4 0 010-5.656z"/>
+              </svg>
+              <span class="font-semibold">{{ spot.favorite_count || 0 }}</span>
             </div>
           </div>
+          <p class="text-gray-600 text-sm mb-1">
+            {{ spot.address }}, {{ spot.kota }}, {{ spot.kecamatan }}, {{ spot.desa }}
+          </p>
         </div>
       </div>
     </div>
-    <!-- Tombol View More -->
-    <div v-if="hiddengem.length > 4" class="mt-10 flex justify-center mb-10">
-      <button 
-      @click="toggleShow"
-      class="bg-[#328E6E] text-white py-3 px-8 rounded-lg hover:bg-[#276d57] transition">
-        {{ showAll ? 'View Less' : 'View More' }}
-      </button>
+    <div v-if="!spots.length" class="text-gray-400 text-center">
+      Tidak ada data hidden gem favorit.
     </div>
   </section>
 </template>
+
+<script setup>
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
+
+const spots = ref([])
+
+const fetchHiddenGems = async () => {
+  try {
+    const response = await axios.get('http://localhost:8000/api/most-favorited-spots/')
+    spots.value = response.data.most_favorited.map(spot => ({
+      ...spot,
+      image: spot.image || ''
+    }))
+  } catch (error) {
+    console.error('Gagal mengambil data hidden gem favorit:', error)
+    spots.value = []
+  }
+}
+
+onMounted(fetchHiddenGems)
+</script>

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import axios from 'axios'
 import Search from '@/components/Search.vue'
@@ -128,20 +128,15 @@ function getPrimaryImage(spot) {
 }
 
 const filteredSpots = computed(() => {
-  if (searchResults.value.length > 0) {
-    return searchResults.value
+  // Jika ada hasil search, tetap filter berdasarkan kota jika dipilih
+  let base = searchResults.value.length > 0 ? searchResults.value : spots.value.filter(d => d.is_verified === true)
+  if (route.query.spot_id) {
+    base = base.filter(s => String(s.spot_id) === String(route.query.spot_id))
   }
-  const spotId = route.query.spot_id
-  if (spotId) {
-    return spots.value.filter(s => String(s.spot_id) === String(spotId))
-  }
-  let result = spots.value.filter(d => d.is_verified === true)
   if (selectedLocation.value) {
-    result = result.filter((d) =>
-      d.kota && d.kota.toLowerCase() === selectedLocation.value.toLowerCase()
-    )
+    base = base.filter(d => d.kota && d.kota.toLowerCase() === selectedLocation.value.toLowerCase())
   }
-  return showAll.value ? result : result.slice(0, 8)
+  return showAll.value ? base : base.slice(0, 8)
 })
 
 async function toggleFavorite(spot) {
@@ -202,6 +197,27 @@ function handleSearchResults(results) {
   }
   searchResults.value = results
 }
+
+watch(selectedLocation, (val) => {
+  searchResults.value = []
+  // Update query di URL agar sinkron
+  if (val) {
+    router.replace({ name: route.name, query: { ...route.query, location: val } })
+  } else {
+    // Hapus location dari query jika pilih All Locations
+    const q = { ...route.query }
+    delete q.location
+    router.replace({ name: route.name, query: q })
+  }
+})
+
+watch(
+  () => route.query.location,
+  (val) => {
+    selectedLocation.value = val || ''
+  },
+  { immediate: true }
+)
 </script>
 
 <template>
@@ -295,6 +311,7 @@ function handleSearchResults(results) {
           {{ showAll ? 'Show Less' : 'Show More' }}
         </button>
       </div>
+
     </section>
 
     <!--add button-->
@@ -334,7 +351,7 @@ function handleSearchResults(results) {
       </RouterLink>
     </div>
 
-    <!-- Modal (Detail Spot Wisata) -->
+    <!-- Model (Detail Spot Wisata) -->
     <div
       v-if="activeModal"
       class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"

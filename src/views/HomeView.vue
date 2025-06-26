@@ -69,6 +69,15 @@ function handleSpotSelected(spot) {
   // Simpan spot_id ke query params, atau bisa juga ke state management/sessionStorage
   router.push({ name: 'destination', query: { spot_id: spot.spot_id } })
 }
+
+const baliCities = [
+  'Denpasar', 'Badung', 'Bangli', 'Buleleng', 'Gianyar', 'Jembrana',
+  'Karangasem', 'Klungkung', 'Tabanan'
+]
+
+function goToDestinationWithCity(city) {
+  router.push({ name: 'destination', query: { location: city } })
+}
 </script>
 
 <template>
@@ -139,13 +148,15 @@ function handleSpotSelected(spot) {
 
       <!-- Grid destinasi -->
       <div
-        class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-y-2 gap-x-4 text-sm font-medium"
+        class="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-9 gap-y-2 gap-x-4 text-sm font-medium"
       >
-        <div v-for="(item, index) in destinationsToShow" :key="index">
-          {{ item }}
-        </div>
-        <div v-if="searchResults.length === 0" class="text-gray-600 cursor-pointer" @click="showAll = !showAll">
-          {{ showAll ? 'Show Less ▲' : 'View More ▼' }}
+        <div
+          v-for="city in baliCities"
+          :key="city"
+          class="cursor-pointer hover:text-green-700 hover:underline transition"
+          @click="goToDestinationWithCity(city)"
+        >
+          {{ city }}
         </div>
       </div>
     </section>
