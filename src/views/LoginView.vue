@@ -113,16 +113,14 @@ const handleLogin = async () => {
       throw new Error('Invalid response from server')
     }
 
-    // Pilih storage berdasarkan rememberMe
-    const storage = rememberMe.value ? localStorage : sessionStorage
-    storage.setItem('access', access)
-    storage.setItem('refresh', refresh)
-    storage.setItem('userRole', role)
-    storage.setItem('userData', JSON.stringify(userData))
+    // Selalu simpan ke localStorage
+    localStorage.setItem('access', access)
+    localStorage.setItem('refresh', refresh)
+    localStorage.setItem('userRole', role)
+    localStorage.setItem('userData', JSON.stringify(userData))
 
     // Redirect berdasarkan role
     router.push({ name: role === 'admin' ? 'admin' : 'home' })
-
   } catch (error) {
     console.error('Login error:', error)
 
@@ -140,7 +138,6 @@ const handleLogin = async () => {
       // Error lainnya
       errorMessage.value = error.message || 'Login failed'
     }
-
   } finally {
     isLoading.value = false
   }
