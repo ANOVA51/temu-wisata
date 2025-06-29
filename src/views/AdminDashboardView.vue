@@ -311,7 +311,7 @@ function goToUpdateWisata(id) {
   <div class="flex h-screen bg-gray-100">
     <div
       v-if="isMobileMenuOpen"
-      class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden transition-opacity duration-300"
+      class="fixed inset-0 bg-opacity-50 z-40 lg:hidden transition-opacity duration-300"
       @click="isMobileMenuOpen = false"
     ></div>
 
@@ -455,7 +455,7 @@ function goToUpdateWisata(id) {
                   </button>
                   <button
                     class="text-red-600 hover:text-red-800 p-1"
-                   @click="setUserRole(user, 'regular')"
+                    @click="setUserRole(user, 'regular')"
                     title="Jadikan Regular"
                   >
                     <i class="mdi mdi-close-circle-outline text-xl"></i>
