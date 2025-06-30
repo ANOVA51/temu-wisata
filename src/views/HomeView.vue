@@ -1,11 +1,14 @@
 <script setup>
-import Search from '@/assets/icon/Search.vue'
+import Search from '@/components/Search.vue'
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import Navbar from '@/components/Navbar.vue'
 import Favhiddengem from '@/components/favhiddengem.vue'
 import Testimoni from '@/components/testimoni.vue'
 import FooterSection from '@/components/FooterSection.vue'
 import AskTesa from '@/components/AskTesa.vue'
+
+const router = useRouter()
 
 const allDestinations = [
   'Ubud',
@@ -30,6 +33,12 @@ const visibleDestinations = computed(() =>
   showAll.value ? allDestinations : allDestinations.slice(0, 9),
 )
 
+const searchResults = ref([])
+
+const destinationsToShow = computed(() => {
+  return searchResults.value.length > 0 ? searchResults.value.map(d => d.name) : visibleDestinations.value
+})
+
 import nature from '@/assets/icon/landscape.png'
 import FnB from '@/assets/icon/FnB.png'
 import relax from '@/assets/icon/yoga.png'
@@ -53,8 +62,22 @@ const toDo = [
   {
     image : beach,
   },
-  
+
 ]
+
+function handleSpotSelected(spot) {
+  // Simpan spot_id ke query params, atau bisa juga ke state management/sessionStorage
+  router.push({ name: 'destination', query: { spot_id: spot.spot_id } })
+}
+
+const baliCities = [
+  'Denpasar', 'Badung', 'Bangli', 'Buleleng', 'Gianyar', 'Jembrana',
+  'Karangasem', 'Klungkung', 'Tabanan'
+]
+
+function goToDestinationWithCity(city) {
+  router.push({ name: 'destination', query: { location: city } })
+}
 </script>
 
 <template>
@@ -81,13 +104,9 @@ const toDo = [
         </h1>
         <div class="mt-6 flex justify-center">
           <div class="relative w-full max-w-md">
-            <input
-              type="text"
-              placeholder="Search..."
-              class="w-full py-3 pl-5 pr-12 rounded-full border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-lime-400"
-            />
             <Search
-              class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5"
+              @update:results="searchResults = $event"
+              @spot-selected="handleSpotSelected"
             />
           </div>
         </div>
@@ -129,13 +148,15 @@ const toDo = [
 
       <!-- Grid destinasi -->
       <div
-        class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-y-2 gap-x-4 text-sm font-medium"
+        class="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-9 gap-y-2 gap-x-4 text-sm font-medium"
       >
-        <div v-for="(item, index) in visibleDestinations" :key="index">
-          {{ item }}
-        </div>
-        <div class="text-gray-600 cursor-pointer" @click="showAll = !showAll">
-          {{ showAll ? 'Show Less ▲' : 'View More ▼' }}
+        <div
+          v-for="city in baliCities"
+          :key="city"
+          class="cursor-pointer hover:text-green-700 hover:underline transition"
+          @click="goToDestinationWithCity(city)"
+        >
+          {{ city }}
         </div>
       </div>
     </section>

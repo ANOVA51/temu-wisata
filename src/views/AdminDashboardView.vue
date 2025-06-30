@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch, onMounted } from 'vue'
 import Swal from 'sweetalert2'
+import router from '@/router'
 
 const active = ref('dashboard')
 const direction = ref('right')
@@ -35,81 +36,9 @@ const wisataList = ref([])
 const selectedWisataImages = ref([])
 const selectedImageIndex = ref(0)
 
-const pendingWisata = ref([
-  {
-    id: 7,
-    name: 'Ulun Danu Beratan',
-    category: 'Temple',
-    location: 'Bali',
-    image: '/api/placeholder/300/200',
-  },
-  {
-    id: 8,
-    name: 'Goa Gong',
-    category: 'Cave',
-    location: 'Ponorogo',
-    image: '/api/placeholder/300/200',
-  },
-  {
-    id: 9,
-    name: 'Air Terjun Sekumpul',
-    category: 'Waterfall',
-    location: 'Buleleng',
-    image: '/api/placeholder/300/200',
-  },
-  {
-    id: 10,
-    name: 'Ulun Danu Beratan',
-    category: 'Temple',
-    location: 'Bali',
-    image: '/api/placeholder/300/200',
-  },
-  {
-    id: 11,
-    name: 'Goa Gong',
-    category: 'Cave',
-    location: 'Ponorogo',
-    image: '/api/placeholder/300/200',
-  },
-  {
-    id: 12,
-    name: 'Air Terjun Sekumpul',
-    category: 'Waterfall',
-    location: 'Buleleng',
-    image: '/api/placeholder/300/200',
-  },
-])
+const pendingWisata = ref([])
 
-const reportData = ref([
-  {
-    id: 1,
-    location: 'Jawa Timur',
-    name: 'Goa Gong',
-    status: 'pending',
-    reporter: 'user_name',
-    date: 'Dec 01 2021',
-    description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-  },
-  {
-    id: 2,
-    location: 'Bali',
-    name: 'Ulun Danu',
-    status: 'approved',
-    reporter: 'admin_user',
-    date: 'Nov 28 2021',
-    description: 'Location verified and approved for listing. All information has been validated.',
-  },
-  {
-    id: 3,
-    location: 'Bali',
-    name: 'Air Terjun Sekumpul',
-    status: 'rejected',
-    reporter: 'test_user',
-    date: 'Nov 25 2021',
-    description: 'Report rejected due to insufficient information provided.',
-  },
-])
+const reportData = ref([])
 
 const userData = ref([])
 
@@ -150,7 +79,7 @@ onMounted(async () => {
         rating: w.rating ?? '-',
         address: `${w.address}, ${w.desa}, ${w.kecamatan}, ${w.kota}`,
         description: w.description,
-        mapsLink: w.Maps_url,
+        mapsLink: w.google_maps_url,
         uploader: w.user_id?.username ?? '-',
         images: w.images, // <-- simpan array gambar asli
       }))
@@ -270,76 +199,111 @@ const rejectReport = () => {
 }
 
 // User Manage Actions
-const approveUser = (user) => {
-  Swal.fire({
-    icon: 'success',
-    html: `
-      <div style="font-size:2rem;font-weight:600;margin:1rem 0;">User Approved!</div>
-      <div style="font-size:1.2rem;color:#666;">User berhasil diaktifkan</div>
-    `,
-    showConfirmButton: true,
-    confirmButtonText: 'OK',
-    customClass: {
-      popup: 'swal2-popup-custom',
-      confirmButton: 'swal2-confirm-custom',
-    },
-    allowOutsideClick: false,
-    allowEscapeKey: false,
-    didOpen: (popup) => {
-      if (Swal.isVisible() && typeof popup.draggable !== 'undefined') {
-        popup.draggable = true
-      }
-    },
-  })
-  user.status = 'active'
+// const approveUser = (user) => {
+//   Swal.fire({
+//     icon: 'success',
+//     html: `
+//       <div style="font-size:2rem;font-weight:600;margin:1rem 0;">User Approved!</div>
+//       <div style="font-size:1.2rem;color:#666;">User berhasil diaktifkan</div>
+//     `,
+//     showConfirmButton: true,
+//     confirmButtonText: 'OK',
+//     customClass: {
+//       popup: 'swal2-popup-custom',
+//       confirmButton: 'swal2-confirm-custom',
+//     },
+//     allowOutsideClick: false,
+//     allowEscapeKey: false,
+//     didOpen: (popup) => {
+//       if (Swal.isVisible() && typeof popup.draggable !== 'undefined') {
+//         popup.draggable = true
+//       }
+//     },
+//   })
+//   user.status = 'active'
+// }
+
+// const setUserPending = (user) => {
+//   Swal.fire({
+//     icon: 'warning',
+//     html: `
+//       <div style="font-size:2rem;font-weight:600;margin:1rem 0;">User Pending!</div>
+//       <div style="font-size:1.2rem;color:#666;">Status user diubah menjadi pending</div>
+//     `,
+//     showConfirmButton: true,
+//     confirmButtonText: 'OK',
+//     customClass: {
+//       popup: 'swal2-popup-custom',
+//       confirmButton: 'swal2-confirm-custom',
+//     },
+//     allowOutsideClick: false,
+//     allowEscapeKey: false,
+//     didOpen: (popup) => {
+//       if (Swal.isVisible() && typeof popup.draggable !== 'undefined') {
+//         popup.draggable = true
+//       }
+//     },
+//   })
+//   user.status = 'pending'
+// }
+
+// const rejectUser = (user) => {
+//   Swal.fire({
+//     icon: 'error',
+//     html: `
+//       <div style="font-size:2rem;font-weight:600;margin:1rem 0;">User Rejected!</div>
+//       <div style="font-size:1.2rem;color:#666;">User berhasil dinonaktifkan</div>
+//     `,
+//     showConfirmButton: true,
+//     confirmButtonText: 'OK',
+//     customClass: {
+//       popup: 'swal2-popup-custom',
+//       confirmButton: 'swal2-confirm-custom',
+//     },
+//     allowOutsideClick: false,
+//     allowEscapeKey: false,
+//     didOpen: (popup) => {
+//       if (Swal.isVisible() && typeof popup.draggable !== 'undefined') {
+//         popup.draggable = true
+//       }
+//     },
+//   })
+//   user.status = 'inactive'
+// }
+
+async function setUserRole(user, role) {
+  try {
+    // const token = localStorage.getItem('access') || sessionStorage.getItem('access')
+    await fetch(`http://127.0.0.1:8000/api/users/${user.id}/update/`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        // Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ role }),
+    })
+    user.role = role
+    Swal.fire({
+      icon: 'success',
+      title: 'Role Updated!',
+      text: `User role changed to ${role}`,
+      timer: 1200,
+      showConfirmButton: false,
+    })
+  } catch (e) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Failed!',
+      text: 'Gagal mengubah role user',
+    })
+  }
 }
 
-const setUserPending = (user) => {
-  Swal.fire({
-    icon: 'warning',
-    html: `
-      <div style="font-size:2rem;font-weight:600;margin:1rem 0;">User Pending!</div>
-      <div style="font-size:1.2rem;color:#666;">Status user diubah menjadi pending</div>
-    `,
-    showConfirmButton: true,
-    confirmButtonText: 'OK',
-    customClass: {
-      popup: 'swal2-popup-custom',
-      confirmButton: 'swal2-confirm-custom',
-    },
-    allowOutsideClick: false,
-    allowEscapeKey: false,
-    didOpen: (popup) => {
-      if (Swal.isVisible() && typeof popup.draggable !== 'undefined') {
-        popup.draggable = true
-      }
-    },
-  })
-  user.status = 'pending'
-}
-
-const rejectUser = (user) => {
-  Swal.fire({
-    icon: 'error',
-    html: `
-      <div style="font-size:2rem;font-weight:600;margin:1rem 0;">User Rejected!</div>
-      <div style="font-size:1.2rem;color:#666;">User berhasil dinonaktifkan</div>
-    `,
-    showConfirmButton: true,
-    confirmButtonText: 'OK',
-    customClass: {
-      popup: 'swal2-popup-custom',
-      confirmButton: 'swal2-confirm-custom',
-    },
-    allowOutsideClick: false,
-    allowEscapeKey: false,
-    didOpen: (popup) => {
-      if (Swal.isVisible() && typeof popup.draggable !== 'undefined') {
-        popup.draggable = true
-      }
-    },
-  })
-  user.status = 'inactive'
+function goToUpdateWisata(id) {
+  sessionStorage.setItem('update_spot_id', id)
+  // Pastikan route ke form update TIDAK pakai param id
+  // Contoh: /form-update-wisata
+  router.push({ name: 'formupdate' })
 }
 </script>
 
@@ -347,7 +311,7 @@ const rejectUser = (user) => {
   <div class="flex h-screen bg-gray-100">
     <div
       v-if="isMobileMenuOpen"
-      class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden transition-opacity duration-300"
+      class="fixed inset-0 bg-opacity-50 z-40 lg:hidden transition-opacity duration-300"
       @click="isMobileMenuOpen = false"
     ></div>
 
@@ -484,15 +448,16 @@ const rejectUser = (user) => {
                 >
                   <button
                     class="text-green-600 hover:text-green-800 p-1"
-                    @click="approveUser(user)"
+                    @click="setUserRole(user, 'admin')"
+                    title="Jadikan Admin"
                   >
                     <i class="mdi mdi-check-circle-outline text-xl"></i>
                   </button>
                   <button
-                    class="text-yellow-600 hover:text-yellow-800 p-1"
-                    @click="setUserPending(user)"
-                  ></button>
-                  <button class="text-red-600 hover:text-red-800 p-1" @click="rejectUser(user)">
+                    class="text-red-600 hover:text-red-800 p-1"
+                    @click="setUserRole(user, 'regular')"
+                    title="Jadikan Regular"
+                  >
                     <i class="mdi mdi-close-circle-outline text-xl"></i>
                   </button>
                 </td>
@@ -563,6 +528,7 @@ const rejectUser = (user) => {
                 </button>
                 <button
                   class="px-3 py-1 bg-gray-500 text-white text-xs rounded hover:bg-gray-600 transition-colors"
+                  @click="goToUpdateWisata(wisata.id)"
                 >
                   Edit
                 </button>
@@ -854,7 +820,7 @@ const rejectUser = (user) => {
                   <i class="mdi mdi-image text-4xl text-white opacity-50"></i>
                 </div>
               </div>
-              <div class="flex-1 space-y-4">
+              <div class="flex-1 space-y-4 pl-11">
                 <h3 class="text-lg sm:text-xl font-bold text-gray-800 mb-2">
                   {{ selectedWisata.name }}
                 </h3>

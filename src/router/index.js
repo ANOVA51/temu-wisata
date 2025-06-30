@@ -56,10 +56,16 @@ const router = createRouter({
       component: () => import('@/views/FormInputWisata.vue'),
     },
     {
+      path: '/formupdate',
+      name: 'formupdate',
+      component: () => import('@/views/FormUpdateWisata.vue'),
+      meta: { requiresAuth: true, requiresAdmin: true } ,
+    },
+    {
       path: '/tesa',
       name: 'tesa',
       component: () => import('@/views/ChatTesa.vue'),
-      
+
     },
     {
       path: '/coba2',

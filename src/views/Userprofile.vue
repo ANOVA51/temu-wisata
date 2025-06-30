@@ -9,12 +9,12 @@ import { onMounted, reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const currentView = ref('dashboard')
+const currentView = ref('Edit')
 const menuItems = [
-  { label: 'Profile', key: 'Edit', icon:profile },
-  { label: 'Favorite Destination', key: 'Favorite', icon:love},
-  { label: 'Logout', key: 'logout', icon:logout},
-  { label: 'back', key: 'back', },
+  { label: 'Profile', key: 'Edit', icon: profile },
+  { label: 'Favorite', key: 'Favorite', icon: love },
+  { label: 'Logout', key: 'logout', icon: logout },
+  { label: 'back', key: 'back' },
 ]
 
 // State user
@@ -122,11 +122,26 @@ async function updateProfile() {
         'Content-Type': 'multipart/form-data',
       },
     })
+    // Fetch ulang data user terbaru
+    const res = await axios.get('http://127.0.0.1:8000/api/users/me/', {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    // Simpan ke sessionStorage (atau localStorage jika pakai rememberMe)
+    sessionStorage.setItem('userData', JSON.stringify(res.data.data))
+    // Jika pakai localStorage:
+    // localStorage.setItem('userData', JSON.stringify(res.data.data))
+
     alert('Profile updated!')
     editMode.value = false
     password1.value = ''
     password2.value = ''
     passwordError.value = ''
+    // Update preview foto jika berubah
+    profilePreview.value = res.data.data.foto_profile
+      ? res.data.data.foto_profile.startsWith('http')
+        ? res.data.data.foto_profile
+        : `http://127.0.0.1:8000${res.data.data.foto_profile}`
+      : penari
   } catch (e) {
     alert('Gagal update profile')
   }
@@ -137,10 +152,10 @@ async function fetchFavorites() {
   const token = localStorage.getItem('access') || sessionStorage.getItem('access')
   try {
     const res = await axios.get('http://127.0.0.1:8000/api/favorites/', {
-      headers: { Authorization: `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${token}` },
     })
     favoriteSpots.value = res.data.favorites
-    favoriteSpotIds.value = res.data.favorites.map(fav => fav.spot_id)
+    favoriteSpotIds.value = res.data.favorites.map((fav) => fav.spot_id)
   } catch (e) {
     favoriteSpots.value = []
     favoriteSpotIds.value = []
@@ -163,11 +178,10 @@ async function toggleFavorite(spot) {
   if (isFavorite(spot)) {
     // Unlike
     try {
-      await axios.delete(
-        `http://127.0.0.1:8000/api/favorites/remove/${spot.spot_id}/`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      )
-      favoriteSpotIds.value = favoriteSpotIds.value.filter(id => id !== spot.spot_id)
+      await axios.delete(`http://127.0.0.1:8000/api/favorites/remove/${spot.spot_id}/`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      favoriteSpotIds.value = favoriteSpotIds.value.filter((id) => id !== spot.spot_id)
       // Jangan hapus dari favoriteSpots.value, biarkan tetap tampil
     } catch (e) {
       alert('Gagal menghapus dari favorit')
@@ -178,7 +192,7 @@ async function toggleFavorite(spot) {
       await axios.post(
         `http://127.0.0.1:8000/api/favorites/add/${spot.spot_id}/`,
         {},
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       )
       favoriteSpotIds.value.push(spot.spot_id)
       // Ambil ulang data favorit agar sinkron
@@ -199,7 +213,7 @@ function openFavoriteModal(spot) {
   selectedFavoriteSpot.value = spot
   showFavoriteModal.value = true
   favoriteModalImages.value = spot.images
-    ? spot.images.map(img => `http://127.0.0.1:8000${img.file_name}`)
+    ? spot.images.map((img) => `http://127.0.0.1:8000${img.file_name}`)
     : []
   favoriteModalCurrentIndex.value = 0
 }
@@ -209,7 +223,8 @@ function closeFavoriteModal() {
 }
 function nextFavoriteImage() {
   if (!favoriteModalImages.value.length) return
-  favoriteModalCurrentIndex.value = (favoriteModalCurrentIndex.value + 1) % favoriteModalImages.value.length
+  favoriteModalCurrentIndex.value =
+    (favoriteModalCurrentIndex.value + 1) % favoriteModalImages.value.length
 }
 </script>
 
@@ -237,7 +252,7 @@ function nextFavoriteImage() {
           class="w-full text-left px-4 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-all flex justify-between items-center"
         >
           <span>{{ item.label }}</span>
-          <component v-if="item.icon" :is="item.icon" class="w-6 h-6"/>
+          <component v-if="item.icon" :is="item.icon" class="w-6 h-6" />
         </button>
       </nav>
     </aside>
@@ -247,7 +262,6 @@ function nextFavoriteImage() {
       <!--edit profile-->
       <section v-if="currentView === 'Edit'">
         <div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow">
-
           <h2 class="text-xl font-semibold mb-4 text-center">User Profile</h2>
           <form class="space-y-4" @submit.prevent="updateProfile">
             <div class="flex justify-center">
@@ -307,7 +321,7 @@ function nextFavoriteImage() {
               />
               <input
                 v-model="password2"
-                type="password"
+                type="text"
                 class="w-full border p-2 rounded mt-2"
                 placeholder="Confirm new password"
               />
@@ -349,7 +363,6 @@ function nextFavoriteImage() {
         </div>
       </section>
 
-
       <section v-if="currentView === 'Favorite'">
         <h2 class="text-2xl font-bold mb-4">Favorite Destinations</h2>
         <div v-if="loadingFavorite" class="text-center py-10">Loading...</div>
@@ -368,14 +381,20 @@ function nextFavoriteImage() {
                 @click.stop="toggleFavorite(spot)"
                 class="absolute top-3 right-3 p-2 bg-white rounded-full shadow-md hover:scale-110 transition z-20"
               >
-                <component :is="isFavorite(spot) ? love : loveoutline" class="w-7 h-7"/>
+                <component :is="isFavorite(spot) ? love : loveoutline" class="w-7 h-7" />
               </button>
               <img
-                :src="spot.images && spot.images.length ? `http://127.0.0.1:8000${spot.images[0].file_name}` : ''"
+                :src="
+                  spot.images && spot.images.length
+                    ? `http://127.0.0.1:8000${spot.images[0].file_name}`
+                    : ''
+                "
                 :alt="spot.name"
                 class="w-full h-full object-cover"
               />
-              <div class="absolute z-10 inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent text-white px-4 py-6 flex flex-col justify-end">
+              <div
+                class="absolute z-10 inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent text-white px-4 py-6 flex flex-col justify-end"
+              >
                 <div class="font-bold text-lg">{{ spot.name }}</div>
                 <div class="text-sm">{{ spot.kota }}</div>
               </div>
@@ -422,14 +441,20 @@ function nextFavoriteImage() {
                 </div>
               </div>
               <div class="text-xs text-gray-500 mt-2">
-                Klik gambar untuk melihat selanjutnya ({{ favoriteModalCurrentIndex + 1 }}/{{ favoriteModalImages.length }})
+                Klik gambar untuk melihat selanjutnya ({{ favoriteModalCurrentIndex + 1 }}/{{
+                  favoriteModalImages.length
+                }})
               </div>
             </div>
             <!-- Right: Details -->
             <div class="flex-1 flex flex-col justify-between w-full md:w-1/2">
               <div>
-                <div class="text-2xl font-bold text-gray-700 mb-2">{{ selectedFavoriteSpot.name }}</div>
-                <div class="text-base text-gray-800 mb-4  whitespace-pre-line break-words">{{ selectedFavoriteSpot.description }}</div>
+                <div class="text-2xl font-bold text-gray-700 mb-2">
+                  {{ selectedFavoriteSpot.name }}
+                </div>
+                <div class="text-base text-gray-800 mb-4 whitespace-pre-line break-words">
+                  {{ selectedFavoriteSpot.description }}
+                </div>
                 <div class="mb-2">
                   <span class="font-semibold">Kategori:</span>
                   <span>{{ selectedFavoriteSpot.category }}</span>
@@ -441,14 +466,15 @@ function nextFavoriteImage() {
                 <div class="mb-2">
                   <span class="font-semibold">Harga:</span>
                   <span>
-                    Rp{{ Number(selectedFavoriteSpot.price_min).toLocaleString() }} - Rp{{ Number(selectedFavoriteSpot.price_max).toLocaleString() }}
+                    Rp{{ Number(selectedFavoriteSpot.price_min).toLocaleString() }} - Rp{{
+                      Number(selectedFavoriteSpot.price_max).toLocaleString()
+                    }}
                   </span>
                 </div>
                 <div class="mb-2">
                   <span class="font-semibold">Alamat:</span>
                   <span>
-                    {{ selectedFavoriteSpot.address }},
-                    {{ selectedFavoriteSpot.desa }},
+                    {{ selectedFavoriteSpot.address }}, {{ selectedFavoriteSpot.desa }},
                     {{ selectedFavoriteSpot.kecamatan }},
                     {{ selectedFavoriteSpot.kota }}
                   </span>
@@ -459,7 +485,8 @@ function nextFavoriteImage() {
                     :href="selectedFavoriteSpot.google_maps_url"
                     target="_blank"
                     class="text-green-600 underline break-all"
-                  >{{ selectedFavoriteSpot.google_maps_url }}</a>
+                    >{{ selectedFavoriteSpot.google_maps_url }}</a
+                  >
                 </div>
               </div>
               <button

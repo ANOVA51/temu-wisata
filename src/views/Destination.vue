@@ -1,8 +1,8 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted, computed, watch } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import axios from 'axios'
-import Search from '@/assets/icon/Search.vue'
+import Search from '@/components/Search.vue'
 import FooterSection from '@/components/FooterSection.vue'
 import Navbar from '@/components/Navbar.vue'
 import loveoutline from '@/components/icons/loveoutline.vue'
@@ -20,12 +20,19 @@ const activeModal = ref(null)
 const modalImages = ref([])
 const modalCurrentIndex = ref(0)
 const router = useRouter()
+const route = useRoute()
 
-//State user login dan testimoni
 const user = ref(null)
 const testimoniForm = ref({ message: '' })
 const testimoniImage = ref(null)
-const favoriteSpotIds = ref([]) // Menyimpan spot_id yang sudah jadi favorit
+const favoriteSpotIds = ref([])
+const searchResults = ref([])
+
+// Static list kota di Bali
+const baliCities = [
+  'Denpasar', 'Badung', 'Bangli', 'Buleleng', 'Gianyar', 'Jembrana',
+  'Karangasem', 'Klungkung', 'Tabanan'
+]
 
 onMounted(async () => {
   try {
@@ -34,67 +41,85 @@ onMounted(async () => {
   } catch (e) {
     alert('Gagal mengambil data destinasi')
   }
-  // Ambil data user login dari localstorage/sessionstorage
   const userData = JSON.parse(
     localStorage.getItem('userData') || sessionStorage.getItem('userData'),
   )
   if (userData) {
     user.value = userData
-    // Ambil daftar favorit user dari backend
     try {
       const token = localStorage.getItem('access') || sessionStorage.getItem('access')
       const res = await axios.get('http://localhost:8000/api/favorites/', {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}` }
       })
-      favoriteSpotIds.value = res.data.favorites.map((fav) => fav.spot_id)
+      favoriteSpotIds.value = res.data.favorites.map(fav => fav.spot_id)
     } catch (e) {
       favoriteSpotIds.value = []
     }
   }
   setTimeout(() => (loading.value = false), 1000)
   AOS.init()
+
+  // Scroll ke grid jika ada spot_id di query
+  if (route.query.spot_id) {
+    setTimeout(() => {
+      const grid = document.getElementById('destination-grid')
+      if (grid) {
+        grid.scrollIntoView({ behavior: 'smooth' })
+      }
+    }, 300)
+  }
 })
 
-// mengambil gambar dari file input dan simban sebagai base64
 function onImageChange(e) {
   const file = e.target.files[0]
-  if (file) {
-    const reader = new FileReader()
-    reader.onload = () => {
-      testimoniImage.value = reader.result
-    }
-    reader.readAsDataURL(file)
+  if (file && file.type.startsWith('image/')) {
+    testimoniImage.value = file
+  } else {
+    testimoniImage.value = null
+    alert('File harus berupa gambar!')
   }
 }
 
-// kirim testimoni ke localStoreage (sementara)
-function submitTestimoni() {
+async function submitTestimoni() {
   if (!user.value) {
     alert('Silahkan login terlebih dahulu untuk memberi testimoni.')
     router.push('/login')
     return
   }
-
   if (!testimoniForm.value.message) {
     alert('pesan testimoni tidak boleh kosong.')
     return
   }
-
-  const newTestimoni = {
-    name: user.value.username, //ambil dari user login
-    message: testimoniForm.value.message,
-    image: testimoniImage.value,
+  if (!activeModal.value) {
+    alert('Tidak ada destinasi yang dipilih.')
+    return
   }
 
-  const existing = JSON.parse(localStorage.getItem('testimonies') || '[]')
-  existing.push(newTestimoni)
-  localStorage.setItem('testimonies', JSON.stringify(existing))
+  const token = localStorage.getItem('access') || sessionStorage.getItem('access')
+  const formData = new FormData()
+  formData.append('testi_text', testimoniForm.value.message)
+  if (testimoniImage.value) {
+    formData.append('images', testimoniImage.value)
+  }
 
-  //rest form
-  testimoniForm.value.message = ''
-  testimoniImage.value = null
-
-  router.push({ name: 'testimonials' })
+  try {
+    await axios.post(
+      `http://127.0.0.1:8000/api/testimoni/${activeModal.value.spot_id}/add/`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    alert('Testimoni berhasil dikirim!')
+    testimoniForm.value.message = ''
+    testimoniImage.value = null
+    router.push({ name: 'testimonials', query: { spot_id: activeModal.value.spot_id } })
+    return
+  } catch (e) {
+    alert('Gagal mengirim testimoni')
+  }
 }
 
 function getPrimaryImage(spot) {
@@ -103,13 +128,15 @@ function getPrimaryImage(spot) {
 }
 
 const filteredSpots = computed(() => {
-  let result = spots.value
-  if (selectedLocation.value) {
-    result = result.filter((d) =>
-      d.name.toLowerCase().includes(selectedLocation.value.toLowerCase()),
-    )
+  // Jika ada hasil search, tetap filter berdasarkan kota jika dipilih
+  let base = searchResults.value.length > 0 ? searchResults.value : spots.value.filter(d => d.is_verified === true)
+  if (route.query.spot_id) {
+    base = base.filter(s => String(s.spot_id) === String(route.query.spot_id))
   }
-  return showAll.value ? result : result.slice(0, 8)
+  if (selectedLocation.value) {
+    base = base.filter(d => d.kota && d.kota.toLowerCase() === selectedLocation.value.toLowerCase())
+  }
+  return showAll.value ? base : base.slice(0, 8)
 })
 
 async function toggleFavorite(spot) {
@@ -120,25 +147,21 @@ async function toggleFavorite(spot) {
   }
   const token = localStorage.getItem('access') || sessionStorage.getItem('access')
   if (isFavorite(spot)) {
-    // Hapus dari favorit
     try {
       await axios.delete(`http://localhost:8000/api/favorites/remove/${spot.spot_id}/`, {
         headers: { Authorization: `Bearer ${token}` },
       })
-      // Update daftar favorit setelah hapus
       favoriteSpotIds.value = favoriteSpotIds.value.filter((id) => id !== spot.spot_id)
     } catch (e) {
       alert('Gagal menghapus dari favorit')
     }
   } else {
-    // Tambah ke favorit
     try {
       await axios.post(
         `http://localhost:8000/api/favorites/add/${spot.spot_id}/`,
         {},
         { headers: { Authorization: `Bearer ${token}` } },
       )
-      // Update daftar favorit setelah tambah
       favoriteSpotIds.value.push(spot.spot_id)
     } catch (e) {
       alert('Gagal menambah ke favorit')
@@ -150,7 +173,6 @@ function isFavorite(spot) {
   return favoriteSpotIds.value.includes(spot.spot_id)
 }
 
-// Modal: tampilkan semua gambar (tanpa memperhitungkan is_primary)
 function openModal(spot) {
   activeModal.value = spot
   modalImages.value = spot.images.map((img) => `http://127.0.0.1:8000${img.file_name}`)
@@ -160,6 +182,42 @@ function nextImage() {
   if (!modalImages.value.length) return
   modalCurrentIndex.value = (modalCurrentIndex.value + 1) % modalImages.value.length
 }
+function goToTestimonials() {
+  if (!activeModal.value) return
+  sessionStorage.setItem('spot_id', activeModal.value.spot_id)
+  router.push({ name: 'testimonials' })
+}
+
+function handleSearchResults(results) {
+  if (route.query.spot_id) {
+    router.replace({
+      name: route.name,
+      query: { ...route.query, spot_id: undefined }
+    })
+  }
+  searchResults.value = results
+}
+
+watch(selectedLocation, (val) => {
+  searchResults.value = []
+  // Update query di URL agar sinkron
+  if (val) {
+    router.replace({ name: route.name, query: { ...route.query, location: val } })
+  } else {
+    // Hapus location dari query jika pilih All Locations
+    const q = { ...route.query }
+    delete q.location
+    router.replace({ name: route.name, query: q })
+  }
+})
+
+watch(
+  () => route.query.location,
+  (val) => {
+    selectedLocation.value = val || ''
+  },
+  { immediate: true }
+)
 </script>
 
 <template>
@@ -195,8 +253,8 @@ function nextImage() {
       <div class="flex justify-center mb-6">
         <select v-model="selectedLocation" class="border rounded px-4 py-2 shadow">
           <option value="">All Locations</option>
-          <option v-for="spot in spots" :key="spot.spot_id" :value="spot.kota">
-            {{ spot.kota }}
+          <option v-for="city in baliCities" :key="city" :value="city">
+            {{ city }}
           </option>
         </select>
       </div>
@@ -204,20 +262,15 @@ function nextImage() {
       <!-- Search -->
       <div class="flex justify-center mb-6">
         <div class="relative w-full max-w-md">
-          <input
-            type="text"
-            placeholder="Search..."
-            class="w-full py-3 pl-5 pr-12 rounded-full border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-lime-400"
-            v-model="selectedLocation"
-          />
-          <Search
-            class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5"
-          />
+          <Search @update:results="handleSearchResults" />
         </div>
       </div>
 
       <!-- Grid Card -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 px-10 overflow-x-hidden">
+      <div
+        id="destination-grid"
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 px-10 overflow-x-hidden"
+      >
         <template v-if="loading">
           <div v-for="i in 8" :key="i" class="animate-pulse bg-gray-200 rounded-xl h-72"></div>
         </template>
@@ -258,6 +311,7 @@ function nextImage() {
           {{ showAll ? 'Show Less' : 'Show More' }}
         </button>
       </div>
+
     </section>
 
     <!--add button-->
@@ -407,12 +461,13 @@ function nextImage() {
                 Kirim Testimoni
               </button>
 
-              <RouterLink
-                to="/testimonials"
+              <button
+                type="button"
+            @click="goToTestimonials"
                 class="block text-sm text-green-600 underline hover:text-green-800 mt-1"
               >
                 Lihat semua testimoni →
-              </RouterLink>
+              </button>
             </form>
           </div>
 

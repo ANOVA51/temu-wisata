@@ -38,7 +38,7 @@
       </div>
 
       <div class="text-center mt-12">
-        <RouterLink to="/" class="text-green-600 hover:text-green-800 font-semibold underline">
+        <RouterLink to="/destination" class="text-green-600 hover:text-green-800 font-semibold underline">
           ← Kembali ke Destinasi
         </RouterLink>
       </div>
@@ -48,13 +48,37 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import axios from 'axios'
 
 const testimonies = ref([])
+const route = useRoute()
 
-onMounted(() => {
-  const stored = localStorage.getItem('testimonies')
-  if (stored) {
-    testimonies.value = JSON.parse(stored)
+onMounted(async () => {
+  // Ambil spot_id dari sessionStorage, fallback ke query jika ada
+  const spotId = sessionStorage.getItem('spot_id') || route.query.spot_id
+  if (spotId) {
+    try {
+      const res = await axios.get(`http://127.0.0.1:8000/api/testimoni/spot/${spotId}/`)
+      testimonies.value = (res.data.testimonies || []).map(item => ({
+        name: item.username || 'Wisatawan',
+        profile: item.foto_profile
+          ? (item.foto_profile.startsWith('http')
+              ? item.foto_profile
+              : `http://127.0.0.1:8000${item.foto_profile}`)
+          : null,
+        message: item.testi_text,
+        image: item.images && item.images.length
+          ? (item.images[0].file_name.startsWith('http')
+              ? item.images[0].file_name
+              : `http://127.0.0.1:8000${item.images[0].file_name}`)
+          : null
+      }))
+    } catch (e) {
+      testimonies.value = []
+    }
+  } else {
+    testimonies.value = []
   }
 })
 </script>
