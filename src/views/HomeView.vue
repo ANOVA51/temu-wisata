@@ -40,29 +40,32 @@ const destinationsToShow = computed(() => {
 })
 
 import nature from '@/assets/icon/landscape.png'
-import FnB from '@/assets/icon/FnB.png'
 import relax from '@/assets/icon/yoga.png'
-import nightlife from '@/assets/icon/nightlife.png'
 import beach from '@/assets/icon/sunset.png'
-
+import adventure from '@/assets/icon/adventure.png'
+import mountain from '@/assets/icon/mountain.png'
 
 const toDo = [
   {
-    image : nature,
+    image: nature,
+    label: 'Nature',
   },
   {
-    image : FnB,
+    image: adventure,
+    label: 'Adventure',
   },
   {
-    image : relax,
+    image: relax,
+    label: 'Cultural',
   },
   {
-    image : nightlife,
+    image: mountain,
+    label: 'Mountain',
   },
   {
-    image : beach,
+    image: beach,
+    label: 'Beach',
   },
-
 ]
 
 function handleSpotSelected(spot) {
@@ -124,16 +127,17 @@ function goToDestinationWithCity(city) {
         <div class="flex justify-center flex-wrap gap-6 md:gap-30 px-8 ">
           <div v-for="(icon , index) in toDo"
           :key="index"
-          class="h-[100px] w-[200px] bg-white rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300"
-          >
-          <div class=" pt-5 pb-5 flex justify-center">
+          class="h-[120px] w-[200px] bg-white rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 flex flex-col items-center justify-center"
+        >
+          <div class="pt-5 pb-2 flex justify-center">
             <img
-            :src="icon.image"
-            class="size-16  object-cover"
+              :src="icon.image"
+              class="size-16 object-cover"
             />
-
           </div>
-
+          <div class="text-center text-black-700 font-semibold text-base">
+            {{ icon.label }}
+          </div>
         </div>
         </div>
 
