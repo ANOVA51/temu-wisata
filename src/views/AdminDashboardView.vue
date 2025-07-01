@@ -403,37 +403,61 @@ function goToUpdateWisata(id) {
         <div class="text-base sm:text-lg font-semibold text-green-700 mb-6">
           {{ userData.length }} User Found
         </div>
-        <div class="overflow-x-auto">
+        <!-- Mobile & Tablet: Card List -->
+        <div class="grid gap-4 lg:hidden">
+          <div
+            v-for="user in userData"
+            :key="user.id"
+            class="bg-white rounded-lg shadow p-4 flex flex-col space-y-2"
+          >
+            <div class="flex items-center space-x-2">
+              <i class="mdi mdi-account-circle text-2xl text-green-600"></i>
+              <span class="font-semibold">{{ user.username }}</span>
+            </div>
+            <div class="text-sm text-gray-600 break-all">{{ user.email }}</div>
+            <div class="flex items-center justify-between">
+              <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">{{ user.role }}</span>
+              <div class="flex space-x-1">
+                <button
+                  class="text-green-600 hover:text-green-800 p-1"
+                  @click="setUserRole(user, 'admin')"
+                  title="Jadikan Admin"
+                >
+                  <i class="mdi mdi-check-circle-outline text-xl"></i>
+                </button>
+                <button
+                  class="text-red-600 hover:text-red-800 p-1"
+                  @click="setUserRole(user, 'regular')"
+                  title="Jadikan Regular"
+                >
+                  <i class="mdi mdi-close-circle-outline text-xl"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Desktop: Table -->
+        <div class="overflow-x-auto hidden lg:block">
           <table class="min-w-full rounded-lg">
             <thead>
               <tr class="bg-green-100">
-                <th
-                  class="py-3 px-3 sm:px-6 text-left font-semibold text-sm sm:text-base whitespace-nowrap"
-                >
+                <th class="py-3 px-3 sm:px-6 text-left font-semibold text-sm sm:text-base whitespace-nowrap">
                   <i class="mdi mdi-account-circle mr-2"></i>User Name
                 </th>
-                <th
-                  class="py-3 px-3 sm:px-6 text-left font-semibold text-sm sm:text-base whitespace-nowrap"
-                >
+                <th class="py-3 px-3 sm:px-6 text-left font-semibold text-sm sm:text-base whitespace-nowrap">
                   Email
                 </th>
-                <th
-                  class="py-3 px-3 sm:px-6 text-left font-semibold text-sm sm:text-base whitespace-nowrap"
-                >
+                <th class="py-3 px-3 sm:px-6 text-left font-semibold text-sm sm:text-base whitespace-nowrap">
                   Role
                 </th>
-                <th
-                  class="py-3 px-3 sm:px-6 text-left font-semibold text-sm sm:text-base whitespace-nowrap"
-                >
+                <th class="py-3 px-3 sm:px-6 text-left font-semibold text-sm sm:text-base whitespace-nowrap">
                   Action
                 </th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="user in userData" :key="user.id" class="border-b hover:bg-green-50">
-                <td
-                  class="py-3 px-3 sm:px-6 flex items-center text-sm sm:text-base whitespace-nowrap"
-                >
+                <td class="py-3 px-3 sm:px-6 flex items-center text-sm sm:text-base whitespace-nowrap">
                   <i class="mdi mdi-account-circle mr-2 text-xl"></i>
                   {{ user.username }}
                 </td>
@@ -443,9 +467,7 @@ function goToUpdateWisata(id) {
                 <td class="py-3 px-3 sm:px-6 text-sm sm:text-base whitespace-nowrap">
                   {{ user.role }}
                 </td>
-                <td
-                  class="py-3 px-3 sm:px-6 flex items-center space-x-1 sm:space-x-2 whitespace-nowrap"
-                >
+                <td class="py-3 px-3 sm:px-6 flex items-center space-x-1 sm:space-x-2 whitespace-nowrap">
                   <button
                     class="text-green-600 hover:text-green-800 p-1"
                     @click="setUserRole(user, 'admin')"
