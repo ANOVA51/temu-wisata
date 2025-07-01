@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, computed } from 'vue'
 import Swal from 'sweetalert2'
 import router from '@/router'
 
@@ -305,6 +305,37 @@ function goToUpdateWisata(id) {
   // Contoh: /form-update-wisata
   router.push({ name: 'formupdate' })
 }
+
+const searchQuery = ref('')
+const sortKey = ref('name')
+const sortOrder = ref('asc') // 'asc' atau 'desc'
+
+const filteredSortedWisata = computed(() => {
+  let result = wisataList.value
+
+  // Search
+  if (searchQuery.value) {
+    const q = searchQuery.value.toLowerCase()
+    result = result.filter(w =>
+      w.name.toLowerCase().includes(q) ||
+      w.category.toLowerCase().includes(q) ||
+      w.address.toLowerCase().includes(q)
+    )
+  }
+
+  // Sort
+  result = [...result].sort((a, b) => {
+    let valA = a[sortKey.value] || ''
+    let valB = b[sortKey.value] || ''
+    if (typeof valA === 'string') valA = valA.toLowerCase()
+    if (typeof valB === 'string') valB = valB.toLowerCase()
+    if (valA < valB) return sortOrder.value === 'asc' ? -1 : 1
+    if (valA > valB) return sortOrder.value === 'asc' ? 1 : -1
+    return 0
+  })
+
+  return result
+})
 </script>
 
 <template>
@@ -521,9 +552,41 @@ function goToUpdateWisata(id) {
       <div v-else-if="active === 'wisata-manage'">
         <h2 class="text-3xl font-bold text-green-700 mb-6">Wisata Manage</h2>
         <div class="text-lg font-semibold text-green-700 mb-6">{{ wisataList.length }} Wisata</div>
+
+        <!-- Search and Sort Section -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+          <input
+            v-model="searchQuery"
+            type="text"
+            placeholder="Search"
+            class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-64"
+          />
+          <div class="flex items-center gap-2">
+            <label class="font-semibold text-gray-700">Sort by:</label>
+            <select v-model="sortKey" class="border border-gray-300 rounded-md px-2 py-1">
+              <option value="name">Nama</option>
+              <option value="category">Kategori</option>
+              <option value="address">Alamat Lengkap</option>
+              <!-- Jika ingin lebih detail, bisa split address -->
+              <!-- <option value="desa">Desa</option>
+              <option value="kecamatan">Kecamatan</option>
+              <option value="kota">Kota</option> -->
+            </select>
+            <button
+              @click="sortOrder = sortOrder === 'asc' ? 'desc' : 'asc'"
+              class="ml-2 px-2 py-1 border rounded"
+              :class="sortOrder === 'asc' ? 'bg-gray-100' : 'bg-gray-300'"
+              :title="sortOrder === 'asc' ? 'Ascending' : 'Descending'"
+            >
+              <span v-if="sortOrder === 'asc'">⬆</span>
+              <span v-else>⬇</span>
+            </button>
+          </div>
+        </div>
+
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <div
-            v-for="wisata in wisataList"
+            v-for="wisata in filteredSortedWisata"
             :key="wisata.id"
             class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
           >
