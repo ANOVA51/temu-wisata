@@ -1,20 +1,21 @@
 <script setup>
 import penari from '@/assets/images/penari.jpg'
-import love from '@/components/icons/filledLove.vue'
+import love from '@/components/icons/love.vue'
 import logout from '@/components/icons/logout.vue'
 import profile from '@/components/icons/profile.vue'
 import loveoutline from '@/components/icons/loveoutline.vue'
+import kembali from '@/components/icons/back.vue'
 import axios from 'axios'
-import { onMounted, reactive, ref, watch } from 'vue'
+import { onMounted, reactive, ref, Transition, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const currentView = ref('dashboard')
+const currentView = ref('Edit')
 const menuItems = [
   { label: 'Profile', key: 'Edit', icon:profile },
-  { label: 'Favorite Destination', key: 'Favorite', icon:love},
+  { label: 'Favorite', key: 'Favorite', icon:love},
   { label: 'Logout', key: 'logout', icon:logout},
-  { label: 'back', key: 'back', },
+  { label: 'back', key: 'back', icon:kembali},
 ]
 
 // State user
@@ -252,7 +253,7 @@ function nextFavoriteImage() {
           class="w-full text-left px-4 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-all flex justify-between items-center"
         >
           <span>{{ item.label }}</span>
-          <component v-if="item.icon" :is="item.icon" class="w-6 h-6"/>
+          <component :is="item.icon" :class="[currentView === item.key ? 'w-7 h-7' : 'w-6 h-6', 'transform trasition-tranform duration-200']" />
         </button>
       </nav>
     </aside>
@@ -261,7 +262,7 @@ function nextFavoriteImage() {
     <main class="flex-1 p-6">
       <!--edit profile-->
       <section v-if="currentView === 'Edit'">
-        <div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow">
+
 
           <h2 class="text-xl font-semibold mb-4 text-center">User Profile</h2>
           <form class="space-y-4" @submit.prevent="updateProfile">
@@ -328,12 +329,12 @@ function nextFavoriteImage() {
               />
               <div v-if="passwordError" class="text-red-500 text-sm mt-1">{{ passwordError }}</div>
             </div>
-            <div class="flex justify-end gap-2 mt-4">
+            <div class="flex justify-center gap-2 mt-4">
               <button
                 v-if="!editMode"
                 type="button"
                 @click="editMode = true"
-                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                class="bg-blue-600 text-white w-50 px-4 py-2 rounded-xl hover:bg-blue-700"
               >
                 Edit
               </button>
@@ -361,7 +362,7 @@ function nextFavoriteImage() {
               </button>
             </div>
           </form>
-        </div>
+
       </section>
 
 
@@ -487,6 +488,7 @@ function nextFavoriteImage() {
           </div>
         </div>
       </section>
+
     </main>
   </div>
 </template>

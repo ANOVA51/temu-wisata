@@ -1,11 +1,11 @@
 <script setup>
 import Search from '@/assets/icon/Search.vue'
 import FooterSection from '@/components/FooterSection.vue'
-import { ref, computed } from 'vue'
+import { computed, ref } from 'vue'
 
 import Favhiddengem from '@/components/favhiddengem.vue'
+import Testimoni from '@/components/IconicPlace.vue'
 import Navbar from '@/components/Navbar.vue'
-import Testimoni from '@/components/testimoni.vue'
 
 const allDestinations = [
   'Ubud',
@@ -30,8 +30,8 @@ const visibleDestinations = computed(() =>
   showAll.value ? allDestinations : allDestinations.slice(0, 9),
 )
 
-import nature from '@/assets/icon/landscape.png'
 import FnB from '@/assets/icon/FnB.png'
+import nature from '@/assets/icon/landscape.png'
 import userIcon from '@/assets/images/profile-tesa.png'
 
 const toDo = [

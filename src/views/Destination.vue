@@ -233,7 +233,7 @@ function goToTestimonials() {
           <div
             v-for="(spot, index) in filteredSpots"
             :key="spot.spot_id"
-            class="group relative bg-white rounded-xl overflow-hidden h-96 flex-shrink-0 shadow-md transform transition duration-300 hover:scale-105 animate-fade-in"
+            class="group relative bg-white rounded-xl overflow-hidden h-96 flex-shrink-0 shadow-md transform transition duration-300 hover:scale-110"
             @click="openModal(spot)"
           >
             <button
@@ -313,7 +313,7 @@ function goToTestimonials() {
       data-aos="zoom-in"
     >
       <div
-        class="bg-white rounded-xl p-8 w-full max-w-5xl shadow-lg flex flex-col md:flex-row gap-10 items-center relative"
+        class="bg-white rounded-xl p-8 w-full max-w-5xl shadow-lg flex flex-col md:flex-row gap-10 items-center relative max-h-[90vh] overflow-y-auto"
       >
         <!-- Gambar carousel style klik untuk next, tampilkan semua gambar -->
         <div class="flex flex-col items-center w-full md:w-1/2">

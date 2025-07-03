@@ -1,11 +1,11 @@
 <script setup>
 import Search from '@/assets/icon/Search.vue'
-import { ref, computed } from 'vue'
-import Navbar from '@/components/Navbar.vue'
-import Favhiddengem from '@/components/favhiddengem.vue'
-import Testimoni from '@/components/testimoni.vue'
-import FooterSection from '@/components/FooterSection.vue'
 import AskTesa from '@/components/AskTesa.vue'
+import Favhiddengem from '@/components/favhiddengem.vue'
+import FooterSection from '@/components/FooterSection.vue'
+import Testimoni from '@/components/IconicPlace.vue'
+import Navbar from '@/components/Navbar.vue'
+import { computed, ref } from 'vue'
 
 const allDestinations = [
   'Ubud',
@@ -30,35 +30,33 @@ const visibleDestinations = computed(() =>
   showAll.value ? allDestinations : allDestinations.slice(0, 9),
 )
 
-import nature from '@/assets/icon/landscape.png'
 import FnB from '@/assets/icon/FnB.png'
-import relax from '@/assets/icon/yoga.png'
+import nature from '@/assets/icon/landscape.png'
 import nightlife from '@/assets/icon/nightlife.png'
 import beach from '@/assets/icon/sunset.png'
-
+import relax from '@/assets/icon/yoga.png'
+import IconicPlace from '@/components/IconicPlace.vue'
 
 const toDo = [
   {
-    image : nature,
+    image: nature,
   },
   {
-    image : FnB,
+    image: FnB,
   },
   {
-    image : relax,
+    image: relax,
   },
   {
-    image : nightlife,
+    image: nightlife,
   },
   {
-    image : beach,
+    image: beach,
   },
-  
 ]
 </script>
 
 <template>
-
   <div>
     <Navbar />
     <!-- Hero Section -->
@@ -94,30 +92,27 @@ const toDo = [
       </div>
     </section>
 
-   <favhiddengem />
+    <favhiddengem />
 
-   <Testimoni />
+    <IconicPlace />
 
     <section>
       <!--Something TO-do-->
       <div>
-        <h2 class="text-3xl md:text-5xl font-bold text-[#328E6E] mt-10 px-10 pb-10 text-center">Something To-Do</h2>
-        <div class="flex justify-center flex-wrap gap-6 md:gap-30 px-8 ">
-          <div v-for="(icon , index) in toDo"
-          :key="index"
-          class="h-[100px] w-[200px] bg-white rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300"
+        <h2 class="text-3xl md:text-5xl font-bold text-[#328E6E] mt-10 px-10 pb-10 text-center">
+          Something To-Do
+        </h2>
+        <div class="flex justify-center flex-wrap gap-6 md:gap-30 px-8">
+          <div
+            v-for="(icon, index) in toDo"
+            :key="index"
+            class="h-[100px] w-[200px] bg-white rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300"
           >
-          <div class=" pt-5 pb-5 flex justify-center">
-            <img
-            :src="icon.image"
-            class="size-16  object-cover"
-            />
-
+            <div class="pt-5 pb-5 flex justify-center">
+              <img :src="icon.image" class="size-16 object-cover" />
+            </div>
           </div>
-
         </div>
-        </div>
-
       </div>
     </section>
 
@@ -139,7 +134,7 @@ const toDo = [
         </div>
       </div>
     </section>
-    <AskTesa/>
-      <FooterSection />
+    <AskTesa />
+    <FooterSection />
   </div>
 </template>

@@ -241,6 +241,20 @@ const rejectWisata = async (wisata) => {
   }
 }
 
+const deleteWisata = async (wisata) => {
+  if (!confirm(`Yakin ingin menghapus wisata "${wisata.name}"?`)) return
+  try {
+    const response = await fetch(`http://localhost:8000/api/touristspots/${wisata.id}/delete/`, {
+      method: 'DELETE',
+    })
+    if (!response.ok) throw new Error('Gagal menghapus wisata di backend')
+    wisataList.value = wisataList.value.filter((w) => w.id !== wisata.id)
+    alert('Wisata berhasil dihapus!')
+  } catch (e) {
+    alert('Gagal menghapus wisata di backend')
+  }
+}
+
 const viewReportDetail = (report) => {
   selectedReport.value = report
   showReportModal.value = true
@@ -575,6 +589,12 @@ function goToUpdateWisata(id) {
                 >
                   Edit
                 </button>
+                 <button
+              @click="deleteWisata"
+              class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium"
+            >
+              Delete
+            </button>
               </div>
             </div>
           </div>
