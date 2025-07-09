@@ -15,7 +15,6 @@ const spots = ref([])
 const loading = ref(true)
 const showAll = ref(false)
 const selectedLocation = ref('')
-const favorites = ref([])
 const activeModal = ref(null)
 const modalImages = ref([])
 const modalCurrentIndex = ref(0)
@@ -27,6 +26,10 @@ const testimoniForm = ref({ message: '' })
 const testimoniImage = ref(null)
 const favoriteSpotIds = ref([])
 const searchResults = ref([])
+
+const categories = ref(['Nature', 'Adventure', 'Cultural', 'Mountain', 'Beach'])
+const selectedCategory = ref('')
+
 
 // Static list kota di Bali
 const baliCities = [
@@ -128,16 +131,23 @@ function getPrimaryImage(spot) {
 }
 
 const filteredSpots = computed(() => {
-  // Jika ada hasil search, tetap filter berdasarkan kota jika dipilih
   let base = searchResults.value.length > 0 ? searchResults.value : spots.value.filter(d => d.is_verified === true)
+
   if (route.query.spot_id) {
     base = base.filter(s => String(s.spot_id) === String(route.query.spot_id))
   }
+
   if (selectedLocation.value) {
-    base = base.filter(d => d.kota && d.kota.toLowerCase() === selectedLocation.value.toLowerCase())
+    base = base.filter(d => d.kota?.toLowerCase() === selectedLocation.value.toLowerCase())
   }
+
+  if (selectedCategory.value) {
+    base = base.filter(d => d.category?.toLowerCase() === selectedCategory.value.toLowerCase())
+  }
+
   return showAll.value ? base : base.slice(0, 8)
 })
+
 
 async function toggleFavorite(spot) {
   if (!user.value) {
@@ -218,6 +228,25 @@ watch(
   },
   { immediate: true }
 )
+
+watch(selectedCategory, (val) => {
+  if (val) {
+    router.replace({ name: route.name, query: { ...route.query, category: val } })
+  } else {
+    const q = { ...route.query }
+    delete q.category
+    router.replace({ name: route.name, query: q })
+  }
+})
+
+watch(
+  () => route.query.category,
+  (val) => {
+    selectedCategory.value = val || ''
+  },
+  { immediate: true }
+)
+
 </script>
 
 <template>
@@ -250,14 +279,22 @@ watch(
       </h2>
 
       <!-- Filter Dropdown -->
-      <div class="flex justify-center mb-6">
+      <div class="flex justify-center mb-6 gap-4">
+        <!-- Lokasi -->
         <select v-model="selectedLocation" class="border rounded px-4 py-2 shadow">
           <option value="">All Locations</option>
           <option v-for="city in baliCities" :key="city" :value="city">
             {{ city }}
           </option>
         </select>
+
+        <!-- Kategori -->
+        <select v-model="selectedCategory" class="border rounded px-4 py-2 shadow">
+          <option value="">All Categories</option>
+          <option v-for="cat in categories" :key="cat" :value="cat">{{ cat }}</option>
+        </select>
       </div>
+
 
       <!-- Search -->
       <div class="flex justify-center mb-6">
