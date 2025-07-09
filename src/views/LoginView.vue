@@ -117,7 +117,7 @@ const handleLogin = async () => {
     localStorage.setItem('access', access)
     localStorage.setItem('refresh', refresh)
     localStorage.setItem('userRole', role)
-    localStorage.setItem('userData', JSON.stringify(userData))
+    sessionStorage.setItem('userData', JSON.stringify(userData))
 
     // Redirect berdasarkan role
     router.push({ name: role === 'admin' ? 'admin' : 'home' })

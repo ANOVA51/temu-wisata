@@ -29,7 +29,7 @@ const handleLogout = () => {
 
 const profilepicture = computed(() => {
   // Ambil data user dari sessionStorage atau localStorage
-  const userData = JSON.parse(localStorage.getItem('userData'))
+  const userData = JSON.parse(sessionStorage.getItem('userData'))
   let foto = userData.foto_profile
   // Jika tidak ada, fallback ke gambar default
   if (!foto) return require('@/assets/images/penari.jpg')
