@@ -8,6 +8,7 @@ import Testimoni from '@/components/testimoni.vue'
 import FooterSection from '@/components/FooterSection.vue'
 import AskTesa from '@/components/AskTesa.vue'
 
+
 const router = useRouter()
 
 const allDestinations = [
@@ -81,6 +82,12 @@ const baliCities = [
 function goToDestinationWithCity(city) {
   router.push({ name: 'destination', query: { location: city } })
 }
+
+function goToCategory(category) {
+  router.push({ name: 'destination', query: { category } })
+}
+
+
 </script>
 
 <template>
@@ -127,6 +134,7 @@ function goToDestinationWithCity(city) {
         <div class="flex justify-center flex-wrap gap-6 md:gap-30 px-8 ">
           <div v-for="(icon , index) in toDo"
           :key="index"
+          @click="goToCategory(icon.label)"
           class="h-[120px] w-[200px] bg-white rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 flex flex-col items-center justify-center"
         >
           <div class="pt-5 pb-2 flex justify-center">
