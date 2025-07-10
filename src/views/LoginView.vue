@@ -114,7 +114,7 @@ const handleLogin = async () => {
     }
 
     // Selalu simpan ke localStorage
-    localStorage.setItem('access', access)
+    sessionStorage.setItem('access', access)
     localStorage.setItem('refresh', refresh)
     localStorage.setItem('userRole', role)
     sessionStorage.setItem('userData', JSON.stringify(userData))
