@@ -1,7 +1,7 @@
 <script setup>
-import { ref, watch, onMounted } from 'vue'
-import Swal from 'sweetalert2'
 import router from '@/router'
+import Swal from 'sweetalert2'
+import { onMounted, ref, watch } from 'vue'
 
 const active = ref('dashboard')
 const direction = ref('right')
@@ -11,7 +11,14 @@ const isMobileMenuOpen = ref(false)
 // Deteksi arah perpindahan
 const lastIndex = ref(0)
 // Diperhatikan: 'report-wisata' masih dikomentari di template HTML
-const menuList = ['dashboard', 'wisata-manage', 'confirm-wisata', 'report-wisata', 'user-manage']
+const menuList = [
+  'dashboard',
+  'wisata-manage',
+  'confirm-wisata',
+  'report-wisata',
+  'user-manage',
+  'iconic-place',
+]
 
 watch(active, (newVal, oldVal) => {
   const newIndex = menuList.indexOf(newVal)
@@ -31,7 +38,7 @@ const showReportModal = ref(false)
 const showWisataModal = ref(false)
 
 const wisataList = ref([])
-
+const iconicPlaces = ref([])
 // Tambahan: untuk gambar detail
 const selectedWisataImages = ref([])
 const selectedImageIndex = ref(0)
@@ -178,6 +185,26 @@ onMounted(async () => {
         images: w.images,
       }))
 
+    const iconicres = await fetch('http://localhost:8000/api/touristspots/all/')
+    const iconicdata = await iconicres.json()
+    iconicPlaces.value = iconicdata.data
+      .filter((w) => w.is_iconic)
+      .map((w) => ({
+        id: w.spot_id,
+        name: w.name,
+        category: w.category,
+        price:
+          w.price_min === w.price_max
+            ? `Rp${Number(w.price_min).toLocaleString()}`
+            : `Rp${Number(w.price_min).toLocaleString()} - Rp${Number(w.price_max).toLocaleString()}`,
+        rating: w.rating ?? '-',
+        address: `${w.address}, ${w.desa}, ${w.kecamatan}, ${w.kota}`,
+        description: w.description,
+        mapsLink: w.Maps_url,
+        uploader: w.user_id?.username ?? '-',
+        images: w.images, // <-- simpan array gambar asli
+      }))
+
     // ...userCount & verifiedSpotCount tetap...
     const userRes = await fetch('http://localhost:8000/api/users/count/')
     const spotRes = await fetch('http://localhost:8000/api/touristspots/count-verified/')
@@ -187,6 +214,7 @@ onMounted(async () => {
     verifiedSpotCount.value = spotData.total_verified_tourist_spots
   } catch (e) {
     wisataList.value = []
+    iconicPlaces.value = []
     userCount.value = 0
     verifiedSpotCount.value = 0
   }
@@ -363,6 +391,31 @@ function goToUpdateWisata(id) {
   // Contoh: /form-update-wisata
   router.push({ name: 'formupdate' })
 }
+
+const showIconicModal = ref(false)
+const selectedIconic = ref(null)
+const iconicModalImages = ref([])
+const iconicModalCurrentIndex = ref(0)
+//function untuk modal
+function openIconicModal(place) {
+  selectedIconic.value = place
+  iconicModalImages.value = place.images.map((img) => `http://localhost:8000${img.file_name}`)
+  iconicModalCurrentIndex.value = 0
+  showIconicModal.value = true
+}
+function nextIconicImage() {
+  if (iconicModalCurrentIndex.value < iconicModalImages.value.length - 1) {
+    iconicModalCurrentIndex.value++
+  }
+}
+const viewIconicDetail = (place) => {
+  selectedIconic.value = place
+  showIconicModal.value = true
+}
+const closeIconicModal = () => {
+  showIconicModal.value = false
+  selectedIconic.value = null
+}
 </script>
 
 <template>
@@ -440,6 +493,19 @@ function goToUpdateWisata(id) {
         >
           <i class="mdi mdi-account-group mr-3 text-2xl"></i>
           <span class="font-semibold text-lg">User Manage</span>
+        </div>
+
+        <div
+          @click="active = 'iconic-place'"
+          :class="[
+            'flex items-center px-4 py-3 rounded-lg cursor-pointer transition-all duration-200',
+            active === 'iconic-place'
+              ? 'bg-white text-green-600 shadow-md'
+              : 'hover:bg-green-700 text-white',
+          ]"
+        >
+          <i class="mdi mdi-map mr-3 text-2xl"></i>
+          <span class="font-semibold text-lg">Iconic Place</span>
         </div>
       </nav>
     </aside>
@@ -589,12 +655,12 @@ function goToUpdateWisata(id) {
                 >
                   Edit
                 </button>
-                 <button
-              @click="deleteWisata"
-              class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium"
-            >
-              Delete
-            </button>
+                <button
+                  @click.stop="deleteWisata(wisa)"
+                  class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium"
+                >
+                  Delete
+                </button>
               </div>
             </div>
           </div>
@@ -718,6 +784,59 @@ function goToUpdateWisata(id) {
               </tbody>
             </table>
           </div>
+        </div>
+      </div>
+
+      <div v-else-if="active === 'iconic-place'">
+        <h2 class="text-3xl font-bold text-green-700 mb-6">Iconic Place</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div
+            v-for="place in iconicPlaces"
+            :key="place.spot_id"
+            class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
+            @click="viewIconicDetail(place)"
+          >
+            <div
+              class="h-48 bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center"
+            >
+              <img
+                v-if="place.images && place.images.length > 0"
+                :src="`http://localhost:8000${place.images[0].file_name}`"
+                class="object-cover h-full w-full"
+                alt="iconic place"
+              />
+              <i v-else class="mdi mdi-image text-4xl text-white opacity-50"></i>
+            </div>
+            <div class="p-4">
+              <h3 class="font-semibold text-gray-800 mb-2">{{ place.name }}</h3>
+              <p class="text-sm text-gray-600 mb-3">{{ place.category }}</p>
+              <!-- Tambahkan info lain sesuai kebutuhan -->
+            </div>
+          </div>
+        </div>
+        <div class="fixed bottom-10 right-10 z-20 flex flex-col items-center">
+          <!-- Tombol plus -->
+          <RouterLink to="/forminput">
+            <button
+              class="w-14 h-14 bg-white text-green-600 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center border border-gray-200"
+              aria-label="Add Destination"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-6 h-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 4v16m8-8H4"
+                />
+              </svg>
+            </button>
+          </RouterLink>
         </div>
       </div>
     </main>
@@ -913,6 +1032,61 @@ function goToUpdateWisata(id) {
                 <div>
                   <h4 class="font-semibold text-gray-800 mb-2">Uploaded by:</h4>
                   <p class="text-sm text-gray-600">{{ selectedWisata.uploader }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
+
+    <transition name="popup-fade">
+      <div v-if="showIconicModal" class="fixed inset-0 flex items-center justify-center z-50">
+        <div class="absolute inset-0 bg-black bg-opacity-50" @click="closeIconicModal"></div>
+        <div
+          class="relative bg-white rounded-xl p-6 sm:p-8 max-w-xl md:max-w-3xl lg:max-w-5xl w-full mx-4 shadow-2xl animate-popup"
+          @click.stop
+        >
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl sm:text-2xl font-bold text-green-700">Detail Iconic Place</h2>
+            <button @click="closeIconicModal" class="text-gray-400 hover:text-gray-600 p-1">
+              <i class="mdi mdi-close text-xl"></i>
+            </button>
+          </div>
+          <div v-if="selectedIconic" class="flex flex-col md:flex-row gap-6">
+            <div class="flex-shrink-0 flex justify-center w-full md:w-auto">
+              <img
+                v-if="selectedIconic.images && selectedIconic.images.length > 0"
+                :src="`http://localhost:8000${selectedIconic.images[0].file_name}`"
+                class="w-[320px] h-[250px] object-cover rounded-xl"
+                alt="iconic place"
+              />
+              <div
+                v-else
+                class="w-[320px] h-[250px] bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center"
+              >
+                <i class="mdi mdi-image text-4xl text-white opacity-50"></i>
+              </div>
+            </div>
+            <div class="flex-1 space-y-4">
+              <h3 class="text-lg sm:text-xl font-bold text-gray-800 mb-2">
+                {{ selectedIconic.name }}
+              </h3>
+              <div class="space-y-1 text-sm text-gray-600">
+                <p><span class="font-medium">Category:</span> {{ selectedIconic.category }}</p>
+                <p><span class="font-medium">Address:</span> {{ selectedIconic.address }}</p>
+                <span class="font-semibold">Google Maps:</span>
+                <a
+                  :href="selectedIconic.google_maps_url"
+                  target="_blank"
+                  class="text-green-600 underline break-all"
+                  >{{ selectedIconic.google_maps_url }}</a
+                >
+              </div>
+              <div>
+                <h4 class="font-semibold text-gray-800 mb-2">Description:</h4>
+                <div class="text-sm text-gray-600 leading-relaxed max-h-40 overflow-y-auto">
+                  {{ selectedIconic.description }}
                 </div>
               </div>
             </div>

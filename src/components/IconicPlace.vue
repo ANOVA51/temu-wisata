@@ -144,7 +144,7 @@ function nextImage() {
         <div class="flex-1 flex flex-col justify-between w-full md:w-1/2">
           <div>
             <div class="text-2xl font-bold text-gray-700 mb-2">{{ activeModal.name }}</div>
-            <div class="text-base text-gray-800 mb-4 whitespace-pre-line break-words">
+            <div class="text-base text-gray-800 mb-4 whitespace-pre-line break-words ">
               {{ activeModal.description }}
             </div>
             <div class="mb-2">

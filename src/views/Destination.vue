@@ -313,7 +313,7 @@ function goToTestimonials() {
       data-aos="zoom-in"
     >
       <div
-        class="bg-white rounded-xl p-8 w-full max-w-5xl shadow-lg flex flex-col md:flex-row gap-10 items-center relative max-h-[90vh] overflow-y-auto"
+        class="bg-white rounded-xl p-8 w-full max-w-5xl shadow-lg flex flex-col md:flex-row gap-10 items-center relative"
       >
         <!-- Gambar carousel style klik untuk next, tampilkan semua gambar -->
         <div class="flex flex-col items-center w-full md:w-1/2">
@@ -350,10 +350,10 @@ function goToTestimonials() {
           </div>
         </div>
         <!-- Right: Details -->
-        <div class="flex-1 flex flex-col justify-between w-full md:w-1/2">
+        <div class="flex-1 flex flex-col justify-between w-full md:w-1/2 relative">
           <div>
-            <div class="text-2xl font-bold text-gray-700 mb-2">{{ activeModal.name }}</div>
-            <div class="text-base text-gray-800 mb-4 whitespace-pre-line break-words">
+            <div class="text-2xl font-bold text-gray-700 mb-1">{{ activeModal.name }}</div>
+            <div class="text-base text-gray-800 mb-4 whitespace-pre-line break-words max-h-40 overflow-y-auto">
               {{ activeModal.description }}
             </div>
             <div class="mb-2">
@@ -391,7 +391,7 @@ function goToTestimonials() {
           </div>
 
           <!-- FORM TESTIMONI -->
-          <div class="mt-6">
+          <div class="mt-2">
             <h3 class="text-lg font-semibold text-gray-700 mb-2">Beri Testimoni</h3>
             <form @submit.prevent="submitTestimoni" class="space-y-3">
               <textarea
@@ -400,24 +400,21 @@ function goToTestimonials() {
                 rows="3"
                 class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
               ></textarea>
-
               <input
                 type="file"
                 accept="image/*"
                 @change="onImageChange"
                 class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
               />
-
               <button
                 type="submit"
                 class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition"
               >
                 Kirim Testimoni
               </button>
-
               <button
                 type="button"
-            @click="goToTestimonials"
+                @click="goToTestimonials"
                 class="block text-sm text-green-600 underline hover:text-green-800 mt-1"
               >
                 Lihat semua testimoni →

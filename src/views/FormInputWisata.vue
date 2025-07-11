@@ -256,6 +256,12 @@
             </div>
           </div>
 
+          <!-- Hanya tampil jika admin -->
+          <div v-if="userRole === 'admin'" class="flex items-center gap-2">
+            <input type="checkbox" id="is_iconic" v-model="form.is_iconic" />
+            <label for="is_iconic" class="text-sm">Tandai sebagai Iconic Place</label>
+          </div>
+
           <!-- Buttons -->
           <div class="flex justify-end gap-4 pt-6">
             <button
@@ -302,6 +308,7 @@ const form = ref({
   regency: '',
   mapsLink: '',
   desa: '',
+  is_iconic: false,
 })
 
 const imagePreviews = ref([])
@@ -398,6 +405,7 @@ const submitForm = async () => {
   formData.append('category', form.value.category)
   formData.append('price_min', Number(form.value.minPrice) || 0)
   formData.append('price_max', Number(form.value.maxPrice) || 0)
+  formData.append('is_iconic', form.value.is_iconic ? 'true' : 'false')
   if (form.value.photos && form.value.photos.length > 0) {
     form.value.photos.forEach((file) => {
       formData.append('images', file)
@@ -434,6 +442,7 @@ const submitForm = async () => {
       mapsLink: '',
       desa: '',
       images: [],
+      is_iconic: false,
     }
     imagePreviews.value = []
   } catch (err) {
@@ -465,6 +474,8 @@ const submitForm = async () => {
     }
   }
 }
+
+const userRole = (localStorage.getItem('userRole') || sessionStorage.getItem('userRole') || '').trim().toLowerCase()
 </script>
 
 <style>
