@@ -1,12 +1,8 @@
 <script setup>
-<<<<<<< HEAD
-=======
 import { ref, watch, onMounted, computed } from 'vue'
-import Swal from 'sweetalert2'
->>>>>>> origin/pius
 import router from '@/router'
 import Swal from 'sweetalert2'
-import { onMounted, ref, watch } from 'vue'
+
 
 const active = ref('dashboard')
 const direction = ref('right')
@@ -339,7 +335,6 @@ function goToUpdateWisata(id) {
   router.push({ name: 'formupdate' })
 }
 
-<<<<<<< HEAD
 const showIconicModal = ref(false)
 const selectedIconic = ref(null)
 const iconicModalImages = ref([])
@@ -364,7 +359,6 @@ const closeIconicModal = () => {
   showIconicModal.value = false
   selectedIconic.value = null
 }
-=======
 const searchQuery = ref('')
 const sortKey = ref('name')
 const sortOrder = ref('asc') // 'asc' atau 'desc'
@@ -395,7 +389,6 @@ const filteredSortedWisata = computed(() => {
 
   return result
 })
->>>>>>> origin/pius
 </script>
 
 <template>
@@ -690,15 +683,12 @@ const filteredSortedWisata = computed(() => {
                 >
                   Edit
                 </button>
-<<<<<<< HEAD
                 <button
                   @click.stop="deleteWisata(wisa)"
                   class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium"
                 >
                   Delete
                 </button>
-=======
->>>>>>> origin/pius
               </div>
             </div>
           </div>
