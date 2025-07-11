@@ -1,4 +1,9 @@
 <script setup>
+<<<<<<< HEAD
+=======
+import { ref, watch, onMounted, computed } from 'vue'
+import Swal from 'sweetalert2'
+>>>>>>> origin/pius
 import router from '@/router'
 import Swal from 'sweetalert2'
 import { onMounted, ref, watch } from 'vue'
@@ -43,81 +48,9 @@ const iconicPlaces = ref([])
 const selectedWisataImages = ref([])
 const selectedImageIndex = ref(0)
 
-const pendingWisata = ref([
-  {
-    id: 7,
-    name: 'Ulun Danu Beratan',
-    category: 'Temple',
-    location: 'Bali',
-    image: '/api/placeholder/300/200',
-  },
-  {
-    id: 8,
-    name: 'Goa Gong',
-    category: 'Cave',
-    location: 'Ponorogo',
-    image: '/api/placeholder/300/200',
-  },
-  {
-    id: 9,
-    name: 'Air Terjun Sekumpul',
-    category: 'Waterfall',
-    location: 'Buleleng',
-    image: '/api/placeholder/300/200',
-  },
-  {
-    id: 10,
-    name: 'Ulun Danu Beratan',
-    category: 'Temple',
-    location: 'Bali',
-    image: '/api/placeholder/300/200',
-  },
-  {
-    id: 11,
-    name: 'Goa Gong',
-    category: 'Cave',
-    location: 'Ponorogo',
-    image: '/api/placeholder/300/200',
-  },
-  {
-    id: 12,
-    name: 'Air Terjun Sekumpul',
-    category: 'Waterfall',
-    location: 'Buleleng',
-    image: '/api/placeholder/300/200',
-  },
-])
+const pendingWisata = ref([])
 
-const reportData = ref([
-  {
-    id: 1,
-    location: 'Jawa Timur',
-    name: 'Goa Gong',
-    status: 'pending',
-    reporter: 'user_name',
-    date: 'Dec 01 2021',
-    description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-  },
-  {
-    id: 2,
-    location: 'Bali',
-    name: 'Ulun Danu',
-    status: 'approved',
-    reporter: 'admin_user',
-    date: 'Nov 28 2021',
-    description: 'Location verified and approved for listing. All information has been validated.',
-  },
-  {
-    id: 3,
-    location: 'Bali',
-    name: 'Air Terjun Sekumpul',
-    status: 'rejected',
-    reporter: 'test_user',
-    date: 'Nov 25 2021',
-    description: 'Report rejected due to insufficient information provided.',
-  },
-])
+const reportData = ref([])
 
 const userData = ref([])
 
@@ -158,7 +91,7 @@ onMounted(async () => {
         rating: w.rating ?? '-',
         address: `${w.address}, ${w.desa}, ${w.kecamatan}, ${w.kota}`,
         description: w.description,
-        mapsLink: w.Maps_url,
+        mapsLink: w.google_maps_url,
         uploader: w.user_id?.username ?? '-',
         images: w.images, // <-- simpan array gambar asli
       }))
@@ -269,20 +202,6 @@ const rejectWisata = async (wisata) => {
   }
 }
 
-const deleteWisata = async (wisata) => {
-  if (!confirm(`Yakin ingin menghapus wisata "${wisata.name}"?`)) return
-  try {
-    const response = await fetch(`http://localhost:8000/api/touristspots/${wisata.id}/delete/`, {
-      method: 'DELETE',
-    })
-    if (!response.ok) throw new Error('Gagal menghapus wisata di backend')
-    wisataList.value = wisataList.value.filter((w) => w.id !== wisata.id)
-    alert('Wisata berhasil dihapus!')
-  } catch (e) {
-    alert('Gagal menghapus wisata di backend')
-  }
-}
-
 const viewReportDetail = (report) => {
   selectedReport.value = report
   showReportModal.value = true
@@ -313,76 +232,104 @@ const rejectReport = () => {
 }
 
 // User Manage Actions
-const approveUser = (user) => {
-  Swal.fire({
-    icon: 'success',
-    html: `
-      <div style="font-size:2rem;font-weight:600;margin:1rem 0;">User Approved!</div>
-      <div style="font-size:1.2rem;color:#666;">User berhasil diaktifkan</div>
-    `,
-    showConfirmButton: true,
-    confirmButtonText: 'OK',
-    customClass: {
-      popup: 'swal2-popup-custom',
-      confirmButton: 'swal2-confirm-custom',
-    },
-    allowOutsideClick: false,
-    allowEscapeKey: false,
-    didOpen: (popup) => {
-      if (Swal.isVisible() && typeof popup.draggable !== 'undefined') {
-        popup.draggable = true
-      }
-    },
-  })
-  user.status = 'active'
-}
+// const approveUser = (user) => {
+//   Swal.fire({
+//     icon: 'success',
+//     html: `
+//       <div style="font-size:2rem;font-weight:600;margin:1rem 0;">User Approved!</div>
+//       <div style="font-size:1.2rem;color:#666;">User berhasil diaktifkan</div>
+//     `,
+//     showConfirmButton: true,
+//     confirmButtonText: 'OK',
+//     customClass: {
+//       popup: 'swal2-popup-custom',
+//       confirmButton: 'swal2-confirm-custom',
+//     },
+//     allowOutsideClick: false,
+//     allowEscapeKey: false,
+//     didOpen: (popup) => {
+//       if (Swal.isVisible() && typeof popup.draggable !== 'undefined') {
+//         popup.draggable = true
+//       }
+//     },
+//   })
+//   user.status = 'active'
+// }
 
-const setUserPending = (user) => {
-  Swal.fire({
-    icon: 'warning',
-    html: `
-      <div style="font-size:2rem;font-weight:600;margin:1rem 0;">User Pending!</div>
-      <div style="font-size:1.2rem;color:#666;">Status user diubah menjadi pending</div>
-    `,
-    showConfirmButton: true,
-    confirmButtonText: 'OK',
-    customClass: {
-      popup: 'swal2-popup-custom',
-      confirmButton: 'swal2-confirm-custom',
-    },
-    allowOutsideClick: false,
-    allowEscapeKey: false,
-    didOpen: (popup) => {
-      if (Swal.isVisible() && typeof popup.draggable !== 'undefined') {
-        popup.draggable = true
-      }
-    },
-  })
-  user.status = 'pending'
-}
+// const setUserPending = (user) => {
+//   Swal.fire({
+//     icon: 'warning',
+//     html: `
+//       <div style="font-size:2rem;font-weight:600;margin:1rem 0;">User Pending!</div>
+//       <div style="font-size:1.2rem;color:#666;">Status user diubah menjadi pending</div>
+//     `,
+//     showConfirmButton: true,
+//     confirmButtonText: 'OK',
+//     customClass: {
+//       popup: 'swal2-popup-custom',
+//       confirmButton: 'swal2-confirm-custom',
+//     },
+//     allowOutsideClick: false,
+//     allowEscapeKey: false,
+//     didOpen: (popup) => {
+//       if (Swal.isVisible() && typeof popup.draggable !== 'undefined') {
+//         popup.draggable = true
+//       }
+//     },
+//   })
+//   user.status = 'pending'
+// }
 
-const rejectUser = (user) => {
-  Swal.fire({
-    icon: 'error',
-    html: `
-      <div style="font-size:2rem;font-weight:600;margin:1rem 0;">User Rejected!</div>
-      <div style="font-size:1.2rem;color:#666;">User berhasil dinonaktifkan</div>
-    `,
-    showConfirmButton: true,
-    confirmButtonText: 'OK',
-    customClass: {
-      popup: 'swal2-popup-custom',
-      confirmButton: 'swal2-confirm-custom',
-    },
-    allowOutsideClick: false,
-    allowEscapeKey: false,
-    didOpen: (popup) => {
-      if (Swal.isVisible() && typeof popup.draggable !== 'undefined') {
-        popup.draggable = true
-      }
-    },
-  })
-  user.status = 'inactive'
+// const rejectUser = (user) => {
+//   Swal.fire({
+//     icon: 'error',
+//     html: `
+//       <div style="font-size:2rem;font-weight:600;margin:1rem 0;">User Rejected!</div>
+//       <div style="font-size:1.2rem;color:#666;">User berhasil dinonaktifkan</div>
+//     `,
+//     showConfirmButton: true,
+//     confirmButtonText: 'OK',
+//     customClass: {
+//       popup: 'swal2-popup-custom',
+//       confirmButton: 'swal2-confirm-custom',
+//     },
+//     allowOutsideClick: false,
+//     allowEscapeKey: false,
+//     didOpen: (popup) => {
+//       if (Swal.isVisible() && typeof popup.draggable !== 'undefined') {
+//         popup.draggable = true
+//       }
+//     },
+//   })
+//   user.status = 'inactive'
+// }
+
+async function setUserRole(user, role) {
+  try {
+    // const token = localStorage.getItem('access') || sessionStorage.getItem('access')
+    await fetch(`http://127.0.0.1:8000/api/users/${user.id}/update/`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        // Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ role }),
+    })
+    user.role = role
+    Swal.fire({
+      icon: 'success',
+      title: 'Role Updated!',
+      text: `User role changed to ${role}`,
+      timer: 1200,
+      showConfirmButton: false,
+    })
+  } catch (e) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Failed!',
+      text: 'Gagal mengubah role user',
+    })
+  }
 }
 
 function goToUpdateWisata(id) {
@@ -392,6 +339,7 @@ function goToUpdateWisata(id) {
   router.push({ name: 'formupdate' })
 }
 
+<<<<<<< HEAD
 const showIconicModal = ref(false)
 const selectedIconic = ref(null)
 const iconicModalImages = ref([])
@@ -416,13 +364,45 @@ const closeIconicModal = () => {
   showIconicModal.value = false
   selectedIconic.value = null
 }
+=======
+const searchQuery = ref('')
+const sortKey = ref('name')
+const sortOrder = ref('asc') // 'asc' atau 'desc'
+
+const filteredSortedWisata = computed(() => {
+  let result = wisataList.value
+
+  // Search
+  if (searchQuery.value) {
+    const q = searchQuery.value.toLowerCase()
+    result = result.filter(w =>
+      w.name.toLowerCase().includes(q) ||
+      w.category.toLowerCase().includes(q) ||
+      w.address.toLowerCase().includes(q)
+    )
+  }
+
+  // Sort
+  result = [...result].sort((a, b) => {
+    let valA = a[sortKey.value] || ''
+    let valB = b[sortKey.value] || ''
+    if (typeof valA === 'string') valA = valA.toLowerCase()
+    if (typeof valB === 'string') valB = valB.toLowerCase()
+    if (valA < valB) return sortOrder.value === 'asc' ? -1 : 1
+    if (valA > valB) return sortOrder.value === 'asc' ? 1 : -1
+    return 0
+  })
+
+  return result
+})
+>>>>>>> origin/pius
 </script>
 
 <template>
   <div class="flex h-screen bg-gray-100">
     <div
       v-if="isMobileMenuOpen"
-      class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden transition-opacity duration-300"
+      class="fixed inset-0 bg-opacity-50 z-40 lg:hidden transition-opacity duration-300"
       @click="isMobileMenuOpen = false"
     ></div>
 
@@ -527,37 +507,61 @@ const closeIconicModal = () => {
         <div class="text-base sm:text-lg font-semibold text-green-700 mb-6">
           {{ userData.length }} User Found
         </div>
-        <div class="overflow-x-auto">
+        <!-- Mobile & Tablet: Card List -->
+        <div class="grid gap-4 lg:hidden">
+          <div
+            v-for="user in userData"
+            :key="user.id"
+            class="bg-white rounded-lg shadow p-4 flex flex-col space-y-2"
+          >
+            <div class="flex items-center space-x-2">
+              <i class="mdi mdi-account-circle text-2xl text-green-600"></i>
+              <span class="font-semibold">{{ user.username }}</span>
+            </div>
+            <div class="text-sm text-gray-600 break-all">{{ user.email }}</div>
+            <div class="flex items-center justify-between">
+              <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">{{ user.role }}</span>
+              <div class="flex space-x-1">
+                <button
+                  class="text-green-600 hover:text-green-800 p-1"
+                  @click="setUserRole(user, 'admin')"
+                  title="Jadikan Admin"
+                >
+                  <i class="mdi mdi-check-circle-outline text-xl"></i>
+                </button>
+                <button
+                  class="text-red-600 hover:text-red-800 p-1"
+                  @click="setUserRole(user, 'regular')"
+                  title="Jadikan Regular"
+                >
+                  <i class="mdi mdi-close-circle-outline text-xl"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Desktop: Table -->
+        <div class="overflow-x-auto hidden lg:block">
           <table class="min-w-full rounded-lg">
             <thead>
               <tr class="bg-green-100">
-                <th
-                  class="py-3 px-3 sm:px-6 text-left font-semibold text-sm sm:text-base whitespace-nowrap"
-                >
+                <th class="py-3 px-3 sm:px-6 text-left font-semibold text-sm sm:text-base whitespace-nowrap">
                   <i class="mdi mdi-account-circle mr-2"></i>User Name
                 </th>
-                <th
-                  class="py-3 px-3 sm:px-6 text-left font-semibold text-sm sm:text-base whitespace-nowrap"
-                >
+                <th class="py-3 px-3 sm:px-6 text-left font-semibold text-sm sm:text-base whitespace-nowrap">
                   Email
                 </th>
-                <th
-                  class="py-3 px-3 sm:px-6 text-left font-semibold text-sm sm:text-base whitespace-nowrap"
-                >
+                <th class="py-3 px-3 sm:px-6 text-left font-semibold text-sm sm:text-base whitespace-nowrap">
                   Role
                 </th>
-                <th
-                  class="py-3 px-3 sm:px-6 text-left font-semibold text-sm sm:text-base whitespace-nowrap"
-                >
+                <th class="py-3 px-3 sm:px-6 text-left font-semibold text-sm sm:text-base whitespace-nowrap">
                   Action
                 </th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="user in userData" :key="user.id" class="border-b hover:bg-green-50">
-                <td
-                  class="py-3 px-3 sm:px-6 flex items-center text-sm sm:text-base whitespace-nowrap"
-                >
+                <td class="py-3 px-3 sm:px-6 flex items-center text-sm sm:text-base whitespace-nowrap">
                   <i class="mdi mdi-account-circle mr-2 text-xl"></i>
                   {{ user.username }}
                 </td>
@@ -567,20 +571,19 @@ const closeIconicModal = () => {
                 <td class="py-3 px-3 sm:px-6 text-sm sm:text-base whitespace-nowrap">
                   {{ user.role }}
                 </td>
-                <td
-                  class="py-3 px-3 sm:px-6 flex items-center space-x-1 sm:space-x-2 whitespace-nowrap"
-                >
+                <td class="py-3 px-3 sm:px-6 flex items-center space-x-1 sm:space-x-2 whitespace-nowrap">
                   <button
                     class="text-green-600 hover:text-green-800 p-1"
-                    @click="approveUser(user)"
+                    @click="setUserRole(user, 'admin')"
+                    title="Jadikan Admin"
                   >
                     <i class="mdi mdi-check-circle-outline text-xl"></i>
                   </button>
                   <button
-                    class="text-yellow-600 hover:text-yellow-800 p-1"
-                    @click="setUserPending(user)"
-                  ></button>
-                  <button class="text-red-600 hover:text-red-800 p-1" @click="rejectUser(user)">
+                    class="text-red-600 hover:text-red-800 p-1"
+                    @click="setUserRole(user, 'regular')"
+                    title="Jadikan Regular"
+                  >
                     <i class="mdi mdi-close-circle-outline text-xl"></i>
                   </button>
                 </td>
@@ -622,9 +625,41 @@ const closeIconicModal = () => {
       <div v-else-if="active === 'wisata-manage'">
         <h2 class="text-3xl font-bold text-green-700 mb-6">Wisata Manage</h2>
         <div class="text-lg font-semibold text-green-700 mb-6">{{ wisataList.length }} Wisata</div>
+
+        <!-- Search and Sort Section -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+          <input
+            v-model="searchQuery"
+            type="text"
+            placeholder="Search"
+            class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-64"
+          />
+          <div class="flex items-center gap-2">
+            <label class="font-semibold text-gray-700">Sort by:</label>
+            <select v-model="sortKey" class="border border-gray-300 rounded-md px-2 py-1">
+              <option value="name">Nama</option>
+              <option value="category">Kategori</option>
+              <option value="address">Alamat Lengkap</option>
+              <!-- Jika ingin lebih detail, bisa split address -->
+              <!-- <option value="desa">Desa</option>
+              <option value="kecamatan">Kecamatan</option>
+              <option value="kota">Kota</option> -->
+            </select>
+            <button
+              @click="sortOrder = sortOrder === 'asc' ? 'desc' : 'asc'"
+              class="ml-2 px-2 py-1 border rounded"
+              :class="sortOrder === 'asc' ? 'bg-gray-100' : 'bg-gray-300'"
+              :title="sortOrder === 'asc' ? 'Ascending' : 'Descending'"
+            >
+              <span v-if="sortOrder === 'asc'">⬆</span>
+              <span v-else>⬇</span>
+            </button>
+          </div>
+        </div>
+
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <div
-            v-for="wisata in wisataList"
+            v-for="wisata in filteredSortedWisata"
             :key="wisata.id"
             class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
           >
@@ -655,12 +690,15 @@ const closeIconicModal = () => {
                 >
                   Edit
                 </button>
+<<<<<<< HEAD
                 <button
                   @click.stop="deleteWisata(wisa)"
                   class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium"
                 >
                   Delete
                 </button>
+=======
+>>>>>>> origin/pius
               </div>
             </div>
           </div>
@@ -1002,7 +1040,7 @@ const closeIconicModal = () => {
                   <i class="mdi mdi-image text-4xl text-white opacity-50"></i>
                 </div>
               </div>
-              <div class="flex-1 space-y-4">
+              <div class="flex-1 space-y-4 pl-11">
                 <h3 class="text-lg sm:text-xl font-bold text-gray-800 mb-2">
                   {{ selectedWisata.name }}
                 </h3>

@@ -29,7 +29,7 @@ const handleLogout = () => {
 
 const profilepicture = computed(() => {
   // Ambil data user dari sessionStorage atau localStorage
-  const userData = JSON.parse(sessionStorage.getItem('userData') || localStorage.getItem('userData') || '{}')
+  const userData = JSON.parse(sessionStorage.getItem('userData'))
   let foto = userData.foto_profile
   // Jika tidak ada, fallback ke gambar default
   if (!foto) return require('@/assets/images/penari.jpg')
@@ -172,8 +172,7 @@ const profilepicture = computed(() => {
       class="fixed top-0 right-0 h-full w-64 bg-white text-black p-6 z-50 transform transition-transform duration-300 shadow-lg"
       :class="{ 'translate-x-0': isSidebarOpen, 'translate-x-full': !isSidebarOpen }"
     >
-
-    <!-- Auth Buttons (Mobile) -->
+      <!-- Auth Buttons (Mobile) -->
       <div class="mt-6 flex flex-col space-y-4 items-center">
         <template v-if="isLoggedIn">
           <RouterLink :to="{ name: 'profile' }">
@@ -231,8 +230,6 @@ const profilepicture = computed(() => {
           </RouterLink>
         </li>
       </ul>
-
-
     </aside>
   </div>
 </template>

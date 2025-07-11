@@ -266,9 +266,36 @@
           <div class="flex justify-end gap-4 pt-6">
             <button
               @click="submitForm"
-              class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              :disabled="isLoading"
+              :class="[
+                'px-6 py-2 rounded-md transition-colors flex items-center gap-2',
+                isLoading
+                  ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                  : 'bg-blue-600 text-white hover:bg-blue-700'
+              ]"
             >
-              Create
+              <svg
+                v-if="isLoading"
+                class="animate-spin h-4 w-4"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              {{ isLoading ? 'Creating...' : 'Create' }}
             </button>
 
             <RouterLink to="/destination">
@@ -315,6 +342,7 @@ const imagePreviews = ref([])
 form.value.photos = []
 
 const categories = ref(['Nature', 'Adventure', 'Cultural', 'Beach', 'Mountain'])
+const isLoading = ref(false)
 
 const handleFileUpload = (event) => {
   const files = Array.from(event.target.files)
@@ -392,6 +420,9 @@ const submitForm = async () => {
     return
   }
 
+  // Set loading to true
+  isLoading.value = true
+
   // Buat FormData
   const formData = new FormData()
   formData.append('name', form.value.name)
@@ -413,13 +444,28 @@ const submitForm = async () => {
   }
 
   try {
-    await axios.post('http://localhost:8000/api/touristspots/', formData, {
+    const res = await axios.post('http://localhost:8000/api/touristspots/', formData, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'multipart/form-data',
       },
     })
-    // Ganti alert dengan SweetAlert2
+
+    // CEK: Jika backend mengirim kode 4002 (duplikat mirip)
+    if (res.data && res.data.code === 4002) {
+      let msg = 'Ada wisata yang mirip di database!\n'
+      if (res.data.similar_name) msg += `Nama mirip: ${res.data.similar_name}\n`
+      if (res.data.similar_desc) msg += `Deskripsi mirip pada: ${res.data.similar_desc}\n`
+      await Swal.fire({
+        icon: 'warning',
+        title: 'Peringatan!',
+        text: msg,
+        showConfirmButton: true,
+      })
+      return // Jangan lanjut reset form
+    }
+
+    // Jika sukses
     await Swal.fire({
       icon: 'success',
       title: 'Berhasil!',
@@ -472,6 +518,9 @@ const submitForm = async () => {
         showConfirmButton: true,
       })
     }
+  } finally {
+    // Set loading to false regardless of success or error
+    isLoading.value = false
   }
 }
 
