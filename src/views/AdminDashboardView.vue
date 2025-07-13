@@ -684,7 +684,7 @@ const filteredSortedWisata = computed(() => {
                   Edit
                 </button>
                 <button
-                  @click.stop="deleteWisata(wisa)"
+                  @click.stop="rejectWisata(wisata)"
                   class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium"
                 >
                   Delete

@@ -45,6 +45,7 @@ import relax from '@/assets/icon/yoga.png'
 import beach from '@/assets/icon/sunset.png'
 import adventure from '@/assets/icon/adventure.png'
 import mountain from '@/assets/icon/mountain.png'
+import IconicPlace from '@/components/IconicPlace.vue'
 
 const toDo = [
   {
@@ -125,7 +126,7 @@ function goToCategory(category) {
 
    <favhiddengem />
 
-   <Testimoni />
+   <IconicPlace />
 
     <section>
       <!--Something TO-do-->
