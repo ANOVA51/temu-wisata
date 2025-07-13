@@ -66,11 +66,6 @@ const router = createRouter({
       component: () => import('@/views/ChatTesa.vue'),
     },
     {
-      path: '/coba2',
-      name: 'coba2',
-      component: () => import('@/views/Coba2.vue'),
-    },
-    {
       path: '/testimonials',
       name: 'testimonials',
       component: () => import('@/views/Testimonials.vue'),

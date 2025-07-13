@@ -17,6 +17,57 @@ const nextImage = () => {
   currentIndex.value = (currentIndex.value + 1) % images.length
 }
 
+// Form data
+const formData = ref({
+  firstname: '',
+  lastname: '',
+  email: '',
+  phone: '',
+  message: ''
+})
+
+// WhatsApp configuration
+const whatsappNumber = '6287860346608' // Nomor WhatsApp tujuan (tanpa +)
+
+const sendToWhatsApp = () => {
+  // Validasi form
+  if (!formData.value.firstname || !formData.value.lastname || !formData.value.email || !formData.value.message) {
+    alert('Please fill in all required fields')
+    return
+  }
+
+  // Template pesan WhatsApp
+  const message = `*TESA - Contact Form Submission*
+
+*Name:* ${formData.value.firstname} ${formData.value.lastname}
+*Email:* ${formData.value.email}
+*Phone:* ${formData.value.phone || 'Not provided'}
+
+*Message:*
+${formData.value.message}
+
+---
+This message was sent from TESA Contact Form.`
+
+  // Encode pesan untuk URL
+  const encodedMessage = encodeURIComponent(message)
+
+  // Buat URL WhatsApp
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`
+
+  // Buka WhatsApp di tab baru
+  window.open(whatsappUrl, '_blank')
+
+  // Reset form setelah mengirim
+  formData.value = {
+    firstname: '',
+    lastname: '',
+    email: '',
+    phone: '',
+    message: ''
+  }
+}
+
 import dimas from '@/assets/images/profile/dimas.jpg'
 import emo from '@/assets/images/profile/emo.jpg'
 import nova from '@/assets/images/profile/nova.jpg'
@@ -112,7 +163,7 @@ const teamMembers = [
 
         <!-- Carousel Bertumpuk -->
         <div
-          class="relative w-full max-w-[360px] max-w-[360px] mx-auto h-[250px] cursor-pointer"
+          class="relative w-full max-w-[360px] mx-auto h-[250px] cursor-pointer"
           @click="nextImage"
         >
           <div class="relative w-full h-full">
@@ -210,36 +261,45 @@ const teamMembers = [
           <p class="text-neu-600 text-sm sm:text-base mb-6">
             Feel free to contact us at your convenience.
           </p>
-          <form class="flex flex-col gap-4">
+          <form class="flex flex-col gap-4" @submit.prevent="sendToWhatsApp">
             <div class="flex gap-4">
               <input
                 type="text"
                 placeholder="Firstname"
-                class="px-3 w-1/2 py-3 text-sm font- border placeholder:text-neu-500 border-neu-200 rounded-full"
+                v-model="formData.firstname"
+                required
+                class="px-3 w-1/2 py-3 text-sm border placeholder:text-neu-500 border-neu-200 rounded-full"
               />
               <input
                 type="text"
                 placeholder="Lastname"
+                v-model="formData.lastname"
+                required
                 class="px-3 w-1/2 py-3 text-sm border placeholder:text-neu-500 border-neu-200 rounded-full"
               />
             </div>
             <input
               type="email"
               placeholder="Email"
+              v-model="formData.email"
+              required
               class="px-3 py-3 text-sm border placeholder:text-neu-500 border-neu-200 rounded-full"
             />
             <input
               type="text"
               placeholder="Phone"
+              v-model="formData.phone"
               class="px-3 py-3 text-sm border placeholder:text-neu-500 border-neu-200 rounded-full"
             />
             <textarea
               rows="7"
               placeholder="Message"
+              v-model="formData.message"
+              required
               class="px-3 py-3 text-sm placeholder:text-neu-500 border border-neu-200 rounded-3xl"
             ></textarea>
-            <button type="submit" class="bg-pr-500 text-neu-50 px-6 py-3 font-medium rounded-full">
-              Send
+            <button type="submit" class="bg-pr-500 text-neu-50 px-6 py-3 font-medium rounded-full hover:bg-pr-600 transition-colors">
+              Send to WhatsApp
             </button>
           </form>
         </div>

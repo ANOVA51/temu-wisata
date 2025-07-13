@@ -62,8 +62,8 @@ function nextImage() {
 <template>
   <section class="bg-white">
     <div class="py-12 px-4 md:px-10">
-      <h2 class="text-3xl md:text-4xl font-bold mb-10 text-left">
-        Iconic places you need to see
+      <h2 class="text-3xl md:text-5xl font-bold text-[#328E6E] mt-10 px-10 pb-10 text-center">
+        Iconic Places You Need to See
       </h2>
 
       <!-- Horizontal Scroll -->
