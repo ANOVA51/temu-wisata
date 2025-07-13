@@ -27,7 +27,7 @@ const router = createRouter({
       path: '/admin',
       name: 'admin',
       component: AdminDashboardView,
-      meta: { requiresAuth: true, requiresAdmin: true } ,
+      meta: { requiresAuth: true, requiresAdmin: true },
     },
     {
       path: '/about',
@@ -43,7 +43,6 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: () => import('@/views/LoginView.vue'),
-
     },
     {
       path: '/signup',
@@ -59,13 +58,12 @@ const router = createRouter({
       path: '/formupdate',
       name: 'formupdate',
       component: () => import('@/views/FormUpdateWisata.vue'),
-      meta: { requiresAuth: true, requiresAdmin: true } ,
+      meta: { requiresAuth: true, requiresAdmin: true },
     },
     {
       path: '/tesa',
       name: 'tesa',
       component: () => import('@/views/ChatTesa.vue'),
-
     },
     {
       path: '/coba2',
@@ -111,7 +109,7 @@ router.beforeEach((to, from, next) => {
   if (authRequired && !isAuthenticated()) {
     return next({
       name: 'login',
-      query: { redirect: to.fullPath } // Simpan URL tujuan untuk redirect setelah login
+      query: { redirect: to.fullPath }, // Simpan URL tujuan untuk redirect setelah login
     })
   }
 
