@@ -1,6 +1,6 @@
 <template>
   <section class="py-10">
-    <h2 class="text-3xl md:text-4xl font-bold text-green-700 mb-6 text-center">Favourite Hidden Gem</h2>
+    <h2 class="text-3xl md:text-5xl font-bold text-[#328E6E] mt-10 px-10 pb-10 text-center">Favourite Hidden Gem</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-10 mb-10">
       <div
         v-for="spot in spots"
@@ -26,7 +26,7 @@
             </div>
           </div>
           <p class="text-gray-600 text-sm mb-1">
-            {{ spot.address }}, {{ spot.kota }}, {{ spot.kecamatan }}, {{ spot.desa }}
+            {{ spot.description.length > 100 ? spot.description.slice(0, 100) + '...' : spot.description }}
           </p>
         </div>
       </div>
