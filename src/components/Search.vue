@@ -6,7 +6,7 @@
         @input="searchSpots"
         type="text"
         placeholder="Search"
-        class="w-full rounded-full border border-gray-300 bg-white/60 backdrop-blur-md px-5 py-3 pl-12 shadow focus:outline-none focus:ring-2 focus:ring-green-400 text-gray-700 placeholder-gray-400 transition"
+        class="w-full rounded-full border border-gray-300 bg-white/60 backdrop-blur-md px-5 py-3 pl-12 shadow focus:outline-none focus:ring-2 focus:ring-green-400 text-gray-700 placeholder-gray-500 transition"
       />
       <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

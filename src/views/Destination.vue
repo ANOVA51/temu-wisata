@@ -15,7 +15,6 @@ const spots = ref([])
 const loading = ref(true)
 const showAll = ref(false)
 const selectedLocation = ref('')
-const favorites = ref([])
 const activeModal = ref(null)
 const modalImages = ref([])
 const modalCurrentIndex = ref(0)
@@ -27,6 +26,10 @@ const testimoniForm = ref({ message: '' })
 const testimoniImage = ref(null)
 const favoriteSpotIds = ref([])
 const searchResults = ref([])
+
+const categories = ref(['Nature', 'Adventure', 'Cultural', 'Mountain', 'Beach'])
+const selectedCategory = ref('')
+
 
 // Static list kota di Bali
 const baliCities = [
@@ -128,16 +131,23 @@ function getPrimaryImage(spot) {
 }
 
 const filteredSpots = computed(() => {
-  // Jika ada hasil search, tetap filter berdasarkan kota jika dipilih
   let base = searchResults.value.length > 0 ? searchResults.value : spots.value.filter(d => d.is_verified === true)
+
   if (route.query.spot_id) {
     base = base.filter(s => String(s.spot_id) === String(route.query.spot_id))
   }
+
   if (selectedLocation.value) {
-    base = base.filter(d => d.kota && d.kota.toLowerCase() === selectedLocation.value.toLowerCase())
+    base = base.filter(d => d.kota?.toLowerCase() === selectedLocation.value.toLowerCase())
   }
+
+  if (selectedCategory.value) {
+    base = base.filter(d => d.category?.toLowerCase() === selectedCategory.value.toLowerCase())
+  }
+
   return showAll.value ? base : base.slice(0, 8)
 })
+
 
 async function toggleFavorite(spot) {
   if (!user.value) {
@@ -218,6 +228,25 @@ watch(
   },
   { immediate: true }
 )
+
+watch(selectedCategory, (val) => {
+  if (val) {
+    router.replace({ name: route.name, query: { ...route.query, category: val } })
+  } else {
+    const q = { ...route.query }
+    delete q.category
+    router.replace({ name: route.name, query: q })
+  }
+})
+
+watch(
+  () => route.query.category,
+  (val) => {
+    selectedCategory.value = val || ''
+  },
+  { immediate: true }
+)
+
 </script>
 
 <template>
@@ -250,14 +279,22 @@ watch(
       </h2>
 
       <!-- Filter Dropdown -->
-      <div class="flex justify-center mb-6">
+      <div class="flex justify-center mb-6 gap-4">
+        <!-- Lokasi -->
         <select v-model="selectedLocation" class="border rounded px-4 py-2 shadow">
           <option value="">All Locations</option>
           <option v-for="city in baliCities" :key="city" :value="city">
             {{ city }}
           </option>
         </select>
+
+        <!-- Kategori -->
+        <select v-model="selectedCategory" class="border rounded px-4 py-2 shadow">
+          <option value="">All Categories</option>
+          <option v-for="cat in categories" :key="cat" :value="cat">{{ cat }}</option>
+        </select>
       </div>
+
 
       <!-- Search -->
       <div class="flex justify-center mb-6">
@@ -396,10 +433,10 @@ watch(
           </div>
         </div>
         <!-- Right: Details -->
-        <div class="flex-1 flex flex-col justify-between w-full md:w-1/2">
+        <div class="flex-1 flex flex-col justify-between w-full md:w-1/2 relative">
           <div>
-            <div class="text-2xl font-bold text-gray-700 mb-2">{{ activeModal.name }}</div>
-            <div class="text-base text-gray-800 mb-4 whitespace-pre-line break-words">
+            <div class="text-2xl font-bold text-gray-700 mb-1">{{ activeModal.name }}</div>
+            <div class="text-base text-gray-800 mb-4 whitespace-pre-line break-words max-h-40 overflow-y-auto">
               {{ activeModal.description }}
             </div>
             <div class="mb-2">
@@ -437,7 +474,7 @@ watch(
           </div>
 
           <!-- FORM TESTIMONI -->
-          <div class="mt-6">
+          <div class="mt-2">
             <h3 class="text-lg font-semibold text-gray-700 mb-2">Beri Testimoni</h3>
             <form @submit.prevent="submitTestimoni" class="space-y-3">
               <textarea
@@ -446,24 +483,21 @@ watch(
                 rows="3"
                 class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
               ></textarea>
-
               <input
                 type="file"
                 accept="image/*"
                 @change="onImageChange"
                 class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
               />
-
               <button
                 type="submit"
                 class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition"
               >
                 Kirim Testimoni
               </button>
-
               <button
                 type="button"
-            @click="goToTestimonials"
+                @click="goToTestimonials"
                 class="block text-sm text-green-600 underline hover:text-green-800 mt-1"
               >
                 Lihat semua testimoni →
