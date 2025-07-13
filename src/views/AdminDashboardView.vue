@@ -174,15 +174,42 @@ const approveWisata = async (wisata) => {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
-        // Tambahkan Authorization jika perlu
+        // Authorization: `Bearer ${token}`, // jika ada autentikasi
       },
       body: JSON.stringify({ is_verified: true }),
     })
     if (!response.ok) throw new Error('Gagal approve di backend')
-    // Hapus dari list frontend setelah sukses
+
+    // Hapus dari list pending
     pendingWisata.value = pendingWisata.value.filter((w) => w.id !== wisata.id)
+
+    // Tambahkan ke wisataList
+    wisataList.value.push({
+      ...wisata,
+      price:
+        wisata.price_min === wisata.price_max
+          ? `Rp${Number(wisata.price_min).toLocaleString()}`
+          : `Rp${Number(wisata.price_min).toLocaleString()} - Rp${Number(wisata.price_max).toLocaleString()}`,
+      rating: wisata.rating ?? '-',
+      address: `${wisata.address}, ${wisata.desa}, ${wisata.kecamatan}, ${wisata.kota}`,
+      uploader: wisata.user_id?.username ?? '-',
+      images: wisata.images,
+    })
+
+    // Optional: notifikasi sukses
+    Swal.fire({
+      icon: 'success',
+      title: 'Berhasil Diverifikasi',
+      text: `${wisata.name} sudah ditambahkan ke daftar wisata.`,
+      timer: 1200,
+      showConfirmButton: false,
+    })
   } catch (e) {
-    alert('Gagal approve wisata ke backend')
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal!',
+      text: 'Gagal approve wisata ke backend',
+    })
   }
 }
 
