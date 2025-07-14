@@ -23,15 +23,20 @@ const formData = ref({
   lastname: '',
   email: '',
   phone: '',
-  message: ''
+  message: '',
 })
 
 // WhatsApp configuration
-const whatsappNumber = '6287860346608' // Nomor WhatsApp tujuan (tanpa +)
+const whatsappNumber = '6281339172556' // Nomor WhatsApp tujuan (tanpa +)
 
 const sendToWhatsApp = () => {
   // Validasi form
-  if (!formData.value.firstname || !formData.value.lastname || !formData.value.email || !formData.value.message) {
+  if (
+    !formData.value.firstname ||
+    !formData.value.lastname ||
+    !formData.value.email ||
+    !formData.value.message
+  ) {
     alert('Please fill in all required fields')
     return
   }
@@ -64,7 +69,7 @@ This message was sent from TESA Contact Form.`
     lastname: '',
     email: '',
     phone: '',
-    message: ''
+    message: '',
   }
 }
 
@@ -298,7 +303,10 @@ const teamMembers = [
               required
               class="px-3 py-3 text-sm placeholder:text-neu-500 border border-neu-200 rounded-3xl"
             ></textarea>
-            <button type="submit" class="bg-pr-500 text-neu-50 px-6 py-3 font-medium rounded-full hover:bg-pr-600 transition-colors">
+            <button
+              type="submit"
+              class="bg-pr-500 text-neu-50 px-6 py-3 font-medium rounded-full hover:bg-pr-600 transition-colors"
+            >
               Send to WhatsApp
             </button>
           </form>

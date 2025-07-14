@@ -3,7 +3,6 @@ import { ref, watch, onMounted, computed } from 'vue'
 import router from '@/router'
 import Swal from 'sweetalert2'
 
-
 const active = ref('dashboard')
 const direction = ref('right')
 // State baru untuk hamburger menu
@@ -243,7 +242,6 @@ const rejectWisata = async (wisata) => {
   }
 }
 
-
 const viewReportDetail = (report) => {
   selectedReport.value = report
   showReportModal.value = true
@@ -415,10 +413,11 @@ const filteredSortedWisata = computed(() => {
   // Search
   if (searchQuery.value) {
     const q = searchQuery.value.toLowerCase()
-    result = result.filter(w =>
-      w.name.toLowerCase().includes(q) ||
-      w.category.toLowerCase().includes(q) ||
-      w.address.toLowerCase().includes(q)
+    result = result.filter(
+      (w) =>
+        w.name.toLowerCase().includes(q) ||
+        w.category.toLowerCase().includes(q) ||
+        w.address.toLowerCase().includes(q),
     )
   }
 
@@ -530,7 +529,7 @@ const filteredSortedWisata = computed(() => {
     </aside>
 
     <main
-      class="flex-1 p-4 sm:p-6 md:p-10 relative overflow-hidden bg-white rounded-tr-3xl rounded-br-3xl pt-16 lg:pt-10"
+      class="flex-1 p-4 sm:p-6 md:p-10 relative overflow-auto bg-white rounded-tr-3xl rounded-br-3xl pt-16 lg:pt-10"
     >
       <button
         @click="isMobileMenuOpen = !isMobileMenuOpen"
@@ -559,7 +558,9 @@ const filteredSortedWisata = computed(() => {
             </div>
             <div class="text-sm text-gray-600 break-all">{{ user.email }}</div>
             <div class="flex items-center justify-between">
-              <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">{{ user.role }}</span>
+              <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">{{
+                user.role
+              }}</span>
               <div class="flex space-x-1">
                 <button
                   class="text-green-600 hover:text-green-800 p-1"
@@ -584,23 +585,33 @@ const filteredSortedWisata = computed(() => {
           <table class="min-w-full rounded-lg">
             <thead>
               <tr class="bg-green-100">
-                <th class="py-3 px-3 sm:px-6 text-left font-semibold text-sm sm:text-base whitespace-nowrap">
+                <th
+                  class="py-3 px-3 sm:px-6 text-left font-semibold text-sm sm:text-base whitespace-nowrap"
+                >
                   <i class="mdi mdi-account-circle mr-2"></i>User Name
                 </th>
-                <th class="py-3 px-3 sm:px-6 text-left font-semibold text-sm sm:text-base whitespace-nowrap">
+                <th
+                  class="py-3 px-3 sm:px-6 text-left font-semibold text-sm sm:text-base whitespace-nowrap"
+                >
                   Email
                 </th>
-                <th class="py-3 px-3 sm:px-6 text-left font-semibold text-sm sm:text-base whitespace-nowrap">
+                <th
+                  class="py-3 px-3 sm:px-6 text-left font-semibold text-sm sm:text-base whitespace-nowrap"
+                >
                   Role
                 </th>
-                <th class="py-3 px-3 sm:px-6 text-left font-semibold text-sm sm:text-base whitespace-nowrap">
+                <th
+                  class="py-3 px-3 sm:px-6 text-left font-semibold text-sm sm:text-base whitespace-nowrap"
+                >
                   Action
                 </th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="user in userData" :key="user.id" class="border-b hover:bg-green-50">
-                <td class="py-3 px-3 sm:px-6 flex items-center text-sm sm:text-base whitespace-nowrap">
+                <td
+                  class="py-3 px-3 sm:px-6 flex items-center text-sm sm:text-base whitespace-nowrap"
+                >
                   <i class="mdi mdi-account-circle mr-2 text-xl"></i>
                   {{ user.username }}
                 </td>
@@ -610,7 +621,9 @@ const filteredSortedWisata = computed(() => {
                 <td class="py-3 px-3 sm:px-6 text-sm sm:text-base whitespace-nowrap">
                   {{ user.role }}
                 </td>
-                <td class="py-3 px-3 sm:px-6 flex items-center space-x-1 sm:space-x-2 whitespace-nowrap">
+                <td
+                  class="py-3 px-3 sm:px-6 flex items-center space-x-1 sm:space-x-2 whitespace-nowrap"
+                >
                   <button
                     class="text-green-600 hover:text-green-800 p-1"
                     @click="setUserRole(user, 'admin')"
